@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [                
+
+        {
+            "name": "Launch Program",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/webroot/product/testtide/server.js",
+            "cwd":     "${workspaceFolder}/webroot/product/testtide/"
+        }, 
+        {
+            "name": "Attach to Process",
+            "type": "node",
+            "request": "attach",
+            "processId": "${command:PickProcess}",
+            "skipFiles": ["<node_internals>/**"]
+        },
+        {
+            "name": "Ambient Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/webroot/ambientextension"
+            ]         
+        }        
+    ]
+}

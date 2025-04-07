@@ -1,0 +1,6 @@
+_.ambient.rootmodule("core/")
+    .include("base/")
+    .include("debug/")
+    .include("oop/")
+    .include("algo/")
+    .include("system/")

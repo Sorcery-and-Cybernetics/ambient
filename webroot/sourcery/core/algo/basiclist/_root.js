@@ -1,0 +1,10 @@
+_.ambient.rootmodule("basiclist/")
+    .include("map")
+    .include("linkedlistnode")
+    .include("linkedlist")
+    .include("stacklist")
+//    .include("listcursor")
+//    .include("listsegment")
+
+    .include("linkedlist.test", "debugmode")
+    .include("stacklist.test", "debugmode")

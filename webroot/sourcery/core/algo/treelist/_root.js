@@ -1,0 +1,6 @@
+_.ambient.rootmodule("treelist/")
+     .include("treebaselist")
+     .include("treelistnode")
+     .include("treesortlist")
+     .include("treeorderlist")
+     .include("treelisttest", "debugmode")

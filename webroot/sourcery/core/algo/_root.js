@@ -1,0 +1,5 @@
+_.ambient.rootmodule("algo/")
+    .require("sourcery/core/oop/")
+    .include("basiclist/")
+    .include("treelist/")    
+    .include("skiplist/")

@@ -1,0 +1,8 @@
+{
+  "name": "sactide",
+  "description": "sactide platform",
+  "version": "3.0.0",
+  "author": "SAC",
+  "dependencies": {   },
+  "license": "SEE LICENSE IN license.html"
+}

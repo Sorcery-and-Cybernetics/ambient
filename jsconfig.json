@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "checkJs": false,
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+            "*": ["*"]
+        }
+    }, "include": [
+        "webroot/sourcery.d.ts",
+        "webroot/sourcery/**/*.js"
+    ]
+}

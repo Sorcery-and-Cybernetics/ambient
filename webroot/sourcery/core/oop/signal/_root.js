@@ -1,0 +1,6 @@
+_.ambient.rootmodule("signal/")
+    .include("signalhelper")
+    .include("event")
+    .include("signaldata")
+    .include("basicsignal")
+    .include("signal")

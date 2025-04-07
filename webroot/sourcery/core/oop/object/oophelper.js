@@ -1,0 +1,229 @@
+//*************************************************************************************************
+// oophelper - Copyright (c) 2024 SAC. All rights reserved.
+//*************************************************************************************************
+_.ambient.module("oophelper", function (_) {
+    _.define.helper("oop", {
+        definers: null
+        , defined: false
+
+        , initialize: function () {
+            this.definers = {}
+        }
+
+        , striparguments: function (fn) {
+            var paramstr = _.innercut$(fn.toString(), "(", ")")
+
+            return _.splittrim$(paramstr)
+        }        
+
+        , registerdefiner: function(definer) {
+            this.definers[definer.babyname] = definer
+
+            if (this.defined) {
+//                _.debug("Making", definer.babyname, definer.supermodelname)
+                definer.make()
+            }
+        }
+
+        , rundefiners: function() {
+            this.defined = true
+            _.foreach(this.definers, function(definer) {
+                definer.make()
+            })
+        }
+
+        , addvalue: function (json, name, value) {
+            var cursor = json
+            var parts = name.split(".")
+
+            if (json[name]) { throw "helper.oop.appendvalue: Value " + name + " already exists" }   
+            json[name] = value
+
+            if (parts.length > 1) {
+                for (var index = 0; index < parts.length; index++) {
+                    var namepart = parts[index]
+
+                    if (index < parts.length - 1) {
+                        if (!cursor[namepart]) {
+                            cursor[namepart] = {}
+                        }
+                        cursor = cursor[namepart]
+
+                    } else {
+                        var jsonvalue = cursor[namepart]
+
+                        if (jsonvalue) {
+                            if (_.isjson(jsonvalue)) {
+                                //transfer all keys from jsonvalue to json
+                                cursor[namepart] = null
+                                _.json.merge(value, jsonvalue)
+                            } else {
+                                throw "helper.oop.appendvalue: Value " + name + " already exists"
+                            }
+                        }
+                        cursor[namepart] = value
+                    }
+                }
+            }
+        }
+
+        , getvalue: function(json, name) {
+            var cursor = json
+            var parts = name.split(".")
+
+            for (var index = 0; index < parts.length; index++) {
+                var namepart = parts[index]
+
+                if (index < parts.length - 1) {
+                    if (!cursor[namepart]) {
+                        return null
+                    }
+                    cursor = cursor[namepart]
+                } else {
+                    return cursor[namepart]
+                }
+            }
+        }
+
+        , addmaker: function (name, model) {
+            var maker = function () {
+                var object = new model()
+                object.initialize.apply(object, arguments)
+                return object
+            }
+            maker.prototype = model.prototype
+            
+            this.addvalue(_.make, name, maker)
+            return maker
+        }
+
+        , getmaker: function(name) {
+            return this.getvalue(_.make, name)
+        }
+
+        , getmodel: function(name) {
+            return this.getvalue(_.model, name)
+        }
+
+        , getdefiner: function(name) {
+            return this.getvalue(_.define, name)
+        }
+
+        , definetrait: function(modeldef, traitname, traitdef) {
+            var method = traitdef.definetrait(modeldef, traitname)
+
+            modeldef[traitname] = method
+        }
+
+        , extendmodeldef: function (modeldef, extenddef, duplicatewarn) {
+
+            for (var traitname in extenddef) {
+                if (extenddef.hasOwnProperty(traitname)) {
+                    
+                    switch (traitname) {
+                        case "_definition":
+                            //Filter out protected keys
+                            break
+
+                        default:
+                            var traitdef = extenddef[traitname]
+
+                            //for now the warning, in the future, we can merge the traits
+                            // if (duplicatewarn && modeldef[traitname]) {
+                            //     _.debug("Duplicate trait " + traitname + " in " + modeldef._modelname)
+                            // }
+
+                            if (traitdef && _.isfunction(traitdef.definetrait)) {
+                                this.definetrait(modeldef, traitname, traitdef)
+
+                            } else {
+                                modeldef[traitname] = traitdef
+                            }
+                    }
+                }
+            }
+        }        
+
+        , makemodel: function (name, supermodel, modeldef) {
+            if (_.isfunction(modeldef)) { modeldef = modeldef(supermodel.prototype) }
+            modeldef = modeldef || {}
+    
+            if (!modeldef.initialize && !supermodel) { modeldef.initialize = _.noop }
+            
+            //Inheritance the classic javascript way. 
+            var model = function () { }
+
+            if (supermodel) {
+                function clone() { }
+                clone.prototype = supermodel.prototype
+                model.prototype = new clone()
+            }            
+
+            //flatten behaviors into prototype
+            for (var key in modeldef) {
+                var trait = modeldef[key]
+
+                if (trait && (trait._modelname == "behavior")) {
+                    delete modeldef[key]
+
+                    if (_.isfunction(trait) && trait._modelname == "behavior") {
+                        trait = _.behavior[key]
+                    }
+
+                    for (var behaviorkey in trait) {
+                        if (behaviorkey != "_modelname") {
+                            if (modeldef[behaviorkey]) { throw "error: duplicate trait in model: " + name + ", behavior: " + key + ", trait: " + behaviorkey }
+                            modeldef[behaviorkey] = trait[behaviorkey]
+                        }
+                    }
+                }
+            }
+    
+            //extend the prototype
+            model.prototype._modelname = name
+            this.extendmodeldef(model.prototype, modeldef, true)
+            model.prototype._supermodel = supermodel
+    
+            return model
+        }
+        
+        , overwritemodel: function(name, modeldef) {
+            if (_.isfunction(modeldef)) { modeldef = modeldef() }
+
+            var model = this.getmodel(name)
+            _.json.merge(model.prototype, modeldef)
+            return model
+        }
+        
+        , adddefiner: function(supermodelname) {
+            var me = this
+
+            me.addvalue(_.define, supermodelname, function (modelname, modeldef) {
+                var superdefiner = me.getmodel("definer." + supermodelname)
+                var definermodel = me.makemodel(modelname, superdefiner, null)
+
+                var definer = new definermodel()
+
+                definermodel.prototype.init(supermodelname, modelname, modeldef)
+
+                me.addvalue(_.model, "definer." + modelname, definermodel)
+                me.adddefiner(modelname)
+    
+                var definer = new definermodel()
+                me.registerdefiner(definer)
+    
+                return definer
+            })
+        }
+
+        , addmodel: function (modelname, supermodelname, modeldef) {
+            var supermodel = this.getmodel(supermodelname)
+            var model = this.makemodel(modelname, supermodel, modeldef)
+
+            this.addvalue(_.model, modelname, model)
+            this.addmaker(modelname, model)
+
+            return model
+        }        
+    })   
+})

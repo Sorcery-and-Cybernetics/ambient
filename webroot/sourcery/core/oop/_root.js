@@ -1,0 +1,5 @@
+_.ambient.rootmodule("oop/")
+    .require("sourcery/core/debug/")
+    .include("object/")
+    .include("defextension/")
+    .include("signal/")

@@ -1,0 +1,431 @@
+//refactormarker
+//childmodel doesn't go correctly. Properties are added. How should we deal with inheritance of traits and methods? Clone, so that we can do optimalisations?
+
+_.behavior = function (proto) {
+    var behavior = _.normalize(proto)
+
+    behavior._modelname = "behavior"
+    return behavior
+}
+
+_.define.module("oophelper", function (_) {
+    _.oophelper = {
+
+        appendvalue: function (json, name, value) {
+            var cursor = json
+            var parts = name.split(".")
+
+            for (var index = 0; index < parts.length; index++) {
+                var namepart = parts[index]
+
+                if (index < parts.length - 1) {
+                    if (!cursor[namepart]) {
+                        cursor[namepart] = {}
+                    }
+                    cursor = cursor[namepart]
+
+                } else {
+                    cursor[namepart] = value
+                    json[name] = value //@andrew: does this work for the "chat.overview" ? 
+                }
+            }            
+        }
+
+        , striparguments: function (fn) {
+            var paramstr = _.innercut$(fn.toString(), "(", ")")
+
+            return _.splittrim$(paramstr)
+        }
+
+        , mergedef: function (superdef, targetdef) {
+            for (prop in superdef) {
+                value = superdef[prop]
+
+                if (superdef.hasOwnProperty(prop)) {
+                    switch (prop) {
+                        case "__proto__":
+                            throw "error"
+
+                        default:
+                            if (_.isarray(value)) {
+                                if (targetdef[prop]) {
+                                    targetdef[prop] = value.concat(targetdef[prop])
+                                } else {
+                                    targetdef[prop] = value.slice(0)
+                                }
+
+                            //refactormarker: This shouldn't be necessary, because of prototypal inheritance
+                            } else if (!targetdef.hasOwnProperty(prop)) {
+                                targetdef[prop] = value
+                            }
+                    }
+                }
+            }
+            return targetdef
+        }
+
+        , makeparamdefinition: function (me, params) {
+            //var me = this
+
+            //if (params == null) {
+            //    return this._paramdef
+            //}
+
+            me.paramdef = {}
+            me.paramnames = []
+
+            if (params) {
+                if (_.isstring(params)) {
+                    params = _.replace$(params, "/*", "")
+                    params = _.replace$(params, "*/", "")
+
+                    params = _.splittrim$(params, ",")
+
+                    _.foreach(params, function (param) {
+                        _.kvsplit$(param, ":")
+
+                        me.paramnames.push(key)
+                        me.paramdef[key] = _.make.waveparam(param.key, _.vartype(param.value), me.paramnames.length)
+                    })
+
+                } else if (_.isarray(params)) {
+                    _.foreach(params, function (key) {
+                        me.paramnames.push(key)
+                        me.paramdef[key] = _.make.waveparam(key, null, me.paramnames.length)
+                    })
+
+                } else if (_.isobject(params)) {
+                    _.foreach(params, function (value, key) {
+                        me.paramnames.push(key)
+                        me.paramdef[key] = _.make.waveparam(key, value, me.paramnames.length)
+
+                        me.paramnames.push(key)
+                    })
+                }
+            }
+
+            return this
+        }
+
+        , updatewrapper: function (def, methodwrapper) {
+            var params = null
+
+            if (!_.length(def.paramnames)) {
+                if (def._source) {
+                    params = _.trim$(_.innercut$(def._source.toString(), "(", ")"))
+                    if (params) {
+                        _.oophelper.makeparamdefinition(def, _.splittrim$(params, ","))
+                    }
+                }
+            }
+
+            if (_.length(def.paramnames)) {
+                var methodwrapper = _.replace$(methodwrapper.toString(), "(", ")", params)
+                methodwrapper = eval("newmethod = " + methodwrapper)
+            }
+
+            methodwrapper._definition = def
+            return methodwrapper
+        }
+
+        , maketraitwrapper: function (def) {
+            var newmethod = function (value) {
+                var self = this
+
+                if (!self._my[def._key]) {
+                    self._my[def._key] = result.maker(this, def._key)
+                }
+
+                return self._my[def._key]
+            }
+
+            var result = _.oophelper.updatewrapper(def, newmethod)
+            return result
+        }
+
+        , createmaker: function (name, def) {
+            //_.make[name] = function() { return new object(arguments) }
+            _.oophelper.appendvalue(_.make, name, function () {
+                var kind = new def()
+                kind.create.apply(kind, arguments)
+                return kind
+            })
+        }
+
+        , createdefextender: function (name, def) {
+            //_[name] = function() { return new object.clone() (arguments) }
+            _.oophelper.appendvalue(_, name, function () {
+                var kind = new def()
+
+                kind.__defcreate.apply(kind, arguments)
+                return kind
+            })
+        }
+
+        , linkmodels: function (supermodel, childmodel, inlined, parentmodel, traitoverride) {
+            //if (nested) {
+            //    _.debug("relink " + parentmodel.__kindname + ", " + childmodel.__kindname + ", " + childmodel._key + ", " + nested)
+            //} else {
+            //    _.debug("link " + parentmodel.__kindname + ", " + childmodel.__kindname )
+            //}
+
+            childmodel._fullmodelname = (inlined ? parentmodel.__kindname + "." + childmodel._key : childmodel.__kindname)
+
+            var key = (inlined ? (traitoverride ? "self": parentmodel.__kindname + "." + childmodel._key) : childmodel.__kindname)
+
+            childmodel._supermodel = supermodel
+            if (!supermodel._submodel) { supermodel._submodel = {} }
+            supermodel._submodel[key] = childmodel
+
+
+            if (parentmodel) { // && !traitoverride) {
+                var key = childmodel._key
+
+                childmodel._parentmodel = parentmodel
+                if (!parentmodel._childmodel) { parentmodel._childmodel = {} }
+                parentmodel._childmodel[key] = childmodel
+
+            } else {
+                childmodel._parentmodel = null
+            }
+        }
+
+        , addtrait: function (target, key, traitmodel) {
+            traitmodel._key = key
+            traitmodel._submodel = null
+            traitmodel._childmodel = null
+
+            if (target[key]) {
+                var supermodel = target[key]._definition
+                var traitoverride = true
+            } else {
+                var supermodel = traitmodel._definition
+                var traitoverride = false
+            }
+
+            if (!supermodel || (supermodel.__kindname !== traitmodel.__kindname)) { throw "error" }
+
+            var traitmodel = _.oophelper.mergedef(supermodel, traitmodel)
+            _.oophelper.linkmodels(supermodel, traitmodel, true, target, traitoverride)
+
+            var method = traitmodel.__defextend(target, key)
+
+            if (method) {
+                if (_.isfunction(method)) {
+                } else {
+                    throw "error: method expected from __defextend"
+                }
+                method._definition = traitmodel
+                target[key] = method
+
+            } else {
+                target[key] = traitmodel
+            }
+
+            //} else {
+            //    target[key] = traitmodel
+            //}
+
+            
+
+                //if (trait._modelname) {
+                //    var custommodelname = target.__modelname + "." + key
+                //    _.oophelper.appendvalue(_.kind, custommodelname, traitdef)
+                //}
+
+                //var definition = target._definition
+
+                ////add traitformula listeners to _listenmap
+                //if (traitdef._listento) {
+                //    if (!definition._listenmap) {
+                //        definition._listenmap = {}
+                //    }
+
+                //    _.foreach(traitdef._listento, function (traitname) {
+                //        var listento = definition._listenmap[traitname]
+
+                //        if (!listento) {
+                //            listento = key
+                //        } else if (!_.isarray(listento)) {
+                //            listento = [listento, key]
+                //        } else {
+                //            listento.push(key)
+                //        }
+
+                //        definition._listenmap[traitname] = listento
+                //    })
+                //}
+
+                //definition[key] = traitdef
+
+                //if (_.reservedtraits[key]) {
+                //    if (!target[key]) {
+                //        target[key] = trait
+                //    } else {
+                //        //todo: implement inheritance here
+
+                //        //                            throw "????"
+                //        //                            throw "error"
+                //    }
+
+                //} else {
+                //    target[key] = trait
+                //}
+
+                //} else if (_.isobject(target[key]) && _.isobject(sourceitem)) {
+
+                //    switch (key) {
+                //        //case "_styleclasses":
+                //        //    target[key] = _.json.merge(target[key], sourceitem)
+                //        //    break
+                //        default:
+                //            target[key] = sourceitem
+                //    }
+
+        //} else {
+        //        target[key] = traitdef
+        //    }
+        }
+
+        , extendprototype: function (target, source, duplicatewarn, grouptag) {
+            source = source.prototype ? source.prototype : source
+            //            target._definition = _.json.shallowmerge(target._definition, source._definition)
+
+            for (var key in source) {
+                if (source.hasOwnProperty(key)) {
+
+                    var traitdef = source[key]
+
+                    switch (key) {
+                        case "_definition":
+
+                        case "_parentmodel":
+                        case "_submodel":
+
+                        case "_childmodel":
+                        case "_supermodel":
+                            break
+
+                        default:
+                            if (duplicatewarn && target[key]) {
+                                _.debug("Duplicate trait " + key + " in " + target.__kindname)
+                            }
+
+                            if (traitdef && _.isfunction(traitdef.__defextend)) {
+                                if (key)
+                                _.oophelper.addtrait(target, key, traitdef)
+
+                            } else if (_.isobject(traitdef)) {
+                                target[key] = _.merge(target[key] || {}, traitdef)
+
+                            //} else if (_.isfunction(traitdef) && traitdef._definition) {
+                                
+                            //    target[key] = traitdef
+                            } else {
+                                target[key] = traitdef
+                            }
+                    }
+                }
+            }
+        }
+
+        , makeprototype: function (name, _super, prototype) {
+            prototype = prototype || {}
+
+            if (_.isfunction(prototype)) {
+                if (_super) { //Get intellisense to work
+                    var __clone = function () { }
+                    __clone.prototype = _super.prototype
+                    __clone = new __clone()
+                    prototype = prototype.call(null, __clone)
+
+                } else {
+                    prototype = prototype(null)
+                }
+            }
+
+            if (prototype == null) {
+                throw "Prototype for [" + name + "] cannot be null"
+            }
+
+            //flatten behaviors into prototype
+            for (var protokey in prototype) {
+                var trait = prototype[protokey]
+
+                if (trait && (trait._modelname == "behavior")) {
+                    delete prototype[protokey]
+
+                    for (var behaviorkey in trait) {
+                        if (behaviorkey != "_modelname") {
+                            if (prototype[behaviorkey]) { throw "error: duplicate trait in kind: " + name + ", behavior: " + protokey + ", trait: " + behaviorkey }
+                            prototype[behaviorkey] = trait[behaviorkey]
+                        }
+                    }
+                } 
+            }
+
+            //var innerscope = prototype._scope
+            //prototype._scope = undefined
+
+            if (!prototype.initialize && !__clone) {
+                prototype.initialize = _.noop
+            }
+
+            fn = function () { }
+
+            //trick to get instanceof working
+            if (_super) {
+                function __() { } 
+                __.prototype = _super.prototype
+                fn.prototype = new __()
+            }
+
+            fn.prototype.__kindname = name
+
+            fn.prototype._childmodel = _super? _.shallowclone(_super.prototype._childmodel): null
+            fn.prototype._submodel = null
+            fn.prototype._supermodel = null
+            fn.prototype._parentmodel = null
+
+            //if (_super) {
+            //    _.oophelper.extendprototype(fn.prototype, _super.prototype)
+            //}
+            _.oophelper.extendprototype(fn.prototype, prototype)
+            fn._definition = fn.prototype
+            fn.prototype._definition = fn.prototype
+
+
+            if (_super) {
+                _.oophelper.linkmodels(_super.prototype, fn.prototype)
+            }
+
+            //if (innerscope) {
+            //    innerscope = _.normalize(innerscope)
+            //    _.oophelper.extendprototype(fn.prototype, scope)
+            //}
+
+            return fn
+        }
+
+        , makedefinition: function (name, supermodelname, source) {
+            var supermodel = _.kind[supermodelname]
+            var model = _.oophelper.makeprototype(name, supermodel, source)
+
+            _.oophelper.appendvalue(_.kind, name, model)
+            _.oophelper.createmaker(name, model)
+
+            if (name != "kind") {
+                _.oophelper.createdefextender(name, model)
+            }
+
+            return model
+        }
+
+        , make: function () {
+//            return 10
+            throw "error"
+        }
+    }
+
+})
+
