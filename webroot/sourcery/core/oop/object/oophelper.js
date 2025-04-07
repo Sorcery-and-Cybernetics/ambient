@@ -2,21 +2,21 @@
 // oophelper - Copyright (c) 2024 SAC. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("oophelper", function (_) {
-    _.define.helper("oop", {
-        definers: null
-        , defined: false
+    _.define.helper("oop", function() {
+        this.definers = null
+        this.defined = false
 
-        , initialize: function () {
+        this.initialize = function () {
             this.definers = {}
         }
 
-        , striparguments: function (fn) {
+        this.striparguments = function (fn) {
             var paramstr = _.innercut$(fn.toString(), "(", ")")
 
             return _.splittrim$(paramstr)
         }        
 
-        , registerdefiner: function(definer) {
+        this.registerdefiner = function(definer) {
             this.definers[definer.babyname] = definer
 
             if (this.defined) {
@@ -25,14 +25,14 @@ _.ambient.module("oophelper", function (_) {
             }
         }
 
-        , rundefiners: function() {
+        this.rundefiners = function() {
             this.defined = true
             _.foreach(this.definers, function(definer) {
                 definer.make()
             })
         }
 
-        , addvalue: function (json, name, value) {
+        this.addvalue = function (json, name, value) {
             var cursor = json
             var parts = name.split(".")
 
@@ -67,7 +67,7 @@ _.ambient.module("oophelper", function (_) {
             }
         }
 
-        , getvalue: function(json, name) {
+        this.getvalue = function(json, name) {
             var cursor = json
             var parts = name.split(".")
 
@@ -85,7 +85,7 @@ _.ambient.module("oophelper", function (_) {
             }
         }
 
-        , addmaker: function (name, model) {
+        this.addmaker = function (name, model) {
             var maker = function () {
                 var object = new model()
                 object.initialize.apply(object, arguments)
@@ -97,25 +97,25 @@ _.ambient.module("oophelper", function (_) {
             return maker
         }
 
-        , getmaker: function(name) {
+        this.getmaker = function(name) {
             return this.getvalue(_.make, name)
         }
 
-        , getmodel: function(name) {
+        this.getmodel = function(name) {
             return this.getvalue(_.model, name)
         }
 
-        , getdefiner: function(name) {
+        this.getdefiner = function(name) {
             return this.getvalue(_.define, name)
         }
 
-        , definetrait: function(modeldef, traitname, traitdef) {
+        this.definetrait = function(modeldef, traitname, traitdef) {
             var method = traitdef.definetrait(modeldef, traitname)
 
             modeldef[traitname] = method
         }
 
-        , extendmodeldef: function (modeldef, extenddef, duplicatewarn) {
+        this.extendmodeldef = function (modeldef, extenddef, duplicatewarn) {
 
             for (var traitname in extenddef) {
                 if (extenddef.hasOwnProperty(traitname)) {
@@ -144,9 +144,15 @@ _.ambient.module("oophelper", function (_) {
             }
         }        
 
-        , makemodel: function (name, supermodel, modeldef) {
-            if (_.isfunction(modeldef)) { modeldef = modeldef(supermodel.prototype) }
-            modeldef = modeldef || {}
+        this.makemodel = function (name, supermodel, modeldef) {
+            if (_.isfunction(modeldef)) { 
+                //Backwards compatible. 
+                var context = {}
+                modeldef = modeldef.call(context, supermodel.prototype) 
+                if (!modeldef) { modeldef = context }
+            } else {
+                modeldef = modeldef || {}
+            }
     
             if (!modeldef.initialize && !supermodel) { modeldef.initialize = _.noop }
             
@@ -187,15 +193,20 @@ _.ambient.module("oophelper", function (_) {
             return model
         }
         
-        , overwritemodel: function(name, modeldef) {
-            if (_.isfunction(modeldef)) { modeldef = modeldef() }
+        this.overwritemodel = function(name, modeldef) {
+            if (_.isfunction(modeldef)) { 
+                //Backwards compatible. 
+                var context = {}
+                modeldef = modeldef.call(context) 
+                if (!modeldef) { modeldef = context }
+            }
 
             var model = this.getmodel(name)
             _.json.merge(model.prototype, modeldef)
             return model
         }
         
-        , adddefiner: function(supermodelname) {
+        this.adddefiner = function(supermodelname) {
             var me = this
 
             me.addvalue(_.define, supermodelname, function (modelname, modeldef) {
@@ -216,7 +227,7 @@ _.ambient.module("oophelper", function (_) {
             })
         }
 
-        , addmodel: function (modelname, supermodelname, modeldef) {
+        this.addmodel = function (modelname, supermodelname, modeldef) {
             var supermodel = this.getmodel(supermodelname)
             var model = this.makemodel(modelname, supermodel, modeldef)
 

@@ -5,6 +5,7 @@ _.ambient.module("httptest")
 .onload(function (_) {
 
     var server = _.make.httpserver("bla", 80)
+
     server.onerror(function(err) {
         _.debug(err)
     })
@@ -16,11 +17,11 @@ _.ambient.module("httptest")
     server.start()
 
     _.http.get("http://localhost:80")
-    .onerror(function(err) {
-        _.debug(err)
-    })
-    .onresponse(function(response) {
-        _.debug(response)
-        server.stop()
-    })
+        .onerror(function(err) {
+            _.debug(err)
+        })
+        .onresponse(function(response) {
+            _.debug(response)
+            server.stop()
+        })
 })

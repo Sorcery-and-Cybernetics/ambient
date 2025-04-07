@@ -76,15 +76,13 @@ _.ambient.module("httphelper").source(function (_) {
         })
 
 
-        return {
-            mimetypes: mimetypes
-            , contenttypes: contenttypes
+        this.mimetypes = mimetypes;
+        this.contenttypes = contenttypes;
 
-            , getmimetype: function (value) {
-                value = _.lcase$(value)
+        this.getmimetype = function (value) {
+            value = _.lcase$(value);
 
-                return this.mimetypes[value] || this.contenttypes[value] || this.mimetype["default"]
-            }
-        }
-    })
+            return this.mimetypes[value] || this.contenttypes[value] || this.mimetypes["default"];
+        };
+    });
 })

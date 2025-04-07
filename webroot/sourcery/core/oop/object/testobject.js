@@ -1,14 +1,12 @@
 _.ambient.module("testobject", function (_) {
     _.define.core.object("testobject", function(supermodel) {
-        return {
-            _modelname: "testobject"
-            , modelname: function () { return this._modelname }
-            , initialize: _.noop
+        this._modelname = "testobject"
+        this.modelname = function () { return this._modelname }
+        this.initialize = _.noop
 
-            , test: function() {
-                _.debug("Test is working")
-            }
-        }             
+        this.test = function() {
+            _.debug("Test is working")
+        }
     })
 //     .extend(function(definer) {
 //         return {

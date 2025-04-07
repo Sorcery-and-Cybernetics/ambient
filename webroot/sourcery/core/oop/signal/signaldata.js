@@ -3,124 +3,117 @@
 //*************************************************************************************************
 _.ambient.module("signaldata", function(_) {    
     _.define.core.object("core.signaldatanode", function (supermodel) {
-        return {
-            fnevent: null
+        this.fnevent = null;
+        this._nextnode = null;
+        this._prevnode = null;
+        this._isroot = false;
 
-            , _nextnode: null
-            , _prevnode: null
-            , _isroot: false
+        this.initialize = function(fnevent) {
+            this.fnevent = fnevent;
+        };
 
-            , initialize: function(fnevent) {
-                this.fnevent = fnevent
-            }
+        this.next = function() {
+            return this._nextnode && this._nextnode._isroot ? null : this._nextnode;
+        };
 
-            , next: function() {
-                return this._nextnode && this._nextnode._isroot ? null : this._nextnode
-            }
+        this.prev = function() {
+            return this._prevnode && this._prevnode._isroot ? null : this._prevnode;
+        };
 
-            , prev: function() {
-                return this._prevnode && this._prevnode._isroot ? null : this._prevnode
-            }
+        this.destroy = function() {
+            this._nextnode._prevnode = this._prevnode;
+            this._prevnode._nextnode = this._nextnode;
 
-            , destroy: function() {
-                this._nextnode._prevnode = this._prevnode
-                this._prevnode._nextnode = this._nextnode
-
-                this._nextnode = null
-                this._prevnode = null
-            }
-        }
+            this._nextnode = null;
+            this._prevnode = null;
+        };
     })
 
     _.define.core.object("core.signaldatalist", function (supermodel) {
-        return {
-            _parent: null
-            , _name: null
-            , _nextnode: null
-            , _prevnode: null
-            , _isroot: true
+        this._parent = null;
+        this._name = null;
+        this._nextnode = null;
+        this._prevnode = null;
+        this._isroot = true;
 
-            , initialize: function(parent, name) {
-                this._parent = parent
-                this._name = name
+        this.initialize = function(parent, name) {
+            this._parent = parent;
+            this._name = name;
 
-                this._nextnode = this
-                this._prevnode = this
+            this._nextnode = this;
+            this._prevnode = this;
+        };
+
+        this.add = function(fnevent) {
+            var node = _.make.core.signaldatanode(fnevent);
+
+            node._prevnode = this._prevnode;
+            node._nextnode = this._prevnode._nextnode;
+            node._prevnode._nextnode = node;
+            this._prevnode = node;
+
+            return node;
+        };
+
+        this.foreach = function(fn) {
+            var cursor = this._nextnode;
+            var nextcursor = null;
+
+            while (cursor && cursor != this) {
+                nextcursor = cursor._nextnode;
+                fn(cursor);
+                cursor = nextcursor;
             }
+            return this;
+        };
 
-            , add: function(fnevent) {
-                var node = _.make.core.signaldatanode(fnevent)
-
-                node._prevnode = this._prevnode
-                node._nextnode = this._prevnode._nextnode
-                node._prevnode._nextnode = node
-                this._prevnode = node
-
-                return node
+        this.destroy = function() {
+            while (this._nextnode && this._nextnode != this) {
+                this._nextnode.destroy();
             }
-
-            , foreach: function(fn) {
-                var cursor = this._nextnode
-                var nextcursor = null
-
-                while (cursor && cursor != this) {
-                    nextcursor = cursor._nextnode
-                    fn(cursor)
-                    cursor = nextcursor
-                }
-                return this
-            }
-
-            , destroy: function() {
-                while (this._nextnode && this._nextnode != this) {
-                    this._nextnode.destroy()
-                }
-                this._nextnode = null
-                this._prevnode = null
-                this._parent = null
-                this._name = null
-            }
-        }
+            this._nextnode = null;
+            this._prevnode = null;
+            this._parent = null;
+            this._name = null;
+        };
     })
 
     _.define.core.object("core.signaldata", function (supermodel) {
-        return {
-            object: null
-            , signals: null
+        this.object = null;
+        this.signals = null;
 
-            , initialize: function(object) {
-                this.object = object
-                this.signals = {}
-            }
+        this.initialize = function(object) {
+            this.object = object;
+            this.signals = {};
+        };
 
-            , addbasicsignal: function(name, fnevent) {
-                this.signals[name] = fnevent
-            }
+        this.addbasicsignal = function(name, fnevent) {
+            this.signals[name] = fnevent;
+        };
 
-            , firebasicsignal: function(name, event) {
-                var fnevent = this.signals[name]
-                if (fnevent) {
-                    fnevent.call(this.object, event)
-                }
+        this.firebasicsignal = function(name, event) {
+            var fnevent = this.signals[name];
+            if (fnevent) {
+                fnevent.call(this.object, event);
             }
+        };
 
-            , addsignal: function(name, fnevent) {
-                var list = this.signals[name]
-                if (!list) {
-                    list = _.make.core.signaldatalist(this, name)
-                    this.signals[name] = list
-                }
-                list.add(fnevent)
+        this.addsignal = function(name, fnevent) {
+            var list = this.signals[name];
+            if (!list) {
+                list = _.make.core.signaldatalist(this, name);
+                this.signals[name] = list;
             }
+            list.add(fnevent);
+        };
 
-            , firesignal: function(name, event) {
-                var list = this.signals[name]
-                if (list) {
-                    list.foreach(function(node) {
-                        node.fnevent.call(this.object, event)
-                    })
-                }
+        this.firesignal = function(name, event) {
+            var list = this.signals[name];
+            if (list) {
+                list.foreach(function(node) {
+                    node.fnevent.call(this.object, event);
+                });
             }
-        }
+        };
     })
 })

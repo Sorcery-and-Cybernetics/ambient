@@ -3,19 +3,17 @@
 //*************************************************************************************************
 _.ambient.module("event", function (_) {
     _.define.core.object("core.event", function () {
-        return {
-            name: ""
-            , source: null
-            , cancelled: false
+        this.name = "";
+        this.source = null;
+        this.cancelled = false;
 
-            , initialize: function (source, name) {
-                this.source = source
-                this.name = name
-            }
+        this.initialize = function (source, name) {
+            this.source = source;
+            this.name = name;
+        };
 
-            , cancel: function () {
-                this.cancelled = true
-            }
-        }
-    })
-})
+        this.cancel = function () {
+            this.cancelled = true;
+        };
+    });
+});
