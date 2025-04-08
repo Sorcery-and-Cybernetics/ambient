@@ -5,24 +5,22 @@ _.ambient.module("treelisttest", function (_) {
 })
 .onload(function (_) {
     _.define.core.object("core.treelisttestitem", function () {
-        return {
-            _name: ""
-            , _value: ""
-            , _indexof: null
+        this._name = "";
+        this._value = "";
+        this._indexof = null;
 
-            , initialize: function (name, value) {
-                this._name = name
-                this._value = value
-            }
-            
-            , name: function () {
-                return this._name
-            }
+        this.initialize = function (name, value) {
+            this._name = name;
+            this._value = value;
+        };
+        
+        this.name = function () {
+            return this._name;
+        };
 
-            , value: function () {
-                return this._value
-            }
-        }
+        this.value = function () {
+            return this._value;
+        };
     })
 
     var debugshow = false

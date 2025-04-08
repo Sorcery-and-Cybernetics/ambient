@@ -3,126 +3,124 @@
 //*************************************************************************************************
 _.ambient.module("map", function(_) { 
     _.define.core.object("core.map", function (supermodel) {
-        return {
-            _parent: null
-            , _key: ""
-            , _value: null
+        this._parent = null;
+        this._key = "";
+        this._value = null;
 
-            , initialize: function (parent, name) {
-                this._value = {}
-            }
+        this.initialize = function (parent, name) {
+            this._value = {};
+        };
 
-            , assign: function (parent, name) {
-                this._parent = parent
-                this._name = name
-                this._value = {}
-            }
+        this.assign = function (parent, name) {
+            this._parent = parent;
+            this._name = name;
+            this._value = {};
+        };
 
-            , name: function () { return this._name }
+        this.name = function () { return this._name; };
 
-            , get: function (key) {
-                if (key == null) { throw "Map.get: key is null" }
-                return this._value[key]
-            }
+        this.get = function (key) {
+            if (key == null) { throw "Map.get: key is null"; }
+            return this._value[key];
+        };
 
-            , set: function (key, value) {
-                if (key == null) { throw "Map.set: key is null" }
+        this.set = function (key, value) {
+            if (key == null) { throw "Map.set: key is null"; }
 
-                this._value[key] = value
-                return this
-            }
+            this._value[key] = value;
+            return this;
+        };
 
-            , has: function (key) {
-                if (key == null) { throw "Map.has: key is null" }
-                return (this._value[key] !== undefined)
-            }
+        this.has = function (key) {
+            if (key == null) { throw "Map.has: key is null"; }
+            return (this._value[key] !== undefined);
+        };
 
-            , del: function (key) {
-                if (key == null) { throw "Map.del: key is null" }
-                delete this._value[key]
-            }
+        this.del = function (key) {
+            if (key == null) { throw "Map.del: key is null"; }
+            delete this._value[key];
+        };
 
-            , foreach: function (next) {
-                var me = this
+        this.foreach = function (next) {
+            var me = this;
 
-                for (var key in this._value) {
-                    var result = next(this._value[key], key)
+            for (var key in this._value) {
+                var result = next(this._value[key], key);
 
-                    switch (result) {
-                        case _.done:
-                            return
+                switch (result) {
+                    case _.done:
+                        return;
 
-                        case _.remove:
-                            me.del(key)
-                            break
-                    }
+                    case _.remove:
+                        me.del(key);
+                        break;
                 }
             }
+        };
 
-            , clear: function () {
-                var me = this
+        this.clear = function () {
+            var me = this;
 
-                for (var key in this._value) {
-                    me.del(key)
-                }
+            for (var key in this._value) {
+                me.del(key);
             }
+        };
 
-            , length: function () {                
-                var count = 0
+        this.length = function () {                
+            var count = 0;
 
-                for (var key in this._value) {
-                    count++
-                }
-                return count
+            for (var key in this._value) {
+                count++;
             }
+            return count;
+        };
 
-            , destroy: function () {
-                this.clear()
-                supermodel.destroy.call(this)
-            }
+        this.destroy = function () {
+            this.clear();
+            supermodel.destroy.call(this);
+        };
+        
+        this.keys = function () {
+            var result = [];
             
-            , keys: function () {
-                var result = []
-                
-                this.foreach(function (value, key) {
-                    result.push(key)
-                })
-                return result
-            }
+            this.foreach(function (value, key) {
+                result.push(key);
+            });
+            return result;
+        };
+        
+        this.values = function () {
+            var result = [];
             
-            , values: function () {
-                var result = []
-                
-                this.foreach(function (value, key) {
-                    result.push(value)
-                })
-                return result
-            }
+            this.foreach(function (value, key) {
+                result.push(value);
+            });
+            return result;
+        };
 
-            , tojson: function () {
-                var result = {} 
-                
-                this.foreach(function (value, key) {
-                    result[key] = value
-                })
-                return result                
-            }
+        this.tojson = function () {
+            var result = {};
             
-            , fromjson: function (data) {
-                var me = this
+            this.foreach(function (value, key) {
+                result[key] = value;
+            });
+            return result;                
+        };
+        
+        this.fromjson = function (data) {
+            var me = this;
 
-                _.foreach(data, function (value, key) {
-                    me.set(key, value)
-                })
+            _.foreach(data, function (value, key) {
+                me.set(key, value);
+            });
+        };
+
+        this.debugbehavior = _.behavior({
+            debugout: function () {
+                _.debug(this.tojson());
             }
-
-            , debugbehavior: _.behavior({
-                debugout: function () {
-                    _.debug(this.tojson())
-                }
-            })
-        }
-    })
+        });
+    });
 })
 .onload(function(_) {
     //write tests for map
