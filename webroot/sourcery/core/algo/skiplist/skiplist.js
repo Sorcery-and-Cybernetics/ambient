@@ -24,7 +24,7 @@ _.ambient.module("skiplist", function(_) {
         this.skiplistnavigationbehavior = _.behavior(function() {
             this.isroot = function () { return true; };
             this.base = function () { return this; };
-            this.top = function () { return this.__topsegment; };
+            this.segmenttop = function () { return this.__topsegment; };
 
             this.segmentnext = function () {
                 return this.__nextnode;
@@ -53,8 +53,8 @@ _.ambient.module("skiplist", function(_) {
                 if (value === undefined) { return this.__issortlist; }
 
                 if (this.__issortlist != value) {
+                    if (this.count() > 0) { throw "Cannot change list type after adding nodes"; }
                     this.__issortlist = value;
-                    this.__isskiplist = true;
                 }
                 return this;
             };
@@ -80,7 +80,15 @@ _.ambient.module("skiplist", function(_) {
                     _.make.skiplistsegment(this, value - 1);
                 }
                 return this;
-            };  
+            };
+
+            this.nodebyindex = function(index) {
+                return this.segmenttop().nodebyindex(index);
+            };
+
+            this.findnode = function(search, relativeindex) {
+                return this.segmenttop().findnode(search, relativeindex);
+            };
         });   
         
         this.debugbehavior = _.behavior(function() {

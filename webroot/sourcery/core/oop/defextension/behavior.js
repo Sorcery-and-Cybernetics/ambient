@@ -3,21 +3,14 @@
 //*************************************************************************************************
 _.ambient.module("behavior", function (_) {
     _.behavior = function (proto) {
-        if (!proto) {
-            return
-        } else {
-            var behavior = null
+        if (!proto) { return }
+        if (!_.isfunction(proto)) { throw "_.behavior: Function exptected." } 
 
-            if (_.isfunction(proto)) {
-                behavior = { }                
-                proto.call(behavior) 
-            } else {
-                behavior = proto                
-            }
+        var behavior = {}
+        if (proto.call(behavior)) { throw "_.behavior: No return value allowed." }
 
-            behavior._modelname = "behavior"
-            return behavior
-        }
+        behavior._modelname = "behavior"
+        return behavior
     }
 
     _.behavior._modelname = "behavior"

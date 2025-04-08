@@ -7,35 +7,35 @@ _.ambient.module("skiplistnode", function(_) {
         this.__topsegment = null;            
         this.__level = 1;
 
-        this.objectbehavior = _.behavior({
-            initialize: function(value) {
+        this.objectbehavior = _.behavior(function() {
+            this.initialize = function(value) {
                 this._value = value;
-            },
+            };
 
-            destroy: function () {
+            this.destroy = function () {
                 this.unlink();
                 return null;
-            }                  
+            };
         });
 
-        this.skiplistnavigationbehavior = _.behavior({
-            isroot: function () { return false; },
-            base: function () { return this; },
-            top: function () { return this.__topsegment; },
+        this.skiplistnavigationbehavior = _.behavior(function() {
+            this.isroot = function () { return false; };
+            this.base = function () { return this; };
+            this.segmenttop = function () { return this.__topsegment; };
 
-            segmentnext: function () {
+            this.segmentnext = function () {
                 return this.__nextnode;
-            },
+            };
             
-            segmentprev: function () { 
+            this.segmentprev = function () { 
                 return this.__prevnode;
-            },
+            };
 
-            segmentdown: function () { 
+            this.segmentdown = function () { 
                 return null;
-            },
+            };
 
-            segmentleftup: function() {
+            this.segmentleftup = function() {
                 if (this.__upsegment) {  return this.__upsegment; }
                 if (this.isroot()) { return null; }
 
@@ -45,19 +45,19 @@ _.ambient.module("skiplistnode", function(_) {
                     if (cursor.__upsegment) { return cursor.__upsegment; }
                     cursor = cursor.__prevnode;
                 }
-            },
+            };
             
-            segmentrightup: function() {
+            this.segmentrightup = function() {
                 return this.segmentleftup().__nextsegment;
-            },                
+            };                
 
-            segmentup: function () { 
+            this.segmentup = function () { 
                 return this.__upsegment || undefined;
-            }
+            };
         });            
 
-        this.skiplistbehavior = _.behavior({
-            assign: function(cursor, index) {
+        this.skiplistbehavior = _.behavior(function() {
+            this.assign = function(cursor, index) {
                 supermodel.assign.call(this, cursor, index);
 
                 //todo: For now we do a simple random level 
@@ -78,26 +78,24 @@ _.ambient.module("skiplistnode", function(_) {
                 this.segmentleftup().calcsegment(true, true);
 
                 return this;
-            },                
+            };
 
-            unlink: function() {
+            this.unlink = function() {
                 this.__topsegment = null;
                 if (this.__upsegment) { this.__upsegment.unlink(); }
                 
                 var prevnode = this.__prevnode;
                 supermodel.unlink.call(this);
                 prevnode.segmentleftup().calcsegment(false, true);
-            },
+            };
 
-            position: function(relativenode) {
-                var position = 0;
+            this.orderindex = function(relativenode) {
+                if (this.isroot()) { return 0; }
+                if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
 
-
-
-
-                if (relativenode) {}
-
-            }
+                if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
+                return this.__prevnode instanceof _.make.core.skiplist? 1: this.__prevnode.orderindex() + 1;
+            };
         });
         
         this.debugbehavior = _.behavior(function () {

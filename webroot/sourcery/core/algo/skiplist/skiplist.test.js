@@ -18,13 +18,16 @@ _.ambient.module("skiplist.test")
             return line
         }
 
-        var testorder = function(list, debugmode) {
+        var testorder = function(list) {
             list.foreach(function(node, index) {
-                var nodeposition = node.position()
-                //var found = list.findnode(index)
+                var nodeposition = node.orderindex()
+                var found = list.nodebyindex(index)
+                if (!found) { _.debug.assert(true, false, "List order mismatch"); return }
+                var foundindex = found.orderindex()
 
-                if ((nodeposition != index)) {
-                //if (!found || (found.orderindex() != index) || (nodeposition != index)) {
+                _.debug(index + "\t" + nodeposition + "\t" + foundindex)
+
+                if ((foundindex != index) || (nodeposition != index)) {
                     _.debug.assert(true, false, "List order mismatch")
                     return _.done
 
@@ -38,8 +41,10 @@ _.ambient.module("skiplist.test")
             _.debug(makeline(node, index))
         })
 
-
         _.debug.assert(list.debugvalidate(), undefined)
+
+        testorder(list)
+
         _.debug.assertfinish()
 
 

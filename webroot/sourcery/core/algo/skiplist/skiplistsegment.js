@@ -42,7 +42,7 @@ _.ambient.module("skiplistsegment", function (_) {
         this.skiplistnavigationbehavior = _.behavior(function() {
             this.isroot = function () { return this.__base.isroot(); };
             this.base = function () { return this.__base; };
-            this.top = function () { return this.__base.__topsegment; };
+            this.segmenttop = function () { return this.__base.__topsegment; };
             this.level = function() { 
                 var result = 0;
                 var cursor = this;
@@ -93,6 +93,10 @@ _.ambient.module("skiplistsegment", function (_) {
             //todo: Split segment into 2 functions. One that returns the direct up segment, other that returns the segment group.
             this.segmentup = function () { 
                 return this.__upsegment || undefined;
+            };
+
+            this.segmentroot = function() {
+                return this.__base.__topsegment;
             };
         });
 
@@ -153,6 +157,81 @@ _.ambient.module("skiplistsegment", function (_) {
                     }
                 } 
             };
+
+            this.orderindex = function() {
+                var index = 0;
+                var cursor = this;
+
+                while (cursor) {
+                    if (cursor.__segmentup) { cursor = cursor.segmenttop() }
+                    cursor = cursor.__prevsegment;
+                    index += cursor.__childcount;
+
+                    if (cursor.isroot()) { break; }
+                }
+                return index;
+            };
+
+            this.valueinsegment = function(search) {
+                var currentnode = this.__base
+                var nextnode = this.segmentnext().__base
+                if (nextnode.isroot()) { nextnode = nextnode.__prevnode }
+
+                if (search < currentnode.value() || search > nextnode.value()) { return false }
+                return true;
+            }
+
+            this.findnode = function(search, relativeindex) {
+                var cursor = this.segmenttop()
+                var found = null
+
+                while (cursor) {
+                    if (cursor.valueinsegment(search)) {
+                        cursor = cursor.segmentdown();
+                        while (cursor) {
+                            if (cursor.value() == search) {
+                                found = cursor;
+                                break;
+                            }
+                            cursor = cursor.segmentnext();
+                        }
+                        break;
+                    }
+                    cursor = cursor.segmentnext();
+                }
+
+                if (found && relativeindex) { 
+                    found = found.nodebyindex(relativeindex) 
+                    if (!found) { return null }
+                    if (found.value() != search) { return null }
+                }
+                return found;
+            }
+
+            this.nodebyindex = function(index) {
+                var cursor = this.segmenttop();
+
+                while (index) {
+                    if (cursor.__childcount >= index) {
+                        cursor = cursor.segmentdown();
+
+                        if (cursor instanceof _.make.core.skiplistnode) {
+                            while (index > 1) {
+                                index -= 1;
+                                cursor = cursor.segmentnext();
+                                if (cursor.isroot()) { return undefined; }
+                            }
+                            return cursor;
+                        }
+                    } else {
+                        index -= cursor.__childcount;
+                        cursor = cursor.segmentnext();
+                        if (cursor.isroot()) { return undefined; }
+                    }
+                }
+
+                return undefined
+            }
         });
 
         this.debugbehavior = _.behavior(function() {

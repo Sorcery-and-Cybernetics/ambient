@@ -115,11 +115,11 @@ _.ambient.module("map", function(_) {
             });
         };
 
-        this.debugbehavior = _.behavior({
-            debugout: function () {
+        this.debugbehavior = function() {
+            this.debugout = function () {
                 _.debug(this.tojson());
-            }
-        });
+            };
+        };
     });
 })
 .onload(function(_) {
