@@ -6,14 +6,13 @@ _.ambient.module("behavior", function (_) {
         if (!proto) {
             return
         } else {
-            if (_.isfunction(proto)) {
-                //Backwards compatible. 
-                var context = { }
-                var behavior = proto.call(context) 
+            var behavior = null
 
-                if (!behavior) { behavior = context }
+            if (_.isfunction(proto)) {
+                behavior = { }                
+                proto.call(behavior) 
             } else {
-                behavior = proto
+                behavior = proto                
             }
 
             behavior._modelname = "behavior"

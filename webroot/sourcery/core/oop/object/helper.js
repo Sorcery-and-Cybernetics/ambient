@@ -4,10 +4,10 @@
 _.ambient.module("helper").source(function (_) {
     _.define.helper = function(name, source) {
         if (_.isfunction(source)) { 
-            //Backwards compatible. 
             var context = {}
             source = source.call(context) 
-            if (!source) { source = context }
+            if (source) { throw "helper.helper: No return value allowed." }
+            source = context
         }
         
         var helper = new _.model.core.object()

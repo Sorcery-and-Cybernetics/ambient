@@ -146,10 +146,12 @@ _.ambient.module("oophelper", function (_) {
 
         this.makemodel = function (name, supermodel, modeldef) {
             if (_.isfunction(modeldef)) { 
-                //Backwards compatible. 
                 var context = {}
+
                 modeldef = modeldef.call(context, supermodel.prototype) 
-                if (!modeldef) { modeldef = context }
+                if (modeldef) { throw "oophelper.makemodel: No return value allowed." }
+                modeldef = context
+
             } else {
                 modeldef = modeldef || {}
             }
@@ -195,10 +197,10 @@ _.ambient.module("oophelper", function (_) {
         
         this.overwritemodel = function(name, modeldef) {
             if (_.isfunction(modeldef)) { 
-                //Backwards compatible. 
                 var context = {}
                 modeldef = modeldef.call(context) 
-                if (!modeldef) { modeldef = context }
+                if (modeldef) { throw "oophelper.overwritemodel: No return value allowed." }
+                modeldef = context
             }
 
             var model = this.getmodel(name)
