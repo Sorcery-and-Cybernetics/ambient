@@ -15,6 +15,6 @@ _.ambient.module("helper").source(function (_) {
         _.json.merge(helper, source)
 
         _.helper[name] = helper
-        helper.initialize()
+        helper.construct()
     }
 })

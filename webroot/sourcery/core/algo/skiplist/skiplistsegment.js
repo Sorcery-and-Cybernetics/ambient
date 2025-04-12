@@ -14,7 +14,7 @@ _.ambient.module("skiplistsegment", function (_) {
         this.__childcount = 0;
 
         this.objectbehavior = _.behavior(function() {
-            this.initialize = function(segmentdown, level) {
+            this.construct = function(segmentdown, level) {
                 if (!this.__downsegment) {
                     this.__level = segmentdown.__level + 1;
                     this.__downsegment = segmentdown;
@@ -31,7 +31,7 @@ _.ambient.module("skiplistsegment", function (_) {
 
                 if (level > 1) {
                     if (this.__upsegment) {
-                        this.__upsegment.initialize(this, level - 1);
+                        this.__upsegment.construct(this, level - 1);
                     } else {
                         this.__upsegment = _.make.core.skiplistsegment(this, level - 1);
                     }

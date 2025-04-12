@@ -38,8 +38,8 @@ var buffer = require('buffer');
         this.params = null;
         this.headers = null;
 
-        this.initialize = function(method, url, params, headers) {
-        var me = this;
+        this.construct = function(method, url, params, headers) {
+            var me = this;
 
             this.state = this.states.created
 
@@ -131,7 +131,7 @@ var buffer = require('buffer');
                             try {
                                 responsedata = JSON.parse(responsedata.toString());
                             } catch (err) {
-                                me.onerror("Error - Httprequest.initialize - Error parsing JSON response: " + err);
+                                me.onerror("Error - Httprequest.construct - Error parsing JSON response: " + err);
                                 return;
                             }
                     }

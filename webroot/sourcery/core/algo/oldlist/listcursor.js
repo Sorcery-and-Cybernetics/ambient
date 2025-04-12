@@ -8,7 +8,7 @@ _.ambient.module("listcursor", function (_) {
             _list: null
             , _currentnode: null
 
-            , initialize: function(list) {
+            , construct: function(list) {
                 this._list = list
             }
 

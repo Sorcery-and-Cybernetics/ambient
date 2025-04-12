@@ -11,7 +11,7 @@ _.ambient.module("timerevent", function(_) {
     }    
 
     _.define.core.object("core.timerevent", function (supermodel) {
-        this.initialize = function (runimmediate) {
+        this.construct = function (runimmediate) {
             this._runimmediate = runimmediate
         };
         

@@ -36,7 +36,7 @@
 
     _.define.object("roleengine", function () {
         return {
-            initialize: function() {
+            construct: function() {
                 this.role = {}
             }
 

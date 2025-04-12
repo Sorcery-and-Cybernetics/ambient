@@ -7,7 +7,7 @@ _.ambient.module("aliasdb", function(_) {
         this.nodes = null
         this.connection = ""
 
-        this.initialize = function(connection) {
+        this.construct = function(connection) {
             this.connection = connection
             this.nodes = _.make.alias.map()
         }

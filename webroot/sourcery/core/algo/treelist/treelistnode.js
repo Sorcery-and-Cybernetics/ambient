@@ -12,7 +12,7 @@ _.ambient.module("treelistnode", function (_) {
         this._count = 0;
 
         //todo: if item is in another list, remove from other list first.
-        this.initialize = function (list, item) {
+        this.construct = function (list, item) {
             if (!list || !item || item._indexof) { throw "error"; }
             this._list = list;
 

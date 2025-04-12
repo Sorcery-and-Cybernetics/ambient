@@ -8,7 +8,7 @@ _.ambient.module("linkedlist", function(_) {
         this.__count = 0
 
         this.objectbehavior = _.behavior(function() {
-            this.initialize = function() {
+            this.construct = function() {
                 this.__nextnode = this
                 this.__prevnode = this
             }

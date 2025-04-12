@@ -3,20 +3,11 @@
 //*************************************************************************************************
 _.ambient.module("map", function(_) { 
     _.define.core.object("core.map", function (supermodel) {
-        this._parent = null;
-        this._name = "";
         this._value = null;
 
-        this.initialize = function () {
+        this.construct = function () {
             this._value = {};
         };
-
-        this.assign = function (parent, name) {
-            this._parent = parent;
-            this._name = name;
-        };
-
-        this.name = function () { return this._name; };
 
         this.get = function (key) {
             if (key == null) { throw "Map.get: key is null"; }

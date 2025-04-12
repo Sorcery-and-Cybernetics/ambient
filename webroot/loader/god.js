@@ -11,7 +11,7 @@
             , loaded: null
             , isstarted: false
 
-            , initialize: function(system, name, config) {
+            , construct: function(system, name, config) {
                 this.name = name
                 this.config = config || null
 

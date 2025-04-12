@@ -13,7 +13,7 @@
             , _source: ""
             , _onload: null
             
-            , initialize: function (parent, name, rule) {
+            , construct: function (parent, name, rule) {
                 this._parent = parent._loader? parent: null
                 this._loader = parent._loader? parent._loader: parent
 

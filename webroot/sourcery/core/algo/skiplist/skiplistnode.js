@@ -8,7 +8,7 @@ _.ambient.module("skiplistnode", function(_) {
         this.__level = 1;
 
         this.objectbehavior = _.behavior(function() {
-            this.initialize = function(value) {
+            this.construct = function(value) {
                 this._value = value;
             };
 

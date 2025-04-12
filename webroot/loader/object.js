@@ -10,13 +10,13 @@
     _.model.object.prototype = {
         _modelname: "object"
         , modelname: function () { return this._modelname }
-        , initialize: _.noop
+        , construct: _.noop
     }    
 
     var makemaker = function (name, model) {
         var maker = function () {
             var object = new model()
-            object.initialize.apply(object, arguments)
+            object.construct.apply(object, arguments)
             return object
         }
 
@@ -29,8 +29,8 @@
         
         if (modeldef == null) { throw "Modeldef for [" + name + "] cannot be null" } 
         
-        if (!modeldef.initialize  && !supermodel) {
-            modeldef.initialize = _.noop
+        if (!modeldef.construct  && !supermodel) {
+            modeldef.construct = _.noop
         } 
         
         var model = function () { }

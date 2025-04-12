@@ -6,7 +6,7 @@ _.ambient.module("oophelper", function (_) {
         this.definers = null
         this.defined = false
 
-        this.initialize = function () {
+        this.construct = function () {
             this.definers = {}
         }
 
@@ -88,7 +88,7 @@ _.ambient.module("oophelper", function (_) {
         this.addmaker = function (name, model) {
             var maker = function () {
                 var object = new model()
-                object.initialize.apply(object, arguments)
+                object.construct.apply(object, arguments)
                 return object
             }
             maker.prototype = model.prototype
@@ -156,7 +156,7 @@ _.ambient.module("oophelper", function (_) {
                 modeldef = modeldef || {}
             }
     
-            if (!modeldef.initialize && !supermodel) { modeldef.initialize = _.noop }
+            if (!modeldef.construct && !supermodel) { modeldef.construct = _.noop }
             
             //Inheritance the classic javascript way. 
             var model = function () { }

@@ -36,7 +36,7 @@ _.ambient.module("httpresponse", function (_) {
         this.timeoutwarningduration = 500;
         this.session = null;
 
-        this.initialize = function (server, request, response) {
+        this.construct = function (server, request, response) {
             var self = this
 
             this.server = server

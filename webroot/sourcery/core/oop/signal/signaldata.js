@@ -8,7 +8,7 @@ _.ambient.module("signaldata", function(_) {
         this._prevnode = null;
         this._isroot = false;
 
-        this.initialize = function(fnevent) {
+        this.construct = function(fnevent) {
             this.fnevent = fnevent;
         };
 
@@ -36,7 +36,7 @@ _.ambient.module("signaldata", function(_) {
         this._prevnode = null;
         this._isroot = true;
 
-        this.initialize = function(parent, name) {
+        this.construct = function(parent, name) {
             this._parent = parent;
             this._name = name;
 
@@ -82,7 +82,7 @@ _.ambient.module("signaldata", function(_) {
         this.object = null;
         this.signals = null;
 
-        this.initialize = function(object) {
+        this.construct = function(object) {
             this.object = object;
             this.signals = {};
         };

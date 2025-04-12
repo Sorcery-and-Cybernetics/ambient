@@ -10,7 +10,7 @@ _.ambient.module("linkedlistnode", function (_) {
         this.__list = null;
         this._value = null;
 
-        this.initialize = function(value) {
+        this.construct = function(value) {
             this._value = value;
         };
 

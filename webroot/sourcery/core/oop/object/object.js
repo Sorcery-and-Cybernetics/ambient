@@ -11,7 +11,7 @@ _.ambient.module("object").source(function (_) {
         , _phase: 0
         
         , modelname: function () { return this._modelname }
-        , initialize: _.noop
+        , construct: _.noop
         , assign: _.noop
         , destroy: _.noop
 

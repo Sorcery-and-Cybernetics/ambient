@@ -23,7 +23,7 @@ _.ambient.module("httpserver", function (_) {
         // this._onrequest = null;
         // this._onerror = null;
 
-        this.initialize = function (name, port) {
+        this.construct = function (name, port) {
             this.name = name;
             if (port) { this.port = port; }
             return this;

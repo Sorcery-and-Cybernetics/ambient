@@ -7,7 +7,7 @@
             system: null
             , name: null
             
-            , initialize: function (system, name) {
+            , construct: function (system, name) {
                 this.system = system
                 this.name = name
             }

@@ -9,7 +9,7 @@ _.ambient.module("treelisttest", function (_) {
         this._value = "";
         this._indexof = null;
 
-        this.initialize = function (name, value) {
+        this.construct = function (name, value) {
             this._name = name;
             this._value = value;
         };

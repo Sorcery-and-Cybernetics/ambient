@@ -7,7 +7,7 @@ _.ambient.module("aliasnode", function(_) {
         this._object = null;
         this._links = null
 
-        this.initialize = function(object) {
+        this.construct = function(object) {
             this._object = object
         }
 

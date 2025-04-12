@@ -10,7 +10,7 @@ _.ambient.module("skiplistcursor", function (_) {
         this._segmentfilter = null;
         this._nodefilter = null;
 
-        this.initialize = function(list) {
+        this.construct = function(list) {
             this._list = list;
         };
 

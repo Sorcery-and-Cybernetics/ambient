@@ -7,7 +7,7 @@ _.ambient.module("event", function (_) {
         this.source = null;
         this.cancelled = false;
 
-        this.initialize = function (source, name) {
+        this.construct = function (source, name) {
             this.source = source;
             this.name = name;
         };

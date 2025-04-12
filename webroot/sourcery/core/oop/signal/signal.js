@@ -5,7 +5,7 @@ _.ambient.module("signal", function (_) {
     _.define.defextender("core.signal", function(supermodel) {
         // this.fndefault = null;
 
-        this.initialize = function(fndefault) {
+        this.construct = function(fndefault) {
             // if (fndefault) { this.fndefault = fndefault }
         };
 

@@ -15,7 +15,7 @@ _.ambient.module("listnode", function (_) {
 
             , _value: null
 
-            , initialize: function(value) {
+            , construct: function(value) {
                 this._value = value
             }
 

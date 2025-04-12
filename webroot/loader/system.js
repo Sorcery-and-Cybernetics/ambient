@@ -7,7 +7,7 @@
             worlds: null
             , config: null
 
-            , initialize: function(config) {
+            , construct: function(config) {
                 this.config = config
                 this.worlds = {}
             }

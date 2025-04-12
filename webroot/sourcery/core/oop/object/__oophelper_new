@@ -367,8 +367,8 @@ _.define.module("oophelper", function (_) {
             //var innerscope = prototype._scope
             //prototype._scope = undefined
 
-            if (!prototype.initialize && !__clone) {
-                prototype.initialize = _.noop
+            if (!prototype.construct && !__clone) {
+                prototype.construct = _.noop
             }
 
             fn = function () { }

@@ -38,7 +38,7 @@ _.ambient.module("timer", function(_) {
         this.prevdatestring = "";
         this.prevutcdatestring = "";
 
-        this.initialize = function (scope, initial) {
+        this.construct = function (scope, initial) {
             var me = this
 
             me._parent = scope

@@ -2,7 +2,7 @@ _.ambient.module("testobject", function (_) {
     _.define.core.object("testobject", function(supermodel) {
         this._modelname = "testobject"
         this.modelname = function () { return this._modelname }
-        this.initialize = _.noop
+        this.construct = _.noop
 
         this.test = function() {
             _.debug("Test is working")
