@@ -3,7 +3,7 @@
 //*************************************************************************************************
 
 _.ambient.module("aliasnode", function(_) {    
-    _.define.core.object("core.aliasnode", function (supermodel) {
+    _.define.core.object("alias.node", function (supermodel) {
         this._object = null;
         this._links = null
 

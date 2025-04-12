@@ -185,19 +185,23 @@ _.ambient.module("skiplistsegment", function (_) {
                 var cursor = this.segmenttop()
                 var found = null
 
-                while (cursor) {
-                    if (cursor.valueinsegment(search)) {
-                        cursor = cursor.segmentdown();
-                        while (cursor) {
-                            if (cursor.value() == search) {
-                                found = cursor;
-                                break;
+                if (search) {
+                    while (cursor) {
+                        if (cursor.valueinsegment(search)) {
+                            cursor = cursor.segmentdown();
+                            while (cursor) {
+                                if (cursor.value() == search) {
+                                    found = cursor;
+                                    break;
+                                }
+                                cursor = cursor.segmentnext();
                             }
-                            cursor = cursor.segmentnext();
+                            break;
                         }
-                        break;
+                        cursor = cursor.segmentnext();
                     }
-                    cursor = cursor.segmentnext();
+                } else if (relativeindex) {
+                    found = cursor
                 }
 
                 if (found && relativeindex) { 
