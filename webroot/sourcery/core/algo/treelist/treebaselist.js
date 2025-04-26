@@ -178,49 +178,53 @@ _.ambient.module("treebaselist", function (_) {
         //     }
         // };
 
-        this.debugdump = function () {
-            _.debug("");
-            _.debug("Treelist debugdump");
+        this.debugbehavior = _.behavior(function() {
 
-            var cursor = this.firstnode();
+            this.debugdump = function () {
+                _.debug("");
+                _.debug("Treelist debugdump");
 
-            while (cursor) {
-                cursor.debugdump();
-                cursor = cursor.next();
-            }
-        };
+                var cursor = this.firstnode();
 
-        this.debugvalidate = function () {
-            var node = this._rootnode;
-//            if (!node) { return; }
-            if (node._topnode) { throw "error"; }
+                while (cursor) {
+                    cursor.debugdump();
+                    cursor = cursor.next();
+                }
+            };
 
-            function testnode(node, parentnode) {
-                var count = 1;
-                var result = null;
+            this.debugvalidate = function () {
+                var node = this._rootnode;
+    //            if (!node) { return; }
+                if (node._topnode) { throw "error"; }
 
-                var leftnode = node._leftnode;
+                function testnode(node, parentnode) {
+                    var count = 1;
+                    var result = null;
 
-                if (leftnode) {
-                    if (leftnode._topnode != node) { return "Left node not connected correctly to topnode"; }
-                    count += leftnode._count;
+                    var leftnode = node._leftnode;
+
+                    if (leftnode) {
+                        if (leftnode._topnode != node) { return "Left node not connected correctly to topnode"; }
+                        count += leftnode._count;
+                    }
+
+                    var rightnode = node._rightnode;
+
+                    if (rightnode) {
+                        if (rightnode._topnode != node) { return "Right node not connected correctly to topnode"; }
+                        count += rightnode._count;
+                    }
+
+                    if (node._count != count) { return "Count does not match"; }
+
+                    if (!result && leftnode) { result = testnode(leftnode, node); }
+                    if (!result && rightnode) { result = testnode(rightnode, node); }
+                    return result;
                 }
 
-                var rightnode = node._rightnode;
-
-                if (rightnode) {
-                    if (rightnode._topnode != node) { return "Right node not connected correctly to topnode"; }
-                    count += rightnode._count;
-                }
-
-                if (node._count != count) { return "Count does not match"; }
-
-                if (!result && leftnode) { result = testnode(leftnode, node); }
-                if (!result && rightnode) { result = testnode(rightnode, node); }
-                return result;
-            }
-
-            return testnode(node);
-        };
+                return testnode(node);
+            };
+        });
+        
     });
-});
+})

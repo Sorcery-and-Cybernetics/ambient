@@ -125,8 +125,20 @@ async function fileinfo(filePath) {
             continue;
         }
 
+
+        // Behavior definition
+        if (line.startsWith('this.') && line.includes('_.behavior(')) {
+            const match = line.match(/this\.(\w+)\s*=/);
+            if (match) {
+                currentBehavior = { name: match[1], type: 'behavior', linenum: i + 1, scope: [] };
+                if (currentObject) {
+                    currentObject.scope.push(currentBehavior);
+                }
+            }
+        }        
+
         // Method definition
-        if (line.startsWith('this.') && line.includes('=') && (line.includes('function(') || line.includes('function ('))) {
+        else if (line.startsWith('this.') && line.includes('=') && (line.includes('function(') || line.includes('function ('))) {
             const match = line.match(/this\.([\w\.]+\$?)\s*=/);
             if (match) {
                 const item = { name: match[1], type: 'method', linenum: i + 1 };
@@ -164,20 +176,10 @@ async function fileinfo(filePath) {
                 currentModule.scope.push(currentObject);
             }
         } 
-        // Behavior definition
-        else if (line.startsWith('this.') && line.includes('_.behavior(')) {
-            const match = line.match(/this\.(\w+)\s*=/);
-            if (match) {
-                currentBehavior = { name: match[1], type: 'behavior', linenum: i + 1, scope: [] };
-                if (currentObject) {
-                    currentObject.scope.push(currentBehavior);
-                }
-            }
-        }
         // Trait definition
         else if (line.startsWith('this.') && line.includes('=') && line.includes('_.')) {
             const traitMatch = line.match(/this\.([\w\.]+\$?)\s*=\s*_\.(\w+)(\(.*\))?/);
-            if (traitMatch) {
+            if (traitMatch && traitMatch[2] !== 'behavior') {
                 const traitItem = { 
                     name: traitMatch[1], 
                     type: 'trait', 
