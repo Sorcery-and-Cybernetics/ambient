@@ -34,92 +34,92 @@ _.ambient.module("basicmath", function (_) {
     //     return (random() % (ubound - lbound + 1)) + lbound
     // }    
 
-    _.math = {
-        random: function (lbound, ubound) {
-            if (ubound == undefined) {
-                ubound = lbound
-                lbound = 1
-            }
-            return Math.floor(Math.random() * (ubound - lbound + 1)) + lbound
+    _.math = { }
+    _.math.random = function (lbound, ubound) {
+        if (ubound == undefined) {
+            ubound = lbound
+            lbound = 1
         }
+        return Math.floor(Math.random() * (ubound - lbound + 1)) + lbound
+    }
 
-        , round: function (value, decimals) {
+    _.math.round = function (value, decimals) {
             //Thanks to http://www.jacklmoore.com/notes/rounding-in-javascript/
             return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals)
         }
 
-        , roundto: function (value, divider) {
+        _.math.roundto = function (value, divider) {
             return Math.round(value / divider) * divider
         }
 
-        , floorto: function (value, divider) {
+        _.math.floorto = function (value, divider) {
             return Math.floor(value / divider) * divider
         }
 
-        , ceilto: function (value, divider) {
+        _.math.ceilto = function (value, divider) {
             return Math.ceil(value / divider) * divider
         }
 
-        , anchorto: function (value, divider, margin) {
+        _.math.anchorto = function (value, divider, margin) {
             var anchor = Math.round(value / divider) * divider
             return Math.abs(anchor - value) <= margin ? anchor : value
         }
 
-        , hex2: function (dec) {
+        _.math.hex2 = function (dec) {
             var hex = "0123456789ABCDEF"
             return hex.charAt((dec >> 4) & 15) + hex.charAt(dec & 15)
         }
 
-        , perc: function (current, max) {
+        _.math.perc = function (current, max) {
             return max == 0 ? 1 : Math.round(current / max * 100)
         }
 
 
-        , percfrom: function (current, min, max) {
+        _.math.percfrom = function (current, min, max) {
             min = min || 0
             if ((max - min) == 0) { return 0 }
             return ((current - min) / (max - min))
         }
 
-        , percto: function (min, max, perc) {
+        _.math.percto = function (min, max, perc) {
             return ((max - min) * (perc / 100)) + min
         }
 
-        , perctoperc: function (min, max, perc) {
+        _.math.perctoperc = function (min, max, perc) {
             //If max = 0 then result = Infinity
             var value = ((max - min) * (perc / 100)) + min
             value = (value / max)
             return value
         }
 
-        , between: function (value, floor, ceil) {
+        _.math.between = function (value, floor, ceil) {
             return (value >= floor) && (value < ceil) ? true : false
         }
 
-        , inbetween: function (value, floor, ceil) {
+        _.math.inbetween = function (value, floor, ceil) {
             return (value >= floor) && (value <= ceil) ? true : false
         }
 
-        , exbetween: function (value, floor, ceil) {
+        _.math.exbetween = function (value, floor, ceil) {
             return (value > floor) && (value < ceil) ? true : false
         }
 
-        , limitbetween: function (value, floor, ceil) {
+        _.math.limitbetween = function (value, floor, ceil) {
             return (value < floor ? floor : (value > ceil ? ceil : value))
         }
 
-        , limitmin: function (value, floor, ceil) {
+        _.math.limitmin = function (value, floor, ceil) {
             if (value == null) { value = floor }
             return (value < floor ? floor : (value > ceil ? ceil : value))
         }
 
-        , limitmax: function (value, floor, ceil) {
+        _.math.limitmax = function (value, floor, ceil) {
             if (value == null) { value = ceil }
             return (value < floor ? floor : (value > ceil ? ceil : value))
         }
 
 
-        , loopbetween: function (value, floor, ceil) {
+        _.math.loopbetween = function (value, floor, ceil) {
             if (value < floor) {
                 value = ceil
             } else if (value > ceil) {
@@ -128,7 +128,7 @@ _.ambient.module("basicmath", function (_) {
             return value
         }
 
-        , snapdiff: function (value, margin, floor, ceil) {
+        _.math.snapdiff = function (value, margin, floor, ceil) {
             if (value <= floor + margin) {
                 return floor - value
             } else if (value >= ceil - margin) {
@@ -137,57 +137,55 @@ _.ambient.module("basicmath", function (_) {
             return 0
         }
 
-        , snapto: function (value, margin, floor, ceil) {
+        _.math.snapto = function (value, margin, floor, ceil) {
             return value + _.math.snapdiff(value, margin, floor, ceil)
         }
 
-        , log: function (base, value) {
+        _.math.log = function (base, value) {
             return Math.log(value) / Math.log(base || 10)
         }
 
-        , logarithmicchance: function (levelsize, maxlevel) {
+        _.math.logarithmicchance = function (levelsize, maxlevel) {
             var maxsize = Math.pow(levelsize, maxlevel) - 1
             var random = _.math.random(1, maxsize)
             return maxlevel - _.math.floor(_.math.log(levelsize, random))
         }
 
-        , max: Math.max
-        , min: Math.min
+        _.math.max = Math.max
+        _.math.min = Math.min
 
-        , radtodeg: function (radians) {
+        _.math.radtodeg = function (radians) {
             return radians * (180 / Math.PI)
         }
 
-        , degtorad: function (degrees) {
+        _.math.degtorad = function (degrees) {
             return degrees / (180 / Math.PI)
         }
 
-        , sumsq: function (x, y) {
+        _.math.sumsq = function (x, y) {
             return Math.sqrt(x * x + y * y)
         }
 
-        , atan: function (x, y) {
+        _.math.atan = function (x, y) {
             return Math.atan2(y, x)
         }
 
-        , dist: function (c1, c2) {
+        _.math.dist = function (c1, c2) {
             return Math.sqrt(Math.pow(c1.x - c2.x,2) + Math.pow(c1.y - c2.y,2))
         }
 
-        , floor: Math.floor
-        , ceil: Math.ceil
-        , abs: Math.abs
-        , sin: Math.sin
-        , cos: Math.cos
-        , tan: Math.tan
-        , asin: Math.asin
-        , acos: Math.acos
-        , atan2: Math.atan2
-        , sqrt: Math.sqrt
-        , pow: Math.pow
-        , exp: Math.exp
-    }
-
+        _.math.floor = Math.floor
+        _.math.ceil = Math.ceil
+        _.math.abs = Math.abs
+        _.math.sin = Math.sin
+        _.math.cos = Math.cos
+        _.math.tan = Math.tan
+        _.math.asin = Math.asin
+        _.math.acos = Math.acos
+        _.math.atan2 = Math.atan2
+        _.math.sqrt = Math.sqrt
+        _.math.pow = Math.pow
+        _.math.exp = Math.exp
 })
 .onload(function(_) {
     // _.debug("Log chance")

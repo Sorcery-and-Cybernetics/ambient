@@ -150,185 +150,180 @@ _.ambient.module("basicarray", function (_) {
         return found < 0 ? -low - 1 : found
     }
 
-    _.array = {
-        length: function (ar) {
-            if (_.isarray(ar)) {
-                return ar.length
-            }
-            return 0
+    _.array = {}
+
+    _.array.length = function (ar) {
+        if (_.isarray(ar)) {
+            return ar.length
         }
+        return 0
+    }
 
-        , insert: function (items, index, item, ordered) {
-            index = index || items.length + 1
+    _.array.insert = function (items, index, item, ordered) {
+        index = index || items.length + 1
 
-            if (_.isarray(item)) {
-                items.splice.apply(items, [index, 0].concat(item))
-            } else {
-                items.splice(index - 1, 0, item)
-            }
-
+        if (_.isarray(item)) {
+            items.splice.apply(items, [index, 0].concat(item))
+        } else {
+            items.splice(index - 1, 0, item)
             if (ordered) {
                 _.array.reindex(items, index)
             }
             return items
-
         }
+    }
 
-        , remove: function (items, index, ordered) {
-            index = index || items.length
-            if (!index) { return }
+    _.array.remove = function (items, index, ordered) {
+        index = index || items.length
+        if (!index) { return }
 
-            var item = items.splice(index - 1, 1)
+        var item = items.splice(index - 1, 1)
 
-            //            if (item && item[0].orderindex !== undefined) {
-            if (ordered) {
-                _.array.reindex(items, index)
-            }
+        //            if (item && item[0].orderindex !== undefined) {
+        if (ordered) {
+            _.array.reindex(items, index)
         }
+    }
 
-        , intersect: function (array1, array2) {
-            if (array1 == null || array2 == null) {
-                return null
-            }
-            if (array1.length == 0 || array2.length == 0) {
-                return []
-            }
-            return array1.filter(function (item) {
-                return array2.indexOf(item) !== -1
-            })
+    _.array.intersect = function (array1, array2) {
+        if (array1 == null || array2 == null) {
+            return null
         }
-
-        , reindex: function (items, index) {
-            if (!items) { return }
-
-            for (; index <= items.length; index++) {
-                items[index - 1].orderindex = index
-            }
+        if (array1.length == 0 || array2.length == 0) {
+            return []
         }
+        return array1.filter(function (item) {
+            return array2.indexOf(item) !== -1
+        })
+    }
 
-        , changeindex: function (items, index, newindex) {
-            newindex = newindex || items.length + 1
-            var lowest = Math.min(index, newindex)
+    _.array.reindex = function (items, index) {
+        if (!items) { return }
 
-            var item = items.splice(index - 1, 1)
-            items.splice(newindex - 1, 0, item[0])
-
-            this.reindex(items, lowest)
+        for (; index <= items.length; index++) {
+            items[index - 1].orderindex = index
         }
+    }
 
-        , tojson: function (ar, key) {
-            var result = {}
+    _.array.changeindex = function (items, index, newindex) {
+        newindex = newindex || items.length + 1
+        var lowest = Math.min(index, newindex)
 
-            _.foreach(ar, function (item) {
-                result[item[key]] = item
-            })
-            return result
-        }
+        var item = items.splice(index - 1, 1)
+        items.splice(newindex - 1, 0, item[0])
 
-        , todict: function (ar) {
-            var result = {}
+        this.reindex(items, lowest)
+    }
 
-            _.foreach(ar, function (item, index) {
-                result[item] = index + 1
-            })
-            return result
-        }
+    _.array.tojson = function (ar, key) {
+        var result = {}
 
-        , pluck: function (list, key) {
-            var result = []
+        _.foreach(ar, function (item) {
+            result[item[key]] = item
+        })
+        return result
+    }
 
-            _.foreach(list, function (item) {
-                if (item) {
-                    item = item[key]
-                    if (item != null) {
-                        result.push(item)
-                    }
-                    //if (!_.isemptyobject(item)) {
-                    //    result.push(item)
-                    //}
+    _.array.todict = function (ar) {
+        var result = {}
+
+        _.foreach(ar, function (item, index) {
+            result[item] = index + 1
+        })
+        return result
+    }
+
+    _.array.pluck = function (list, key) {
+        var result = []
+
+        _.foreach(list, function (item) {
+            if (item) {
+                item = item[key]
+                if (item != null) {
+                    result.push(item)
                 }
-            })
-            return result
-        }
-
-        , fill: function (ar, posstart, posend, valuestart, valueend, formula) {
-            var length = ar.length
-
-            posstart = posstart || 0
-            posend = posend == null ? length - 1 : posend
-
-            if (valueend == null) { valueend = valuestart }
-
-            var count = posend - posstart + 1
-
-            if (count) {
-                var diff = (valueend - valuestart) / (count - 1)
-                var value = valuestart
-
-                for (var index = posstart; index < posend; index++) {
-                    ar[index] = formula? formula(value): value
-                    value += diff
-                }
-
-                ar[posend] = formula ? formula(valueend) : valueend
             }
-            return ar
-        }
+        })
+        return result
+    }
 
-        , startswith: function (ar1, ar2) {
-            var len = ar1.length
-            var result = true
-            var i = 0
+    _.array.fill = function (ar, posstart, posend, valuestart, valueend, formula) {
+        var length = ar.length
 
-            while (result && i < len) { 
-                result = ar1[i] == ar2[i]
-                i++
-            }
-            return result
-        }
+        posstart = posstart || 0
+        posend = posend == null ? length - 1 : posend
 
-        , sort: function (ar, keyfn) {
-            if (!ar) {
-                return
-            }
-            if (!keyfn) {
-                keyfn = function (a) { return a }
-            }
-            ar.sort(function (a, b) {
-                var keya = keyfn(a)
-                var keyb = keyfn(b)
+        if (valueend == null) { valueend = valuestart }
 
-                if (keya == keyb) { return 0; }
-                if (keya > keyb) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            })
-        }
+        var count = posend - posstart + 1
 
-        , swap: function (ar, posa, posb) {
-            var mem = ar[posa]
-            ar[posa] = ar[posb]
-            ar[posb] = mem
+        if (count) {
+            var diff = (valueend - valuestart) / (count - 1)
+            var value = valuestart
 
-            return ar
-        }
-
-        , shuffle: function (ar, lbound, ubound) {
-            lbound = lbound || 0
-            ubound = Math.min(ar.length - lbound - 1, (ubound || ar.length))
-
-            var result = ar.slice()
-
-            for (var index = lbound; index <= ubound; index++) {
-                var swappos = _.math.random(lbound, ubound)
-                _.array.swap(result, index, swappos)
-                
+            for (var index = posstart; index < posend; index++) {
+                ar[index] = formula? formula(value): value
+                value += diff
             }
 
-            return result
+            ar[posend] = formula ? formula(valueend) : valueend
         }
+        return ar
+    }
+
+    _.array.startswith = function (ar1, ar2) {
+        var len = ar1.length
+        var result = true
+        var i = 0
+
+        while (result && i < len) { 
+            result = ar1[i] == ar2[i]
+            i++
+        }
+        return result
+    }
+
+    _.array.sort = function (ar, keyfn) {
+        if (!ar) {
+            return
+        }
+        if (!keyfn) {
+            keyfn = function (a) { return a }
+        }
+        ar.sort(function (a, b) {
+            var keya = keyfn(a)
+            var keyb = keyfn(b)
+
+            if (keya == keyb) { return 0; }
+            if (keya > keyb) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        })
+    }
+
+    _.array.swap = function (ar, posa, posb) {
+        var mem = ar[posa]
+        ar[posa] = ar[posb]
+        ar[posb] = mem
+
+        return ar
+    }
+
+    _.array.shuffle = function (ar, lbound, ubound) {
+        lbound = lbound || 0
+        ubound = Math.min(ar.length - lbound - 1, (ubound || ar.length))
+
+        var result = ar.slice()
+
+        for (var index = lbound; index <= ubound; index++) {
+            var swappos = _.math.random(lbound, ubound)
+            _.array.swap(result, index, swappos)
+            
+        }
+
+        return result
     }
 })
