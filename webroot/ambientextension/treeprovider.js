@@ -15,14 +15,18 @@ class FileHistoryProvider {
     }
 
     addFile(filePath) {
-        if (!filePath.startsWith("webroot/")) return; // Only allow paths starting with "webroot/"
+        const webrootIndex = filePath.indexOf("webroot\\");
+        if (webrootIndex === -1) return; // Invalid file if "webroot/" is not in the path
     
-        filePath = filePath.slice(8); // Remove "webroot/" prefix
+        const truncatedPath = filePath.slice(webrootIndex + 8); // Strip filepath before and including "webroot/"
     
-        const index = this.fileHistory.indexOf(filePath);
+        const index = this.fileHistory.findIndex(item => item.full === filePath);
         if (index !== -1) this.fileHistory.splice(index, 1); // Remove existing entry
     
-        this.fileHistory.unshift(filePath); // Add to the top
+        this.fileHistory.unshift({
+            truncated: truncatedPath,
+            full: filePath
+        }); // Add to the top
     
         if (this.fileHistory.length > this.MAX_HISTORY) this.fileHistory.pop(); // Maintain max history size
     
@@ -43,8 +47,8 @@ class FileHistoryProvider {
 
     getChildren() {
         return this.fileHistory.map(file => ({
-            label: vscode.workspace.asRelativePath(file),
-            tooltip: file
+            label: file.truncated,
+            tooltip: file.full
         }));
     }
 }    
@@ -67,98 +71,72 @@ class MethodTreeProvider {
     }
 
     getTreeItem(element) {
-        return element
+        return element;
     }
 
     async getChildren(element) {
         if (!this.activeFile) return [];
 
         if (!element) {
-            return await this.getClassAndMethods(this.activeFile);
-        } else if (element instanceof JsClassItem) {
-            return element.methods.map(method => new JsMethodItem(method, element.filePath));
-        } else {
-            return [];
+            const fileData = await fileinfo(this.activeFile);
+            if (!fileData || !Array.isArray(fileData)) return [];
+            
+            // Skip the module level and directly return its scope
+            const moduleScope = fileData[0]?.scope || [];
+            return moduleScope.map(item => new TreeItem(item, this.activeFile));
+        } else if (element.data.scope) {
+            return element.data.scope.map(item => new TreeItem(item, this.activeFile));
         }
-    }    
-
-    async getClassAndMethods(filePath) {
-        try {
-            const fileData = await fileinfo(filePath);  // Await if async
-            if (!Array.isArray(fileData)) { return []; }
-            var result = fileData.map(classItem => new JsClassItem(classItem, filePath))
-            return result
-
-        } catch (error) {
-            console.error("Error getting class and methods:", error);
-            return [];
-        }
-    }    
+        
+        return [];
+    }
 }
 
+class TreeItem extends vscode.TreeItem {
+    constructor(data, filePath) {
+        super(
+            data.name,
+            data.scope ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None
+        );
 
-    // getChildren(element) {
-    //     // if (!element) {
-    //     //     // Return only JavaScript files from the workspace
-    //     //     return vscode.workspace.findFiles("**/*.js").then(files => 
-    //     //         files.map(file => new JsFileItem(file))
-    //     //     );
-    //     // } else if (element instanceof JsFileItem) {
-    //     //     // Extract class and method info from the file
-    //     //     return this.getClassAndMethods(element.resourceUri.fsPath);
-    //     // } else if (element.type === "class") {
-    //     //     // Show methods under a class
-    //     //     return element.methods.map(method => new JsMethodItem(method, element.filePath));
-    //     // }
-    //     // return [];
-    // }  
-    
-    
-    // getTreeItem(element) {
-    //     let treeItem = new vscode.TreeItem(element.name);
-    //     treeItem.collapsibleState = element.methods ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None;
-    //     if (element.linenum) {
-    //         treeItem.command = {
-    //             command: "ambientextension.gotoLine",
-    //             title: "Go to Line",
-    //             arguments: [element.linenum]
-    //         };
-    //     }
-    //     return treeItem;
-    // }
+        this.data = data;
+        this.filePath = filePath;
+        
+        // Set icon based on type
+        switch (data.type) {
+            case 'object':
+                this.iconPath = new vscode.ThemeIcon('symbol-class');
+                break;
+            case 'method':
+                this.iconPath = new vscode.ThemeIcon('symbol-method');
+                break;
+            case 'trait':
+                this.iconPath = new vscode.ThemeIcon('symbol-property');
+                break;
+            case 'behavior':
+                this.iconPath = new vscode.ThemeIcon('symbol-namespace');
+                break;
+            case 'function':
+                this.iconPath = new vscode.ThemeIcon('symbol-function');
+                break;
+            case 'enum':
+                this.iconPath = new vscode.ThemeIcon('symbol-enum');
+                break;
+            case 'eventhandler':
+                this.iconPath = new vscode.ThemeIcon('symbol-event');
+                break;
+            
+        }
 
+        // Add line number navigation command
+        if (data.linenum) {
+            this.command = {
+                command: 'ambientextension.gotoLine',
+                title: 'Go to Line',
+                arguments: [data.linenum]
+            };
+        }
+    }
+}
 
 module.exports = { FileHistoryProvider, MethodTreeProvider };
-
-
-
-
-// Class node
-class JsClassItem extends vscode.TreeItem {
-    constructor(classData, filePath) {
-        super(classData.name, vscode.TreeItemCollapsibleState.Expanded);
-        this.filePath = filePath;
-        this.type = "class";
-        this.methods = classData.methods;
-        this.command = {
-            command: "ambientextension.gotoLine",
-            title: "Go to Line",
-            arguments: [classData.linenum]
-        };
-    }
-}
-
-// Method node
-class JsMethodItem extends vscode.TreeItem {
-    constructor(method, filePath) {
-        super(method.name, vscode.TreeItemCollapsibleState.None);
-        this.filePath = filePath;
-        this.command = {
-            command: "ambientextension.gotoLine",
-            title: "Go to Line",
-            arguments: [method.linenum]
-        };
-    }
-}
-
-// module.exports = TreeProvider;

@@ -163,7 +163,7 @@ var buffer = require('buffer');
         this.onerror = _.make.core.basicsignal()
     })
 
-    _.http = {        
+    _.core.http = {        
         "get": function (url, params, next) {
             return _.make.core.httprequest("get", url, params, null, next)
         }
