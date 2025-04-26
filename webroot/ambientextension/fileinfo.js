@@ -189,6 +189,8 @@ async function fileinfo(filePath) {
                     traitItem.type = 'enum';
                 } else if (traitMatch[2] === 'make' && line.includes('_.make.core.basicsignal')) {
                     traitItem.type = 'eventhandler';
+                } else if (traitMatch[2] === 'make' && line.includes('_.make.core.signal')) {
+                    traitItem.type = 'eventhandler';
                 }
 
                 if (currentBehavior) {
