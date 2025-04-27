@@ -4,8 +4,8 @@
 _.ambient.module("linkedlistnode", function (_) {
 
     _.define.core.object("core.linkedlistnode", function (supermodel) {
-        this.__nextnode = null;
-        this.__prevnode = null;
+        this.__nodenext = null;
+        this.__nodeprev = null;
 
         this.__list = null;
         this._value = null;
@@ -45,13 +45,13 @@ _.ambient.module("linkedlistnode", function (_) {
 
                 while (index) {
                     if (index < 0) {
-                        cursor = cursor.__prevnode;
+                        cursor = cursor.__nodeprev;
                         if (cursor == list) { break; }
                         index += 1;
 
                     } else {
-                        if (cursor.__nextnode == list) { break; }
-                        cursor = cursor.__nextnode;
+                        if (cursor.__nodenext == list) { break; }
+                        cursor = cursor.__nodenext;
                         index -= 1;
                     }
                 }
@@ -59,11 +59,11 @@ _.ambient.module("linkedlistnode", function (_) {
                 this.__list = list;
                 list.__count += 1;
 
-                this.__prevnode = cursor;
-                this.__nextnode = cursor.__nextnode;
+                this.__nodeprev = cursor;
+                this.__nodenext = cursor.__nodenext;
 
-                this.__prevnode.__nextnode = this;
-                this.__nextnode.__prevnode = this;
+                this.__nodeprev.__nodenext = this;
+                this.__nodenext.__nodeprev = this;
 
                 return this;
             };
@@ -73,12 +73,12 @@ _.ambient.module("linkedlistnode", function (_) {
                     this.__list.__count -= 1;
                 }
     
-                if (this.__nextnode) { this.__nextnode.__prevnode = this.__prevnode; }
-                if (this.__prevnode) { this.__prevnode.__nextnode = this.__nextnode; }
+                if (this.__nodenext) { this.__nodenext.__nodeprev = this.__nodeprev; }
+                if (this.__nodeprev) { this.__nodeprev.__nodenext = this.__nodenext; }
     
                 this.__list = null;
-                this.__nextnode = null;
-                this.__prevnode = null;
+                this.__nodenext = null;
+                this.__nodeprev = null;
             };
     
             this.calcsegment = function() {
@@ -92,12 +92,12 @@ _.ambient.module("linkedlistnode", function (_) {
         });
 
         this.navigationbehavior = _.behavior(function() {
-            this.nextnode = function () {
-                return !this.__nextnode || (this.__nextnode == this.__list ? null : this.__nextnode);
+            this.nodenext = function () {
+                return !this.__nodenext || (this.__nodenext == this.__list ? null : this.__nodenext);
             };
 
-            this.prevnode = function () {
-                return !this.__prevnode || (this.__prevnode == this.__list ? null : this.__prevnode);
+            this.nodeprev = function () {
+                return !this.__nodeprev || (this.__nodeprev == this.__list ? null : this.__nodeprev);
             };
         });
 

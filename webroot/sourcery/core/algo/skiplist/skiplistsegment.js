@@ -175,10 +175,10 @@ _.ambient.module("skiplistsegment", function (_) {
 
             this.valueinsegment = function(search) {
                 var currentnode = this.__base
-                var nextnode = this.segmentnext().__base
-                if (nextnode.isroot()) { nextnode = nextnode.__prevnode }
+                var nodenext = this.segmentnext().__base
+                if (nodenext.isroot()) { nodenext = nodenext.__nodeprev }
 
-                if (search < currentnode.value() || search > nextnode.value()) { return false }
+                if (search < currentnode.value() || search > nodenext.value()) { return false }
                 return true;
             }
 

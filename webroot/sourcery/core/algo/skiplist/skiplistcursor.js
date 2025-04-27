@@ -36,7 +36,7 @@ _.ambient.module("skiplistcursor", function (_) {
             this.movenext = function() {
                 if (this.eof()) { return false; }
     
-                var cursor = this._current.__nextnode.__segmentdown;
+                var cursor = this._current.__nodenext.__segmentdown;
     
                 while (!this.eof()) {
                     if (cursor instanceof _.model.listsegment) {
@@ -54,7 +54,7 @@ _.ambient.module("skiplistcursor", function (_) {
                             this._current = cursor;
                             return true;
                         } else {
-                            cursor = cursor.__nextnode;
+                            cursor = cursor.__nodenext;
                             if (cursor.__segmentdown) {
                                 cursor = cursor.__segmentdown;
                             }

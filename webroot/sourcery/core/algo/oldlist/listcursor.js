@@ -23,12 +23,12 @@ _.ambient.module("listcursor", function (_) {
              }
 
             , movenext: function() { 
-                this._currentnode = this._currentnode? this._currentnode.__nextnode: null
+                this._currentnode = this._currentnode? this._currentnode.__nodenext: null
                 return !this.eof() 
             }
 
             , moveprev: function() { 
-                this._currentnode = this._currentnode? this._currentnode.__prevnode: null
+                this._currentnode = this._currentnode? this._currentnode.__nodeprev: null
                 return !this.eof()
             }
 

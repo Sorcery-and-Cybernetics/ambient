@@ -14,8 +14,8 @@ _.ambient.module("skiplist", function(_) {
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function() {
-                this.__nextnode = this;
-                this.__prevnode = this;
+                this.__nodenext = this;
+                this.__nodeprev = this;
 
                 this.__upsegment = _.make.core.skiplistsegment(this, this.__segmentlevel);
             };
@@ -67,11 +67,11 @@ _.ambient.module("skiplist", function(_) {
             this.level = function() { return 1; };
 
             this.segmentnext = function () {
-                return this.__nextnode;
+                return this.__nodenext;
             };
             
             this.segmentprev = function () { 
-                return this.__prevnode;
+                return this.__nodeprev;
             };
 
             this.segmentdown = function () { 
@@ -115,7 +115,7 @@ _.ambient.module("skiplist", function(_) {
                     var result = cursor.debugvalidate();
 
                     if (result) { errors.concat(result); }
-                    cursor = cursor.nextnode();
+                    cursor = cursor.nodenext();
                 }
 
                 var segment = this.__upsegment;

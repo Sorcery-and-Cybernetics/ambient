@@ -3,6 +3,12 @@
 //*************************************************************************************************
 _.ambient.module("skiplistnode", function(_) {    
     _.define.core.linkedlistnode("core.skiplistnode", function (supermodel) {
+        this.__nodenext = null;
+        this.__nodeprev = null;
+
+        this.__list = null;
+        this._value = null;
+
         this.__upsegment = null;
         this.__topsegment = null;            
         this.__level = 1;
@@ -10,11 +16,6 @@ _.ambient.module("skiplistnode", function(_) {
         this.constructbehavior = _.behavior(function() {
             this.construct = function(value) {
                 this._value = value;
-            };
-
-            this.destroy = function () {
-                this.unlink();
-                return null;
             };
 
             this.assign = function(cursor, index) {
@@ -44,20 +45,26 @@ _.ambient.module("skiplistnode", function(_) {
                 this.__topsegment = null;
                 if (this.__upsegment) { this.__upsegment.unlink(); }
                 
-                var prevnode = this.__prevnode;
+                var nodeprev = this.__nodeprev;
                 supermodel.unlink.call(this);
-                prevnode.segmentleftup().calcsegment(false, true);
+                nodeprev.segmentleftup().calcsegment(false, true);
             };
 
+            this.destroy = function () {
+                this.unlink();
+                return null;
+            };            
+        });
+
+        this.modelbehavior = _.behavior(function() {
             this.orderindex = function(relativenode) {
                 if (this.isroot()) { return 0; }
                 if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
 
                 if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
-                return this.__prevnode instanceof _.make.core.skiplist? 1: this.__prevnode.orderindex() + 1;
+                return this.__nodeprev instanceof _.make.core.skiplist? 1: this.__nodeprev.orderindex() + 1;
             };
         });
-
 
         this.navigationbehavior = _.behavior(function() {
             this.isroot = function () { return false; };
@@ -66,11 +73,11 @@ _.ambient.module("skiplistnode", function(_) {
             this.level = function() { return 1; };
 
             this.segmentnext = function () {
-                return this.__nextnode;
+                return this.__nodenext;
             };
             
             this.segmentprev = function () { 
-                return this.__prevnode;
+                return this.__nodeprev;
             };
 
             this.segmentdown = function () { 
@@ -85,7 +92,7 @@ _.ambient.module("skiplistnode", function(_) {
 
                 while (cursor) {
                     if (cursor.__upsegment) { return cursor.__upsegment; }
-                    cursor = cursor.__prevnode;
+                    cursor = cursor.__nodeprev;
                 }
             };
             

@@ -5,8 +5,8 @@ _.ambient.module("listnode", function (_) {
 
     _.define.core.object("listnode", function (supermodel) {
         return {
-            __nextnode: null
-            , __prevnode: null
+            __nodenext: null
+            , __nodeprev: null
             , __segmentup: null
             , __segmentdown: null
             , __isrootnode: false
@@ -44,12 +44,12 @@ _.ambient.module("listnode", function (_) {
                 _.helper.list.insertnodebefore(this.__list, node, this)
             }
 
-            , nextnode: function () {
-                return !this.__nextnode || this.__nextnode.isroot ? null : this.__nextnode 
+            , nodenext: function () {
+                return !this.__nodenext || this.__nodenext.isroot ? null : this.__nodenext 
             }
 
-            , prevnode: function () {
-                return !this.__prevnode || this.__prevnode.isroot ? null : this.__prevnode
+            , nodeprev: function () {
+                return !this.__nodeprev || this.__nodeprev.isroot ? null : this.__nodeprev
             }
 
             , destroy: function () {
