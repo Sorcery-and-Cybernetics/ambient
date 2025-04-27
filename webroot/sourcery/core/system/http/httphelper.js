@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// httphelper - Copyright (c) 2024 SAC. All rights reserved.
+// httphelper - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httphelper").source(function (_) {
     _.define.helper("http", function() {

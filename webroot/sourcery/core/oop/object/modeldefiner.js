@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// modeldefiner - Copyright (c) 2024 SAC. All rights reserved.
+// modeldefiner - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("modeldefiner", function (_) {
     var definer = function() {}

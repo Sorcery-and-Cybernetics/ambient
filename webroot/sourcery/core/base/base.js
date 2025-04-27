@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// base - Copyright (c) 2024 SAC. All rights reserved.
+// base - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("base", function (_) {
     // Reserved collections

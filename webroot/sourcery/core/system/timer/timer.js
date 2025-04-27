@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// Timer - Copyright (c) 2024 SAC. All rights reserved.
+// Timer - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("timer", function(_) {  
     _.define.core.globalobject("core.timer", function (supermodel) {

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicstring - Copyright (c) 2024 SAC. All rights reserved.
+// basicstring - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicstring", function (_) {
     _.asc = function (str) {

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// skiplist - Copyright (c) 2024 SAC. All rights reserved.
+// skiplist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("skiplist", function(_) {    
     _.define.core.linkedlist("core.skiplist", function (supermodel) {
@@ -19,31 +19,8 @@ _.ambient.module("skiplist", function(_) {
 
                 this.__upsegment = _.make.core.skiplistsegment(this, this.__segmentlevel);
             };
-        });
 
-        this.skiplistnavigationbehavior = _.behavior(function() {
-            this.isroot = function () { return true; };
-            this.base = function () { return this; };
-            this.segmenttop = function () { return this.__topsegment; };
 
-            this.segmentnext = function () {
-                return this.__nextnode;
-            };
-            
-            this.segmentprev = function () { 
-                return this.__prevnode;
-            };
-
-            this.segmentdown = function () { 
-                return null;
-            };
-
-            this.segmentup = function () { 
-                return this.__upsegment || undefined;
-            };
-        });
-
-        this.skiplistbehavior = _.behavior(function() {
             this.__makenode = function(item) {
                 if (item instanceof _.make.skiplistnode) { return item; } 
                 return _.make.linkedlistnode(item);
@@ -90,7 +67,30 @@ _.ambient.module("skiplist", function(_) {
                 return this.segmenttop().findnode(search, relativeindex);
             };
         });   
-        
+
+
+        this.navigationbehavior = _.behavior(function() {
+            this.isroot = function () { return true; };
+            this.base = function () { return this; };
+            this.segmenttop = function () { return this.__topsegment; };
+
+            this.segmentnext = function () {
+                return this.__nextnode;
+            };
+            
+            this.segmentprev = function () { 
+                return this.__prevnode;
+            };
+
+            this.segmentdown = function () { 
+                return null;
+            };
+
+            this.segmentup = function () { 
+                return this.__upsegment || undefined;
+            };
+        });
+      
         this.debugbehavior = _.behavior(function() {
             this.debugout = function () {
                 var result = [];

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// aliasnode - Copyright (c) 2024 SAC. All rights reserved.
+// aliasnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 
 _.ambient.module("aliasnode", function(_) {    

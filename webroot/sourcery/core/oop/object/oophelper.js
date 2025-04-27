@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// oophelper - Copyright (c) 2024 SAC. All rights reserved.
+// oophelper - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("oophelper", function (_) {
     _.define.helper("oop", function() {

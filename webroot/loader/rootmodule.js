@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// rootmodule - Copyright (c) 2024 SAC. All rights reserved.
+// rootmodule - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
     _.define.object("rootmodule", function () {

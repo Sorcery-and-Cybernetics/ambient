@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// listcursor - Copyright (c) 2024 SAC. All rights reserved.
+// listcursor - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("listcursor", function (_) {
     

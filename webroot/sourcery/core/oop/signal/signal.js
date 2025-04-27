@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// signal - Copyright (c) 2024 SAC. All rights reserved.
+// signal - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("signal", function (_) {
     _.define.defextender("core.signal", function(supermodel) {

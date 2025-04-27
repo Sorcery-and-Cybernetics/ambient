@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicpath - Copyright (c) 2024 SAC. All rights reserved.
+// basicpath - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicpath", function (_) {
     _.path = _.path || {}

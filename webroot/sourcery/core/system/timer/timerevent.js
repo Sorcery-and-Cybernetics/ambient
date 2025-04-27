@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// Timerevent - Copyright (c) 2024 SAC. All rights reserved.
+// Timerevent - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("timerevent", function(_) {    
     var toms = function (time) {

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// loader - Copyright (c) 2024 SAC. All rights reserved.
+// loader - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 
 if (typeof global == "undefined") {

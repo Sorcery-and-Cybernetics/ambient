@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// httpresponse - Copyright (c) 2024 SAC. All rights reserved.
+// httpresponse - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httpresponse", function (_) {
 //todo: cannot send byte data, because of json arrays

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// treesortlist - Copyright (c) 2024 SAC. All rights reserved.
+// treesortlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("treesortlist", function (_) {
     _.define.core.treebaselist("core.treesortlist", function () {

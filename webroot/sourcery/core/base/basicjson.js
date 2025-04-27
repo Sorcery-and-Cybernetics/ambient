@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicjson - Copyright (c) 2024 SAC. All rights reserved.
+// basicjson - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicjson").source(function (_) {
         _.json = { }

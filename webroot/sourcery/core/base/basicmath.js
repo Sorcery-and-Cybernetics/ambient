@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicmath - Copyright (c) 2024 SAC. All rights reserved.
+// basicmath - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicmath", function (_) {
     var rnd = null

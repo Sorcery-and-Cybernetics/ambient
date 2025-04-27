@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// linkedlist - Copyright (c) 2024 SAC. All rights reserved.
+// linkedlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("linkedlist", function(_) {    
     _.define.core.object("core.linkedlist", function (supermodel) {

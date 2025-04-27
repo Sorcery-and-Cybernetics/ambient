@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// loaderroot - Copyright (c) 2024 SAC. All rights reserved.
+// loaderroot - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 var loaderpath = "./" 
 

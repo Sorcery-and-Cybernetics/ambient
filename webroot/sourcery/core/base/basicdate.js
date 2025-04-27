@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicdate - Copyright (c) 2024 SAC. All rights reserved.
+// basicdate - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicdate", function (_) {
     _.helper.date = {

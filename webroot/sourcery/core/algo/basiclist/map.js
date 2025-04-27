@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// map - Copyright (c) 2024 SAC. All rights reserved.
+// map - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("map", function(_) { 
     _.define.core.object("core.map", function (supermodel) {

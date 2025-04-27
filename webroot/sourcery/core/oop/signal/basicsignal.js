@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicsignal - Copyright (c) 2024 SAC. All rights reserved.
+// basicsignal - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicsignal", function (_) {
     _.define.defextender("core.basicsignal", function(supermodel) {

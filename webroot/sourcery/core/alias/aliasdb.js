@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// aliasdb - Copyright (c) 2024 SAC. All rights reserved.
+// aliasdb - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 
 _.ambient.module("aliasdb", function(_) {    

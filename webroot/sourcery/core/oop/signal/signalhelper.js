@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// signalhelper - Copyright (c) 2024 SAC. All rights reserved.
+// signalhelper - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("signalhelper", function (_) {
     _.define.helper("core.signal", function() {

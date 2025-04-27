@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// basicdebug - Copyright (c) 2024 SAC. All rights reserved.
+// basicdebug - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicdebug", function (_) {
     _.debug = function (text) {

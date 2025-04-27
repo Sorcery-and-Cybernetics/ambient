@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// skiplistsegmentlevel - Copyright (c) 2024 SAC. All rights reserved.
+// skiplistsegmentlevel - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("skiplistsegment", function (_) {
     _.define.core.object("core.skiplistsegment", function (supermodel) {

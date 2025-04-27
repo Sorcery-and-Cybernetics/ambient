@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// world - Copyright (c) 2024 SAC. All rights reserved.
+// world - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
     _.define.object("world", function () {

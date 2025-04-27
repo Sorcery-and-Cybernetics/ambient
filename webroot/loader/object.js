@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// object - Copyright (c) 2024 SAC. All rights reserved.
+// object - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
     _.define = _.define || {}

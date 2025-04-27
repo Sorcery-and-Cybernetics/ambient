@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// signaldata - Copyright (c) 2024 SAC. All rights reserved.
+// signaldata - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("signaldata", function(_) {    
     _.define.core.object("core.signaldatanode", function (supermodel) {

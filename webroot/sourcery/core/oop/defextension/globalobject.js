@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// globalobject - Copyright (c) 2024 SAC. All rights reserved.
+// globalobject - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("globalobject", function (_) {
     _.define.core.object("core.globalobject")

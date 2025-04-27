@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// stacklist - Copyright (c) 2024 SAC. All rights reserved.
+// stacklist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("stacklist", function (_) {
     _.define.core.linkedlist("core.stacklist", function (supermodel) {

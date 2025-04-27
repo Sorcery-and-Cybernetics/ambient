@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// httpserver - Copyright (c) 2024 SAC. All rights reserved.
+// httpserver - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httpserver", function (_) {
     var http = require('http')

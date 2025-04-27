@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// helper - Copyright (c) 2024 SAC. All rights reserved.
+// helper - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("helper").source(function (_) {
     _.define.helper = function(name, source) {

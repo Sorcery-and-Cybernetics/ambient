@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// behavior - Copyright (c) 2024 SAC. All rights reserved.
+// behavior - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("behavior", function (_) {
     _.behavior = function (proto) {

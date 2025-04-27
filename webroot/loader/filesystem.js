@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// filesystem - Copyright (c) 2024 SAC. All rights reserved.
+// filesystem - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
     var fs = require("fs")

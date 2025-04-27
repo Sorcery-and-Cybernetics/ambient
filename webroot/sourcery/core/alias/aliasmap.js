@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// aliasmap - Copyright (c) 2024 SAC. All rights reserved.
+// aliasmap - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("map", function(_) { 
     _.define.core.map("alias.map", function (supermodel) {

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// httprequest - Copyright (c) 2024 SAC. All rights reserved.
+// httprequest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httprequest", function (_) {
 

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// httptest - Copyright (c) 2024 SAC. All rights reserved.
+// httptest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httptest")
 .onload(function (_) {

@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// config - Copyright (c) 2024 SAC. All rights reserved.
+// config - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
     _.loadconfig = function (startconfig) {
