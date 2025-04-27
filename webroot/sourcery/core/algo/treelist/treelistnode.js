@@ -319,39 +319,39 @@ _.ambient.module("treelistnode", function (_) {
             // if (this._evolution == _.enum.evolution.destroy) { return null; }
             // this._evolution = _.enum.evolution.destroy;
 
-            var lastnode = null;
+            var nodelast = null;
 
             if (this._leftnode && this._rightnode) {
-                var lastnode = this.next();
-                lastnode._topnode.updatecount(-1);
+                var nodelast = this.next();
+                nodelast._topnode.updatecount(-1);
 
-                lastnode._leftnode = this._leftnode;
-                this._leftnode._topnode = lastnode;
+                nodelast._leftnode = this._leftnode;
+                this._leftnode._topnode = nodelast;
 
-                if (this._rightnode != lastnode) {
-                    if (lastnode._rightnode) {
-                        lastnode._topnode._leftnode = lastnode._rightnode;
-                        lastnode._rightnode._topnode = lastnode._topnode;
+                if (this._rightnode != nodelast) {
+                    if (nodelast._rightnode) {
+                        nodelast._topnode._leftnode = nodelast._rightnode;
+                        nodelast._rightnode._topnode = nodelast._topnode;
                     } else {
-                        lastnode._topnode._leftnode = null;
+                        nodelast._topnode._leftnode = null;
                     }
 
-                    lastnode._rightnode = this._rightnode;
-                    this._rightnode._topnode = lastnode;
+                    nodelast._rightnode = this._rightnode;
+                    this._rightnode._topnode = nodelast;
                 }
 
-                lastnode._count = this._count;
+                nodelast._count = this._count;
 
                 if (!this._topnode) {
-                    this._list._rootnode = lastnode;
-                    lastnode._topnode = null;
+                    this._list._rootnode = nodelast;
+                    nodelast._topnode = null;
                 } else {
-                    lastnode._topnode = this._topnode;
+                    nodelast._topnode = this._topnode;
 
                     if (this.ishangingleft()) {
-                        this._topnode._leftnode = lastnode;
+                        this._topnode._leftnode = nodelast;
                     } else {
-                        this._topnode._rightnode = lastnode;
+                        this._topnode._rightnode = nodelast;
                     }
                 }
 
@@ -361,28 +361,28 @@ _.ambient.module("treelistnode", function (_) {
                 }
 
                 if (this._leftnode) {
-                    var lastnode = this._leftnode;
+                    var nodelast = this._leftnode;
                 } else if (this._rightnode) {
-                    var lastnode = this._rightnode;
+                    var nodelast = this._rightnode;
                 } else {
-                    lastnode = null;
+                    nodelast = null;
                 }
 
                 if (!this._topnode) {
-                    this._list._rootnode = lastnode;
-                    if (lastnode) {
-                        lastnode._topnode = null;
+                    this._list._rootnode = nodelast;
+                    if (nodelast) {
+                        nodelast._topnode = null;
                     }
 
                 } else {
-                    if (lastnode) {
-                        lastnode._topnode = this._topnode;
+                    if (nodelast) {
+                        nodelast._topnode = this._topnode;
                     }
 
                     if (this.ishangingleft()) {
-                        this._topnode._leftnode = lastnode;
+                        this._topnode._leftnode = nodelast;
                     } else {
-                        this._topnode._rightnode = lastnode;
+                        this._topnode._rightnode = nodelast;
                     }
                 }
             }

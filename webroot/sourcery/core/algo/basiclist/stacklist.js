@@ -14,7 +14,7 @@ _.ambient.module("stacklist", function (_) {
         }
 
         this.pop = function () {
-            var cursor = this.lastnode()
+            var cursor = this.nodelast()
             var value
 
             if (cursor) {
@@ -35,7 +35,7 @@ _.ambient.module("stacklist", function (_) {
         }
 
         this.popfirst = function () {
-            var cursor = this.firstnode()
+            var cursor = this.nodefirst()
             var value
 
             if (cursor) {

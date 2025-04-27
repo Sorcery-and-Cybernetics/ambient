@@ -106,7 +106,7 @@ _.ambient.module("skiplist", function(_) {
 
             this.debugvalidate = function() {
                 var errors = [];
-                var cursor = this.firstnode();
+                var cursor = this.nodefirst();
                 var count = 0;
 
                 var errors = supermodel.debugvalidate.call(this) || [];

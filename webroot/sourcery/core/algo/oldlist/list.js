@@ -4,8 +4,8 @@
 _.ambient.module("list", function(_) {    
     _.define.listnode("list", function (supermodel) {
         return {
-            __firstnode: null
-            , __lastnode: null
+            __nodefirst: null
+            , __nodelast: null
             , _count: 0
             , _maxsegmentlevel: 0
 
@@ -63,21 +63,21 @@ _.ambient.module("list", function(_) {
 
             , linkedlistbehavior: _.behavior({
                 count: function () { return this._count }
-                , firstnode: function () { return this.__firstnode == this? null: this.__firstnode }
-                , lastnode: function () { return this.__lastnode == this? null: this.__lastnode }
+                , nodefirst: function () { return this.__nodefirst == this? null: this.__nodefirst }
+                , nodelast: function () { return this.__nodelast == this? null: this.__nodelast }
 
                 , __unlinknode: function (node) {
                     if (node.__list != this) { throw "Node not in list" }
                     this._count -= 1
 
                     if (node.__nodeprev == this) {
-                        this.__firstnode = node.__nodenext
+                        this.__nodefirst = node.__nodenext
                     } else {
                         node.__nodeprev.__nodenext = node.__nodenext
                     }
 
                     if (node.__nodenext == this) {
-                        this.__lastnode = node.__nodeprev
+                        this.__nodelast = node.__nodeprev
                     } else {
                         node.__nodenext.__nodeprev = node.__nodeprev
                     }
@@ -96,7 +96,7 @@ _.ambient.module("list", function(_) {
 
                 , foreach: function(fn) {
                     var nodes = []
-                    var cursor = this.firstnode()
+                    var cursor = this.nodefirst()
                     
                     while (cursor && (cursor != this)) {
                         nodes.push(cursor)
@@ -112,7 +112,7 @@ _.ambient.module("list", function(_) {
             , debugbehavior: _.behavior({
                 debugvalidate: function() {
                     var errors = []
-                    var cursor = this.__firstnode
+                    var cursor = this.__nodefirst
                     var count = 0
 
                     while (cursor && cursor != this) {
@@ -124,7 +124,7 @@ _.ambient.module("list", function(_) {
                             errors.push("Missing nodeprev") 
                         } else {
                             if (cursor.__nodeprev == this) {
-                                if (this.__firstnode != cursor) { errors.push("Firstnode not pointing to this node") } 
+                                if (this.__nodefirst != cursor) { errors.push("nodefirst not pointing to this node") } 
                             } else {
                                 if (cursor.__nodeprev.__nodenext != cursor) { errors.push("nodeprev not pointing to this node") }
                             }
@@ -134,7 +134,7 @@ _.ambient.module("list", function(_) {
                             errors.push("Missing nodenext") 
                         } else {
                             if (cursor.__nodenext == this) {
-                                if (this.__lastnode != cursor) { errors.push("Lastnode not pointing to this node") }
+                                if (this.__nodelast != cursor) { errors.push("nodelast not pointing to this node") }
                             } else {
                                 if (cursor.__nodenext.__nodeprev != cursor) { errors.push("nodenext not pointing to this node") }
                             }
@@ -161,7 +161,7 @@ _.ambient.module("list", function(_) {
             })
             
             , destroy: function () {
-                var cursor = this.__firstnode
+                var cursor = this.__nodefirst
 
                 while (cursor) {
                     var nodenext = cursor.__nodenext

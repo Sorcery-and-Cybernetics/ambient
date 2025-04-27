@@ -14,7 +14,7 @@ _.ambient.module("linkedlist", function(_) {
             }
 
             this.destroy = function () {
-                var cursor = this.__firstnode
+                var cursor = this.__nodefirst
 
                 while (cursor) {
                     var nodenext = cursor.nodenext()
@@ -28,8 +28,8 @@ _.ambient.module("linkedlist", function(_) {
         this.linkedlistbehavior = _.behavior(function () {
             this.count = function () { return this.__count }
             this.isroot = function () { return true }
-            this.firstnode = function () { return this.__nodenext.isroot()? null: this.__nodenext }
-            this.lastnode = function () { return this.__nodeprev.isroot()? null: this.__nodeprev }
+            this.nodefirst = function () { return this.__nodenext.isroot()? null: this.__nodenext }
+            this.nodelast = function () { return this.__nodeprev.isroot()? null: this.__nodeprev }
 
             this.__makenode = function(item) {
                 if (item instanceof _.make.core.linkedlistnode) { return item } 
@@ -38,7 +38,7 @@ _.ambient.module("linkedlist", function(_) {
             
             this.foreach = function(fn) {
                 var nodes = []
-                var cursor = this.firstnode()
+                var cursor = this.nodefirst()
                 var context = null
                 
                 while (cursor) {
@@ -60,7 +60,7 @@ _.ambient.module("linkedlist", function(_) {
         this.debugbehavior = _.behavior(function() {
             this.debugvalidate = function() {
                 var errors = []
-                var cursor = this.firstnode()
+                var cursor = this.nodefirst()
                 var count = 0
 
                 while (cursor && cursor != this) {
@@ -69,7 +69,7 @@ _.ambient.module("linkedlist", function(_) {
                     if (cursor.list() != this) { errors.push("Node not in list") }
 
                     if (!cursor.nodeprev()) {
-                        if (this.firstnode() != cursor) { errors.push("Firstnode not pointing to this node") }                             
+                        if (this.nodefirst() != cursor) { errors.push("nodefirst not pointing to this node") }                             
                     } else if (!cursor.nodeprev()){
                         errors.push("Missing nodeprev") 
                     } else {
@@ -77,7 +77,7 @@ _.ambient.module("linkedlist", function(_) {
                     }
 
                     if (!cursor.nodenext()) {
-                        if (this.lastnode() != cursor) { errors.push("Lastnode not pointing to this node") }                             
+                        if (this.nodelast() != cursor) { errors.push("nodelast not pointing to this node") }                             
                     } else if (!cursor.nodenext()) {
                         errors.push("Missing nodenext")
                     } else {

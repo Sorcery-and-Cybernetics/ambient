@@ -9,8 +9,8 @@ _.ambient.module("stacklist.test")
 
     stack.pushfirst(5)
 
-    _.debug.assert(stack.firstnode().value(), 5, "First node value should be 5")
-    _.debug.assert(stack.lastnode().value(), 30, "Last node value should be 30")
+    _.debug.assert(stack.nodefirst().value(), 5, "First node value should be 5")
+    _.debug.assert(stack.nodelast().value(), 30, "Last node value should be 30")
     _.debug.assert(stack.count(), 4, "Stack length should be 4")
 
     var value = stack.pop()

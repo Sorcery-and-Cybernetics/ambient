@@ -77,8 +77,8 @@ _.ambient.module("treelisttest", function (_) {
                counter += 1
     
                var itembypos = list.getbypos(counter * maxy)
-               var itemfirst = list.findfirstnode(itemkey)
-               var itemlast = list.findlastnode(itemkey)
+               var itemfirst = list.findnodefirst(itemkey)
+               var itemlast = list.findnodelast(itemkey)
     
                _.debug(itembypos.name(), itemfirst.name(), itemlast.name(), itembypos.position(), itemfirst.position(), itemlast.position())
            }

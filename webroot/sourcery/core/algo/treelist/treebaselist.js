@@ -27,7 +27,7 @@ _.ambient.module("treebaselist", function (_) {
             if (!node) { throw "error"; }
 
             if (!cursor) {
-                cursor = this.lastnode();
+                cursor = this.nodelast();
 
                 if (cursor) {
                     return this.insertnodeafter(cursor, node);
@@ -58,7 +58,7 @@ _.ambient.module("treebaselist", function (_) {
             if (!node) { throw "error"; }
 
             if (!cursor) {
-                cursor = this.firstnode();
+                cursor = this.nodefirst();
 
                 if (cursor) {
                     return this.insertnodebefore(cursor, node);
@@ -132,18 +132,18 @@ _.ambient.module("treebaselist", function (_) {
         };
 
         this.firstitem = function(){
-            var cursor = this.firstnode();
+            var cursor = this.nodefirst();
 
             return cursor? cursor.item(): null;
         };
 
         this.lastitem = function () {
-            var cursor = this.lastnode();
+            var cursor = this.nodelast();
 
             return cursor ? cursor.item() : null;
         };
 
-        this.firstnode = function () {
+        this.nodefirst = function () {
             var cursor = this._rootnode;
 
             while (cursor && cursor._leftnode) {
@@ -152,7 +152,7 @@ _.ambient.module("treebaselist", function (_) {
             return cursor;
         };
 
-        this.lastnode = function () {
+        this.nodelast = function () {
             var cursor = this._rootnode;
 
             while (cursor && cursor._rightnode) {
@@ -162,7 +162,7 @@ _.ambient.module("treebaselist", function (_) {
         };
 
         this.foreachitem = function (next) {
-            var cursor = this.firstnode();
+            var cursor = this.nodefirst();
 
             while (cursor) {
                 next(cursor.item());
@@ -184,7 +184,7 @@ _.ambient.module("treebaselist", function (_) {
                 _.debug("");
                 _.debug("Treelist debugdump");
 
-                var cursor = this.firstnode();
+                var cursor = this.nodefirst();
 
                 while (cursor) {
                     cursor.debugdump();
