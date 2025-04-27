@@ -100,6 +100,7 @@ _.ambient.module("skiplistsegment", function (_) {
             this.isroot = function () { return this.__base.isroot(); };
             this.base = function () { return this.__base; };
             this.segmenttop = function () { return this.__base.__topsegment; };
+
             this.level = function() { 
                 var result = 0;
                 var cursor = this;
@@ -219,13 +220,14 @@ _.ambient.module("skiplistsegment", function (_) {
                     if (cursor.__childcount >= index) {
                         cursor = cursor.segmentdown();
 
-                        if (cursor instanceof _.make.core.skiplistnode) {
-                            while (index > 1) {
+                        if (cursor.level() == 1) {
+                            if (cursor.isroot()) { cursor = cursor.segmentnext()}
+
+                            while (!cursor.isroot() && (index > 1)) {
                                 index -= 1;
                                 cursor = cursor.segmentnext();
-                                if (cursor.isroot()) { return undefined; }
                             }
-                            return cursor;
+                            return cursor.isroot()? undefined : cursor;
                         }
                     } else {
                         index -= cursor.__childcount;

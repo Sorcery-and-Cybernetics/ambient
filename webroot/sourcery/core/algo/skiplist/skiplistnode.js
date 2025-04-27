@@ -63,6 +63,7 @@ _.ambient.module("skiplistnode", function(_) {
             this.isroot = function () { return false; };
             this.base = function () { return this; };
             this.segmenttop = function () { return this.__topsegment; };
+            this.level = function() { return 1; };
 
             this.segmentnext = function () {
                 return this.__nextnode;

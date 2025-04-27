@@ -162,8 +162,7 @@ var buffer = require('buffer');
         this.onresponse = _.make.core.basicsignal()
         this.onerror = _.make.core.basicsignal()
     })
-})    
-.onload(function(_) {
+
     _.core.http = {        
         "get": function (url, params, next) {
             return _.make.core.httprequest("get", url, params, null, next)
@@ -171,6 +170,5 @@ var buffer = require('buffer');
         , "post": function (url, params, next) {
             return _.make.core.httprequest("post", url, params, null, next)
         }
-    }
-})
-
+    }    
+})    

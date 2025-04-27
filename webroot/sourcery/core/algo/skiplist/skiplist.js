@@ -64,6 +64,8 @@ _.ambient.module("skiplist", function(_) {
             this.base = function () { return this; };
             this.segmenttop = function () { return this.__topsegment; };
 
+            this.level = function() { return 1; };
+
             this.segmentnext = function () {
                 return this.__nextnode;
             };

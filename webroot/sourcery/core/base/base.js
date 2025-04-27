@@ -8,6 +8,7 @@ _.ambient.module("base", function (_) {
     _.define = {};
     _.make = {};
     _.model = {};
+    _.core = {};
 
     // Constants
     _.crlf = "\r\n";

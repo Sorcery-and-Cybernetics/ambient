@@ -3,7 +3,7 @@ _.ambient.module("skiplist.test")
         _.debug.assertstart("skiplist")
         var list = _.make.core.skiplist().segmentsize(2)
 
-        for (var index = 1; index <= 200; index++) {
+        for (var index = 1; index <= 250; index++) {
             _.make.core.skiplistnode(index).assign(list, -1)
         }
 
@@ -22,7 +22,9 @@ _.ambient.module("skiplist.test")
             list.foreach(function(node, index) {
                 var nodeposition = node.orderindex()
                 var found = list.nodebyindex(index)
-                if (!found) { _.debug.assert(true, false, "List order mismatch"); return }
+                if (!found || !found.orderindex) { 
+                    var found = list.nodebyindex(index)
+                    _.debug.assert(true, false, "List order mismatch"); return }
                 var foundindex = found.orderindex()
 
                 _.debug(index + "\t" + nodeposition + "\t" + foundindex)
