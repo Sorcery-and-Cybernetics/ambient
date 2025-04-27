@@ -12,14 +12,13 @@ _.ambient.module("skiplist", function(_) {
 
         this.__issortlist = false;
 
-        this.objectbehavior = _.behavior(function() {
+        this.constructbehavior = _.behavior(function() {
             this.construct = function() {
                 this.__nextnode = this;
                 this.__prevnode = this;
 
                 this.__upsegment = _.make.core.skiplistsegment(this, this.__segmentlevel);
             };
-
 
             this.__makenode = function(item) {
                 if (item instanceof _.make.skiplistnode) { return item; } 
@@ -58,16 +57,7 @@ _.ambient.module("skiplist", function(_) {
                 }
                 return this;
             };
-
-            this.nodebyindex = function(index) {
-                return this.segmenttop().nodebyindex(index);
-            };
-
-            this.findnode = function(search, relativeindex) {
-                return this.segmenttop().findnode(search, relativeindex);
-            };
-        });   
-
+        });
 
         this.navigationbehavior = _.behavior(function() {
             this.isroot = function () { return true; };
@@ -90,6 +80,16 @@ _.ambient.module("skiplist", function(_) {
                 return this.__upsegment || undefined;
             };
         });
+
+        this.searchbehavior = _.behavior(function() {
+            this.nodebyindex = function(index) {
+                return this.segmenttop().nodebyindex(index);
+            };
+
+            this.findnode = function(search, relativeindex) {
+                return this.segmenttop().findnode(search, relativeindex);
+            };
+        });           
       
         this.debugbehavior = _.behavior(function() {
             this.debugout = function () {
