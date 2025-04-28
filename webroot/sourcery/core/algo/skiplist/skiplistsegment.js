@@ -132,7 +132,6 @@ _.ambient.module("skiplistsegment", function (_) {
                 return this.__downsegment;
             };
 
-            //todo: we can optimize by dual using __upsegment
             this.segmentleftup = function() {
                 if (this.__upsegment) {  return this.__upsegment; }
                 if (this.isroot()) { return null; }
@@ -148,7 +147,6 @@ _.ambient.module("skiplistsegment", function (_) {
                 return this.segmentleftup().__nextsegment;
             };
 
-            //todo: Split segment into 2 functions. One that returns the direct up segment, other that returns the segment group.
             this.segmentup = function () { 
                 return this.__upsegment || undefined;
             };
@@ -158,7 +156,7 @@ _.ambient.module("skiplistsegment", function (_) {
             };
         });
 
-        this.searchbehavior = _.behavior(function() {
+        this.modelbehavior = _.behavior(function() {
             this.orderindex = function() {
                 var index = 0;
                 var cursor = this;
@@ -171,73 +169,31 @@ _.ambient.module("skiplistsegment", function (_) {
                     if (cursor.isroot()) { break; }
                 }
                 return index;
+            };            
+        });
+
+        this.searchbehavior = _.behavior(function() {
+            this.valueinsegment = function(search, option) {
+                var currentnode = this.__base;
+                var nodenext = this.segmentnext().__base;
+                if (nodenext.isroot()) { nodenext = nodenext.__nodeprev; }
+
+                var currentValue = currentnode.value();
+                var nextValue = nodenext.value();
+
+                switch(option) {
+                    case "<=":
+                        return search <= nextValue;
+                    case ">=":
+                        return search >= currentValue;
+                    case ">":
+                        return search > currentValue;
+                    case "<":
+                        return search < nextValue;
+                    default: // "==" or undefined
+                        return search >= currentValue && search <= nextValue;
+                }
             };
-
-            this.valueinsegment = function(search) {
-                var currentnode = this.__base
-                var nodenext = this.segmentnext().__base
-                if (nodenext.isroot()) { nodenext = nodenext.__nodeprev }
-
-                if (search < currentnode.value() || search > nodenext.value()) { return false }
-                return true;
-            }
-
-            this.findnode = function(search, relativeindex) {
-                var cursor = this.segmenttop()
-                var found = null
-
-                if (search) {
-                    while (cursor) {
-                        if (cursor.valueinsegment(search)) {
-                            cursor = cursor.segmentdown();
-                            while (cursor) {
-                                if (cursor.value() == search) {
-                                    found = cursor;
-                                    break;
-                                }
-                                cursor = cursor.segmentnext();
-                            }
-                            break;
-                        }
-                        cursor = cursor.segmentnext();
-                    }
-                } else if (relativeindex) {
-                    found = cursor
-                }
-
-                if (found && relativeindex) { 
-                    found = found.nodebyindex(relativeindex) 
-                    if (!found) { return null }
-                    if (found.value() != search) { return null }
-                }
-                return found;
-            }
-
-            this.nodebyindex = function(index) {
-                var cursor = this.segmenttop();
-
-                while (index) {
-                    if (cursor.__childcount >= index) {
-                        cursor = cursor.segmentdown();
-
-                        if (cursor.level() == 1) {
-                            if (cursor.isroot()) { cursor = cursor.segmentnext()}
-
-                            while (!cursor.isroot() && (index > 1)) {
-                                index -= 1;
-                                cursor = cursor.segmentnext();
-                            }
-                            return cursor.isroot()? undefined : cursor;
-                        }
-                    } else {
-                        index -= cursor.__childcount;
-                        cursor = cursor.segmentnext();
-                        if (cursor.isroot()) { return undefined; }
-                    }
-                }
-
-                return undefined
-            }
         });
 
         this.debugbehavior = _.behavior(function() {

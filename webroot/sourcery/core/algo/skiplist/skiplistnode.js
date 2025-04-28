@@ -3,21 +3,11 @@
 //*************************************************************************************************
 _.ambient.module("skiplistnode", function(_) {    
     _.define.core.linkedlistnode("core.skiplistnode", function (supermodel) {
-        this.__nodenext = null;
-        this.__nodeprev = null;
-
-        this.__list = null;
-        this._value = null;
-
         this.__upsegment = null;
         this.__topsegment = null;            
         this.__level = 1;
 
         this.constructbehavior = _.behavior(function() {
-            this.construct = function(value) {
-                this._value = value;
-            };
-
             this.assign = function(cursor, index) {
                 supermodel.assign.call(this, cursor, index);
 
@@ -63,7 +53,7 @@ _.ambient.module("skiplistnode", function(_) {
 
                 if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
                 return this.__nodeprev instanceof _.make.core.skiplist? 1: this.__nodeprev.orderindex() + 1;
-            };
+            };           
         });
 
         this.navigationbehavior = _.behavior(function() {
@@ -103,10 +93,16 @@ _.ambient.module("skiplistnode", function(_) {
             this.segmentup = function () { 
                 return this.__upsegment || undefined;
             };
-        });            
-       
+        }); 
+        
+        this.searchbehavior = _.behavior(function() {
+            this.valueinsegment = function(searchvalue, searchindex) {
+            }
+        });
+               
         this.debugbehavior = _.behavior(function () {
             this.debugout = function() {}
+
             this.debugvalidate = function() {
                 var errors = (this.__segmentup? this.__segmentup.debugvalidate(): []);
 
