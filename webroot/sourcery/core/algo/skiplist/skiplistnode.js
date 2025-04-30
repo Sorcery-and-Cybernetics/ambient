@@ -32,21 +32,24 @@ _.ambient.module("skiplistnode", function(_) {
             };
 
             this.unlink = function() {
-                this.__topsegment = null;
                 if (this.__upsegment) { this.__upsegment.unlink(); }
+                this.__topsegment = null;
                 
                 var nodeprev = this.__nodeprev;
                 supermodel.unlink.call(this);
                 nodeprev.segmentleftup().calcsegment(false, true);
+                return this;
             };
 
-            this.destroy = function () {
+            this.destroy = function() {
                 this.unlink();
                 return null;
             };            
         });
 
         this.modelbehavior = _.behavior(function() {
+            this.value = function() { return this._value; };
+            
             this.orderindex = function(relativenode) {
                 if (this.isroot()) { return 0; }
                 if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
@@ -57,22 +60,14 @@ _.ambient.module("skiplistnode", function(_) {
         });
 
         this.navigationbehavior = _.behavior(function() {
-            this.isroot = function () { return false; };
-            this.base = function () { return this; };
-            this.segmenttop = function () { return this.__topsegment; };
+            this.isroot = function() { return false; };
+            this.base = function() { return this; };
+            this.segmenttop = function() { return this.__topsegment; };
             this.level = function() { return 1; };
 
-            this.segmentnext = function () {
-                return this.__nodenext;
-            };
-            
-            this.segmentprev = function () { 
-                return this.__nodeprev;
-            };
-
-            this.segmentdown = function () { 
-                return null;
-            };
+            this.segmentnext = function() { return this.__nodenext; };            
+            this.segmentprev = function() { return this.__nodeprev; };
+            this.segmentdown = function() { return null; };
 
             this.segmentleftup = function() {
                 if (this.__upsegment) {  return this.__upsegment; }
@@ -86,13 +81,8 @@ _.ambient.module("skiplistnode", function(_) {
                 }
             };
             
-            this.segmentrightup = function() {
-                return this.segmentleftup().__nextsegment;
-            };                
-
-            this.segmentup = function () { 
-                return this.__upsegment || undefined;
-            };
+            this.segmentrightup = function() { return this.segmentleftup().__nextsegment; };                
+            this.segmentup = function() { return this.__upsegment || undefined; };
         }); 
         
         this.searchbehavior = _.behavior(function() {

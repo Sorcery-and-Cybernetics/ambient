@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// listnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
+// linkedlistnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("linkedlistnode", function (_) {
 
@@ -8,30 +8,11 @@ _.ambient.module("linkedlistnode", function (_) {
         this.__nodeprev = null;
 
         this.__list = null;
-        this._value = null;
+        this.__value = null;
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function(value) {
-                this._value = value;
-            };
-
-            this.parent = function () {
-                return this.__list._parent;
-            };
-
-            this.list = function () {
-                return this.__list;
-            };
-
-            this.isroot = function() { return false; };
-
-            this.value = function(value) {
-                if (value === undefined) { return this._value; }
-
-                if (value != value) {
-                    this._value = value;
-                }
-                return this;
+                this.__value = value;
             };
 
             this.assign = function(cursor, index) {
@@ -81,14 +62,31 @@ _.ambient.module("linkedlistnode", function (_) {
                 this.__nodeprev = null;
             };
     
-            this.calcsegment = function() {
-                
-            };  
-            
             this.destroy = function () {
                 if (this.__list) { this.unlink(); }
                 return null;
             };            
+        });
+
+        this.modelbehavior = _.behavior(function() {
+            this.parent = function () {
+                return this.__list._parent;
+            };
+
+            this.list = function () {
+                return this.__list;
+            };
+
+            this.isroot = function() { return false; };
+
+            this.value = function(value) {
+                if (value === undefined) { return this.__value; }
+
+                if (value != value) {
+                    this.__value = value;
+                }
+                return this;
+            }; 
         });
 
         this.navigationbehavior = _.behavior(function() {
@@ -100,7 +98,6 @@ _.ambient.module("linkedlistnode", function (_) {
                 return !this.__nodeprev || (this.__nodeprev == this.__list ? null : this.__nodeprev);
             };
         });
-
     });
 
 });

@@ -55,45 +55,6 @@ _.ambient.module("skiplistsegment", function (_) {
                 this.__prevsegment = null;
                 this.__nextsegment = null;
             };
-
-            this.calcsegment = function(calcprevsegment, recursive) {
-                var childcount = 0;
-
-                var cursor = this.segmentdown();
-
-                var segmentright = this.__nextsegment;
-                var segmentend = segmentright.segmentdown();
-
-                if (!cursor.isroot() && calcprevsegment){
-                    this.segmentprev().calcsegment(false, false);
-                }
-
-                do {
-                    if (cursor instanceof _.make.core.skiplistsegment) { 
-                        childcount += cursor.__childcount;
-                    } else if (cursor instanceof _.make.core.skiplistnode) {
-                        childcount++;
-                    }
-                    cursor = cursor.segmentnext();
-                } while (cursor != segmentend);
-
-                this.__childcount = childcount;
-
-
-                if (recursive) {
-                    var segmentleftup = this.segmentleftup();
-
-                    if (calcprevsegment) {
-                        if (segmentleftup.isroot() || this.segmentprev().segmentleftup() == segmentleftup) {
-                            calcprevsegment = false;
-                        }
-                    }
-
-                    if (segmentleftup) {
-                        segmentleftup.calcsegment(calcprevsegment, recursive);
-                    }
-                } 
-            };
         });
 
         this.navigationbehavior = _.behavior(function() {
@@ -169,6 +130,46 @@ _.ambient.module("skiplistsegment", function (_) {
                     if (cursor.isroot()) { break; }
                 }
                 return index;
+            };  
+            
+            this.calcsegment = function(calcprevsegment, recursive) {
+                var childcount = 0;
+
+                var cursor = this.segmentdown();
+
+                var segmentright = this.__nextsegment;
+                var segmentend = segmentright.segmentdown();
+
+                if (!cursor.isroot() && calcprevsegment){
+                    this.segmentprev().calcsegment(false, false);
+                }
+
+                do {
+                    if (cursor instanceof _.make.core.skiplistsegment) { 
+                        childcount += cursor.__childcount;
+                    } else if (cursor instanceof _.make.core.skiplistnode) {
+                        childcount++;
+                    }
+                    cursor = cursor.segmentnext();
+                } while (cursor != segmentend);
+
+                this.__childcount = childcount;
+
+
+                if (recursive) {
+                    var segmentleftup = this.segmentleftup();
+
+                    if (calcprevsegment) {
+                        if (segmentleftup.isroot() || this.segmentprev().segmentleftup() == segmentleftup) {
+                            calcprevsegment = false;
+                        }
+                    }
+
+                    if (segmentleftup) {
+                        segmentleftup.calcsegment(calcprevsegment, recursive);
+                    }
+                } 
+                return this;
             };            
         });
 
