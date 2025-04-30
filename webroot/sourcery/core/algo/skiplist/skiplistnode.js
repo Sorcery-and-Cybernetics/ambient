@@ -48,8 +48,8 @@ _.ambient.module("skiplistnode", function(_) {
         });
 
         this.modelbehavior = _.behavior(function() {
-            this.value = function() { return this._value; };
-            
+            this.value = function() { return this.__value; };
+
             this.orderindex = function(relativenode) {
                 if (this.isroot()) { return 0; }
                 if (relativenode) { return this.orderindex() - relativenode.orderindex(); }

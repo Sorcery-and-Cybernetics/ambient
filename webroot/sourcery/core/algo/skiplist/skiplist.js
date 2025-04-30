@@ -323,6 +323,7 @@ _.ambient.module("skiplist", function(_) {
 
                 } else {
                     relativeindex = cursor.orderindex() + relativeindex
+                    if (relativeindex < 0) { return undefined; }
                     return this.nodebyindex(relativeindex);
                 }
             };

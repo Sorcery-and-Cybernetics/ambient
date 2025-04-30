@@ -1,18 +1,16 @@
 _.ambient.module("skiplist.test")
     .onload(function(_) {
-        var itemcount = 250
+        var itemcount = 300
 
         _.debug.assertstart("skiplist")
         var list = _.make.core.skiplist().segmentsize(2)
-
-
 
         for (var index = 1; index <= itemcount; index++) {
             _.make.core.skiplistnode(index).assign(list, -1)
         }
 
         var makeline = function(node, index) {
-            var line = index + "\t" + (node.isroot()? "Root": node.value())
+            var line = index + "\t" + (node.isroot()? "Root": node.value()) + "\t==>"
 
             var cursor = node.segmentup()
             while (cursor) {
@@ -31,7 +29,7 @@ _.ambient.module("skiplist.test")
                     _.debug.assert(true, false, "List order mismatch"); return }
                 var foundindex = found.orderindex()
 
-                _.debug(index + "\t" + nodeposition + "\t" + foundindex)
+//                _.debug(index + "\t" + nodeposition + "\t" + foundindex)
 
                 if ((foundindex != index) || (nodeposition != index)) {
                     _.debug.assert(true, false, "List order mismatch")
@@ -47,14 +45,17 @@ _.ambient.module("skiplist.test")
             _.debug(makeline(node, index))
         })
 
-        _.debug.assert(list.debugvalidate(), undefined)
+        _.debug.assert(list.debugvalidate(), undefined, "list.debugvalidate() - ordered index")
         testorderindex(list)
 
         // Test find relative node with random positions
         _.debug("Testing findrelativenode with random positions:")
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 100; i++) {
             // Get random start position (1 to itemcount)
-            var startpos = Math.floor(Math.random() * itemcount - 2) + 2
+            var startpos = Math.floor(Math.random() * (itemcount - 2)) + 2
+            if (startpos == 0) { 
+                startpos = 1
+             }
             var startnode = list.nodebyindex(startpos)
             
             // Calculate max possible moves in each direction
@@ -85,29 +86,29 @@ _.ambient.module("skiplist.test")
         
         // Test from first node
         var firstnode = list.nodefirst()
-        _.debug.assert(firstnode.value(), 1, "First node value")
-        _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "First node backward")
-        _.debug.assert(list.findrelativenode(firstnode, 2).value(), 2, "First node forward")
-        _.debug.assert(list.findrelativenode(firstnode, itemcount - 1).value(), itemcount, "First node to end")
-        _.debug.assert(list.findrelativenode(firstnode, itemcount), undefined, "First node beyond end")
+        _.debug.assert(firstnode.value(), 1, "firstnode.value()")
+        _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "list.findrelativenode(firstnode, -1)")
+        _.debug.assert(list.findrelativenode(firstnode, 1).value(), 2, "list.findrelativenode(firstnode, 1)")
+        _.debug.assert(list.findrelativenode(firstnode, itemcount - 1).value(), itemcount, "list.findrelativenode(firstnode, itemcount - 1)")
+        _.debug.assert(list.findrelativenode(firstnode, itemcount), undefined, "list.findrelativenode(firstnode, itemcount)")
 
         // Test from last node
         var lastnode = list.nodelast()
         _.debug.assert(lastnode.value(), itemcount, "Last node value")
-        _.debug.assert(list.findrelativenode(lastnode, 0).value(), itemcount, "Last node same")
-        _.debug.assert(list.findrelativenode(lastnode, 1), undefined, "Last node forward")
-        _.debug.assert(list.findrelativenode(lastnode, -1).value(), itemcount - 2, "Last node backward")
-        _.debug.assert(list.findrelativenode(lastnode, -(itemcount - 1)).value(), 1, "Last node to start")
-        _.debug.assert(list.findrelativenode(lastnode, -itemcount), undefined, "Last node beyond start")
+        _.debug.assert(list.findrelativenode(lastnode, 0).value(), itemcount, "list.findrelativenode(lastnode, 0)")
+        _.debug.assert(list.findrelativenode(lastnode, 1), undefined, "list.findrelativenode(lastnode, 1)")
+        _.debug.assert(list.findrelativenode(lastnode, -1).value(), itemcount - 1, "list.findrelativenode(lastnode, -1)")
+        _.debug.assert(list.findrelativenode(lastnode, -(itemcount - 1)).value(), 1, "list.findrelativenode(lastnode, -(itemcount - 1))")
+        _.debug.assert(list.findrelativenode(lastnode, -itemcount), undefined, "list.findrelativenode(lastnode, -itemcount)")
 
         // Test from middle node (position 125)
         var middlepos = Math.floor(itemcount / 2)
         var middlenode = list.nodebyindex(middlepos)
-        _.debug.assert(middlenode.value(), middlepos, "Middle node value")
-        _.debug.assert(list.findrelativenode(middlenode, itemcount - middlepos + 1), undefined, "Middle node beyond end")
-        _.debug.assert(list.findrelativenode(middlenode, -middlepos - 1), undefined, "Middle node beyond start")
-        _.debug.assert(list.findrelativenode(middlenode, middlepos).value(), itemcount, "Middle node to end")
-        _.debug.assert(list.findrelativenode(middlenode, -(middlepos - 1)).value(), 1, "Middle node to start")
+        _.debug.assert(middlenode.value(), middlepos, "middlenode.value()")
+        _.debug.assert(list.findrelativenode(middlenode, itemcount - middlepos + 1), undefined, "list.findrelativenode(middlenode, itemcount - middlepos + 1)")
+        _.debug.assert(list.findrelativenode(middlenode, -middlepos - 1), undefined, "list.findrelativenode(middlenode, -middlepos - 1)")
+        _.debug.assert(list.findrelativenode(middlenode, middlepos).value(), itemcount, "list.findrelativenode(middlenode, middlepos)")
+        _.debug.assert(list.findrelativenode(middlenode, -(middlepos - 1)).value(), 1, "list.findrelativenode(middlenode, -(middlepos - 1))")
 
         _.debug.assertfinish()
 

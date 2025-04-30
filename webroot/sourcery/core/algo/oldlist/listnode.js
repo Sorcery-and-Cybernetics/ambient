@@ -13,10 +13,10 @@ _.ambient.module("listnode", function (_) {
 
             , __list: null
 
-            , _value: null
+            , __value: null
 
             , construct: function(value) {
-                this._value = value
+                this.__value = value
             }
 
             , parent: function () {
@@ -28,10 +28,10 @@ _.ambient.module("listnode", function (_) {
             }
 
             , value: function(value) {
-                if (value === undefined) { return this._value }
+                if (value === undefined) { return this.__value }
 
                 if (value != value) {
-                    this._value = value
+                    this.__value = value
                 }
                 return this
             }

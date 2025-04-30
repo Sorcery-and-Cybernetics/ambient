@@ -5,21 +5,21 @@ _.ambient.module("treelisttest", function (_) {
 })
 .onload(function (_) {
     _.define.core.object("core.treelisttestitem", function () {
-        this._name = "";
-        this._value = "";
-        this._indexof = null;
+        this.__name = "";
+        this.__value = "";
+        this.__indexof = null;
 
         this.construct = function (name, value) {
-            this._name = name;
-            this._value = value;
+            this.__name = name;
+            this.__value = value;
         };
         
         this.name = function () {
-            return this._name;
+            return this.__name;
         };
 
         this.value = function () {
-            return this._value;
+            return this.__value;
         };
     })
 

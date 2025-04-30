@@ -3,39 +3,39 @@
 //*************************************************************************************************
 _.ambient.module("map", function(_) { 
     _.define.core.object("core.map", function (supermodel) {
-        this._value = null;
+        this.__value = null;
 
         this.construct = function () {
-            this._value = {};
+            this.__value = {};
         };
 
         this.get = function (key) {
             if (key == null) { throw "Map.get: key is null"; }
-            return this._value[key];
+            return this.__value[key];
         };
 
         this.set = function (key, value) {
             if (key == null) { throw "Map.set: key is null"; }
 
-            this._value[key] = value;
+            this.__value[key] = value;
             return this;
         };
 
         this.has = function (key) {
             if (key == null) { throw "Map.has: key is null"; }
-            return (this._value[key] !== undefined);
+            return (this.__value[key] !== undefined);
         };
 
         this.del = function (key) {
             if (key == null) { throw "Map.del: key is null"; }
-            delete this._value[key];
+            delete this.__value[key];
         };
 
         this.foreach = function (next) {
             var me = this;
 
-            for (var key in this._value) {
-                var result = next(this._value[key], key);
+            for (var key in this.__value) {
+                var result = next(this.__value[key], key);
 
                 switch (result) {
                     case _.done:
@@ -51,7 +51,7 @@ _.ambient.module("map", function(_) {
         this.clear = function () {
             var me = this;
 
-            for (var key in this._value) {
+            for (var key in this.__value) {
                 me.del(key);
             }
         };
@@ -59,7 +59,7 @@ _.ambient.module("map", function(_) {
         this.length = function () {                
             var count = 0;
 
-            for (var key in this._value) {
+            for (var key in this.__value) {
                 count++;
             }
             return count;

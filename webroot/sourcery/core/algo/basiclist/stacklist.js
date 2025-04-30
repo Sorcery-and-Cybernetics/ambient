@@ -39,7 +39,7 @@ _.ambient.module("stacklist", function (_) {
             var value
 
             if (cursor) {
-                value = cursor._value
+                value = cursor.__value
                 cursor.destroy()
             }
             return value

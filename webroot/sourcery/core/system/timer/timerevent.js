@@ -12,25 +12,25 @@ _.ambient.module("timerevent", function(_) {
 
     _.define.core.object("core.timerevent", function (supermodel) {
         this.construct = function (runimmediate) {
-            this._runimmediate = runimmediate
+            this.__runimmediate = runimmediate
         };
         
-        this._value = 0;
+        this.__value = 0;
         this.value = function (value) {
-            if (value == null) { return this._value; }
+            if (value == null) { return this.__value; }
 
-            if (value != this._value) {
-                this._value = value;
+            if (value != this.__value) {
+                this.__value = value;
                 //this.rebond()
             }
         };            
 
-        this._interval = 0;
+        this.__interval = 0;
         this.interval = function(value) {
-            if (value === undefined) { return this._interval; }
+            if (value === undefined) { return this.__interval; }
 
-            if (this._interval != value) {
-                this._interval = value;
+            if (this.__interval != value) {
+                this.__interval = value;
 
                 if (!this.timeend() || (value + _.timer.now <= this.timeend())) {
                     this.value(_.timer.now + value);
@@ -41,17 +41,17 @@ _.ambient.module("timerevent", function(_) {
             return this;
         };
 
-        this._timeend = 0;
+        this.__timeend = 0;
         this.timeend = function(value) {
-            if (value === undefined) { return this._timeend; }
+            if (value === undefined) { return this.__timeend; }
 
-            if (this._timeend != value) {
-                this._timeend = value;
+            if (this.__timeend != value) {
+                this.__timeend = value;
             }
             return this;
         };
 
-        this._runimmediate = false;
+        this.__runimmediate = false;
 
         this.waituntil = function (time) {
             var time = toms(time);
