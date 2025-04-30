@@ -11,6 +11,17 @@ _.ambient.module("object").source(function (_) {
         , _phase: 0
         
         , modelname: function () { return this._modelname }
+        , supermodel: function() { return this._supermodel }
+        , ismodel: function(modelname) { return this._modelname === modelname }
+        , instanceof: function(modelname) {                 
+            var cursor = this;
+
+            while (cursor) {
+                if (cursor._modelname === modelname) { return true; }
+                cursor = cursor._supermodel;
+            }
+            return false;
+         }        
         , construct: _.noop
         , assign: _.noop
         , destroy: _.noop
