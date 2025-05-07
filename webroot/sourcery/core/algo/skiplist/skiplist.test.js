@@ -13,7 +13,15 @@ _.ambient.module("skiplist.test")
         // Helper function to output list structure
         var segmentdump = function(list) {
             var makeline = function(node, index) {
-                var line = index + "\t" + (node.isroot()? "Root": node.value()) + "\t==>"
+                var nodevalue
+                if (node.isroot()) { 
+                    nodevalue = "Root" 
+                } else { 
+                    nodevalue = node.value() 
+                    if (_.ismodel(nodevalue)) { nodevalue = nodevalue.debugout()}
+                }
+                
+                var line = index + "\t" + nodevalue + "\t==>"
 
                 var cursor = node.segmentup()
                 while (cursor) {
@@ -153,26 +161,78 @@ _.ambient.module("skiplist.test")
                 items.push(value);                
             }
         }
-
-        
+       
         items = _.array.shuffle(items);
-//        var items = ["B6", "B4", "B0"]
 
         _.foreach(items, function(item) {
             list.add(item);
-//            segmentdump(list)
         });
 
-        segmentdump(list)
+//        segmentdump(list)
         _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+
+
+        _.define.core.object("testskiplistitem", function(supermodel) {
+            this.__value = null;
+            this.__order = 0
+
+            this.construct = function(value, order) {
+                this.__value = value;
+                this.__order = order
+            }
+
+            this.get = function(name) {
+                if (name == "value") { return this.__value; }
+                if (name == "order") { return this.__order; }
+            }
+
+            this.debugout = function() {
+                return this.__value + "\t" + this.__order;
+            }            
+        })
+
+        var additem = function(list, value, order, tag) {
+            if (!tag) { tag = order; }
+            var item = _.make.testskiplistitem(value, tag)
+            list.add(item, order)
+//            segmentdump(list)
+        }
+
+
+        var list = _.make.core.skiplist("value")
+
+        // Create a shuffled list of items
+        var itemcount = 3;
+        var valuecount = 3;
+        var items = [];
+        
+        for (var i = 0; i < itemcount; i++) {
+            for (var j = 1; j <= valuecount; j++) {
+                additem(list, String.fromCharCode(65 + i), j);
+            }
+        }
+
+        segmentdump(list)  
+
+        additem(list, "B", 4)
+        segmentdump(list)
+
+        additem(list, "C", 0, 4)
+        segmentdump(list)
+
+        additem(list, "A", 2, 4)
+        segmentdump(list)        
+
+    _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+
+
 
         _.debug.assertfinish()
 
-//andrew: continue
-// test findfirst and findlast
-// findlast should traverse the list backwards.
 
-        
+
+
+
 
 
         // var result = []

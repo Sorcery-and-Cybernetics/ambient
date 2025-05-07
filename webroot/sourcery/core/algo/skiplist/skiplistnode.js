@@ -52,8 +52,9 @@ _.ambient.module("skiplistnode", function(_) {
                 return this.__value; 
             };
 
-            this.sortvalue = function() { 
-                var sortvaluename = this.list().sortvaluename()
+            this.sortvalue = function(list) { 
+                list = list || this.list();
+                var sortvaluename = list.sortvaluename()
                 if (sortvaluename) { return this.__value.get(sortvaluename); }
                 return this.__value; 
             };            

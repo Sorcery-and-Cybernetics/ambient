@@ -137,6 +137,7 @@ _.ambient.module("skiplist", function(_) {
         this.modelbehavior = _.behavior(function() {
             this.add = function(value, orderindex) {
                 var node = this.__makenode(value);
+                var value = node.sortvalue(this)
                 var cursor;
 
                 if (!this.count()) {
@@ -160,7 +161,7 @@ _.ambient.module("skiplist", function(_) {
                         // We have matching values - handle orderindex
                         if (!orderindex || orderindex === 0) {
                             // Append after last matching value
-                            cursor = lastMatch;
+                            cursor = lastMatch.segmentnext();
                         } else {
                             var matchCount = lastMatch.orderindex() - firstMatch.orderindex() + 1;
                             
