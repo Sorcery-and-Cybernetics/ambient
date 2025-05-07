@@ -48,7 +48,15 @@ _.ambient.module("skiplistnode", function(_) {
         });
 
         this.modelbehavior = _.behavior(function() {
-            this.value = function() { return this.__value; };
+            this.value = function() { 
+                return this.__value; 
+            };
+
+            this.sortvalue = function() { 
+                var sortvaluename = this.list().sortvaluename()
+                if (sortvaluename) { return this.__value.get(sortvaluename); }
+                return this.__value; 
+            };            
 
             this.orderindex = function(relativenode) {
                 if (this.isroot()) { return 0; }
@@ -86,17 +94,29 @@ _.ambient.module("skiplistnode", function(_) {
         }); 
         
         this.searchbehavior = _.behavior(function() {
-            this.valueinsegment = function(searchvalue, searchindex) {
+            this.valueinsegment = function(searchvalue, option) {
+                return _.core.valuecompare(searchvalue, this.sortvalue(), option);
             }
         });
                
         this.debugbehavior = _.behavior(function () {
-            this.debugout = function() {}
+            this.debugout = function() {
+                var result = this.value() + ", segments ["                
+                var cursor = this.segmentup();
+
+                while (cursor) {
+                    result += cursor.__childcount;
+                    cursor = cursor.segmentup();
+                    if (cursor) { result += ", "; }
+                }
+                result += "]";
+                return result;
+            }
 
             this.debugvalidate = function() {
-                var errors = (this.__segmentup? this.__segmentup.debugvalidate(): []);
+                var errors = (this.__upsegment? this.__upsegment.debugvalidate(): undefined);
 
-                return errors.length? errors: undefined;
+                return errors? errors: undefined;
             }
         });            
     });

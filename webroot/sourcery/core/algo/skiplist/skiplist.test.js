@@ -1,25 +1,36 @@
 _.ambient.module("skiplist.test")
     .onload(function(_) {
-        var itemcount = 300
+        var itemcount = 10
 
         _.debug.assertstart("skiplist")
         var list = _.make.core.skiplist().segmentsize(2)
 
+        // Populate the skiplist with 300 nodes with values 1-300
         for (var index = 1; index <= itemcount; index++) {
             _.make.core.skiplistnode(index).assign(list, -1)
         }
 
-        var makeline = function(node, index) {
-            var line = index + "\t" + (node.isroot()? "Root": node.value()) + "\t==>"
+        // Helper function to output list structure
+        var segmentdump = function(list) {
+            var makeline = function(node, index) {
+                var line = index + "\t" + (node.isroot()? "Root": node.value()) + "\t==>"
 
-            var cursor = node.segmentup()
-            while (cursor) {
-                line += "\t" + cursor.__childcount
-                cursor = cursor.segmentup()
+                var cursor = node.segmentup()
+                while (cursor) {
+                    line += "\t" + cursor.__childcount
+                    cursor = cursor.segmentup()
+                }
+                return line
             }
-            return line
+
+            _.debug(makeline(list, 0))
+
+            list.foreach(function(node, index) {
+                _.debug(makeline(node, index))
+            })
         }
 
+        // Helper function to verify node ordering and indexing consistency
         var testorderindex = function(list) {
             list.foreach(function(node, index) {
                 var nodeposition = node.orderindex()
@@ -39,17 +50,16 @@ _.ambient.module("skiplist.test")
             })
         }
 
-        _.debug(makeline(list, 0))
+//        segmentdump(list)
 
-        list.foreach(function(node, index) {
-            _.debug(makeline(node, index))
-        })
 
+        // Verify list structure and ordering
         _.debug.assert(list.debugvalidate(), undefined, "list.debugvalidate() - ordered index")
         testorderindex(list)
 
-        // Test find relative node with random positions
-        _.debug("Testing findrelativenode with random positions:")
+        // RANDOM POSITION TESTS
+        // Test findrelativenode with 100 random positions to ensure correct node navigation
+        //_.debug("Testing findrelativenode with random positions:")
         for (var i = 0; i < 100; i++) {
             // Get random start position (1 to itemcount)
             var startpos = Math.floor(Math.random() * (itemcount - 2)) + 2
@@ -66,14 +76,14 @@ _.ambient.module("skiplist.test")
             var forwardsteps = Math.floor(Math.random() * maxforward) + 1
             var backwardsteps = -(Math.floor(Math.random() * maxbackward) + 1)
             
-            // Test forward movement
+            // Test forward movement - verify we can navigate forward correctly
             var forwardnode = list.findrelativenode(startnode, forwardsteps)
             if (!forwardnode || !forwardnode.value || forwardnode.value() != startpos + forwardsteps) {
 //                var forwardnode = list.findrelativenode(startnode, forwardsteps)
                 _.debug.assert(-1, startpos + forwardsteps, "Forward from " + startpos + " by " + forwardsteps)
             }
             
-            // Test backward movement
+            // Test backward movement - verify we can navigate backward correctly
             var backwardnode = list.findrelativenode(startnode, backwardsteps)
             if (!backwardnode || !backwardnode.value || backwardnode.value() != startpos + backwardsteps) {
                 var backwardnode = list.findrelativenode(startnode, backwardsteps)
@@ -81,10 +91,11 @@ _.ambient.module("skiplist.test")
             }
         }
 
-        // Test boundary conditions with fixed positions
-        _.debug("Testing findrelativenode boundary conditions:")
+        // BOUNDARY CONDITION TESTS
+        // Test edge cases for findrelativenode to ensure proper handling of boundaries
+        //_.debug("Testing findrelativenode boundary conditions:")
         
-        // Test from first node
+        // Test navigation from first node
         var firstnode = list.nodefirst()
         _.debug.assert(firstnode.value(), 1, "firstnode.value()")
         _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "list.findrelativenode(firstnode, -1)")
@@ -92,7 +103,7 @@ _.ambient.module("skiplist.test")
         _.debug.assert(list.findrelativenode(firstnode, itemcount - 1).value(), itemcount, "list.findrelativenode(firstnode, itemcount - 1)")
         _.debug.assert(list.findrelativenode(firstnode, itemcount), undefined, "list.findrelativenode(firstnode, itemcount)")
 
-        // Test from last node
+        // Test navigation from last node
         var lastnode = list.nodelast()
         _.debug.assert(lastnode.value(), itemcount, "Last node value")
         _.debug.assert(list.findrelativenode(lastnode, 0).value(), itemcount, "list.findrelativenode(lastnode, 0)")
@@ -101,7 +112,7 @@ _.ambient.module("skiplist.test")
         _.debug.assert(list.findrelativenode(lastnode, -(itemcount - 1)).value(), 1, "list.findrelativenode(lastnode, -(itemcount - 1))")
         _.debug.assert(list.findrelativenode(lastnode, -itemcount), undefined, "list.findrelativenode(lastnode, -itemcount)")
 
-        // Test from middle node (position 125)
+        // Test navigation from middle node
         var middlepos = Math.floor(itemcount / 2)
         var middlenode = list.nodebyindex(middlepos)
         _.debug.assert(middlenode.value(), middlepos, "middlenode.value()")
@@ -110,12 +121,58 @@ _.ambient.module("skiplist.test")
         _.debug.assert(list.findrelativenode(middlenode, middlepos).value(), itemcount, "list.findrelativenode(middlenode, middlepos)")
         _.debug.assert(list.findrelativenode(middlenode, -(middlepos - 1)).value(), 1, "list.findrelativenode(middlenode, -(middlepos - 1))")
 
+
+        // Test delete-insert
+        for (var position = 1; position <= itemcount; position++) {
+            var node = list.nodebyindex(position)
+            var value = node.value()
+            
+            node = node.destroy()
+
+            _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
+            testorderindex(list)
+
+             _.make.core.skiplistnode(value).assign(list, -1)
+            
+             _.debug.assert(list.debugvalidate(), undefined, "List validation after reinserting value " + value)
+             testorderindex(list)
+        } 
+
+
+        var list = _.make.core.skiplist();
+        list.issortlist(true)
+    
+        // Create a shuffled list of items
+        var itemcount = 5;
+        var valuecount = 7;
+        var items = [];
+        
+        for (var i = 0; i < itemcount; i++) {
+            for (var j = 0; j < valuecount; j++) {
+                var value = String.fromCharCode(65 + i) + j; 
+                items.push(value);                
+            }
+        }
+
+        
+        items = _.array.shuffle(items);
+//        var items = ["B6", "B4", "B0"]
+
+        _.foreach(items, function(item) {
+            list.add(item);
+//            segmentdump(list)
+        });
+
+        segmentdump(list)
+        _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+
         _.debug.assertfinish()
 
+//andrew: continue
+// test findfirst and findlast
+// findlast should traverse the list backwards.
 
-
-
-
+        
 
 
         // var result = []

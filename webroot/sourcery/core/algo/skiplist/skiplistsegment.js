@@ -63,14 +63,16 @@ _.ambient.module("skiplistsegment", function (_) {
             this.segmenttop = function () { return this.__base.__topsegment; };
 
             this.level = function() { 
-                var result = 0;
-                var cursor = this;
+                return this.__level;
+                
+                // var result = 0;
+                // var cursor = this;
 
-                while (cursor) {
-                    result++;
-                    cursor = cursor.__downsegment;
-                }
-                return result;
+                // while (cursor) {
+                //     result++;
+                //     cursor = cursor.__downsegment;
+                // }
+                // return result;
             };
 
             this.segmentnext = function () {
@@ -174,26 +176,26 @@ _.ambient.module("skiplistsegment", function (_) {
         });
 
         this.searchbehavior = _.behavior(function() {
-            this.valueinsegment = function(search, option) {
-                var currentnode = this.__base;
-                var nodenext = this.segmentnext().__base;
-                if (nodenext.isroot()) { nodenext = nodenext.__nodeprev; }
-
-                var currentValue = currentnode.value();
-                var nextValue = nodenext.value();
-
-                switch(option) {
-                    case "<=":
-                        return search <= nextValue;
-                    case ">=":
-                        return search >= currentValue;
-                    case ">":
-                        return search > currentValue;
-                    case "<":
-                        return search < nextValue;
-                    default: // "==" or undefined
-                        return search >= currentValue && search <= nextValue;
+            this.segmentfloor = function() {
+                if (this.isroot()) { 
+                    var segmentnode = this.base().segmentnext();
+                } else {
+                    var segmentnode = this.base();
                 }
+
+                if (segmentnode.isroot()) { return undefined; }
+                return segmentnode.sortvalue();
+            };
+
+            this.segmentceil = function() {
+                var segmentnode = this.segmentnext().base().segmentprev();
+                if (segmentnode.isroot()) { return undefined; }
+
+                return segmentnode.sortvalue();
+            };
+
+            this.valueinsegment = function(search, option) {
+                return _.core.segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option);
             };
         });
 

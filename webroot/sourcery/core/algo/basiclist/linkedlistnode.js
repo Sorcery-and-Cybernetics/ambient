@@ -22,17 +22,17 @@ _.ambient.module("linkedlistnode", function (_) {
 
                 var list = (cursor instanceof _.make.core.linkedlist ? cursor : cursor.__list);
 
-                if (index > 0) { index -= 1; }
+//                if (index > 0) { index -= 1; }
 
                 while (index) {
                     if (index < 0) {
-                        cursor = cursor.__nodeprev;
                         if (cursor == list) { break; }
+                        cursor = cursor.__nodeprev;
                         index += 1;
 
                     } else {
-                        if (cursor.__nodenext == list) { break; }
                         cursor = cursor.__nodenext;
+                        if (cursor.__nodenext == list) { break; }
                         index -= 1;
                     }
                 }
@@ -40,8 +40,8 @@ _.ambient.module("linkedlistnode", function (_) {
                 this.__list = list;
                 list.__count += 1;
 
-                this.__nodeprev = cursor;
-                this.__nodenext = cursor.__nodenext;
+                this.__nodenext = cursor;
+                this.__nodeprev = cursor.__nodeprev;
 
                 this.__nodeprev.__nodenext = this;
                 this.__nodenext.__nodeprev = this;
