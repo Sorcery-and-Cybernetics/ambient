@@ -217,10 +217,10 @@ _.ambient.module("skiplist.test")
         additem(list, "B", 4)
         segmentdump(list)
 
-        additem(list, "C", 0, 4)
+        additem(list, "C", -5, 4)
         segmentdump(list)
 
-        additem(list, "A", 2, 4)
+        additem(list, "A", 7, 4)
         segmentdump(list)        
 
     _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")

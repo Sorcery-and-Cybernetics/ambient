@@ -171,8 +171,10 @@ _.ambient.module("skiplist", function(_) {
                             }
                             
                             // Validate orderindex is within bounds of matching values
-                            if (orderindex < 1 || orderindex > matchCount + 1) {
-                                throw "Invalid orderindex: Would violate sort order";
+                            if (orderindex < 1) { 
+                                orderindex = 1
+                            } else if (orderindex > matchCount + 1) {
+                                orderindex = matchCount + 1;
                             }
                             
                             // Find the node at relative position within matching values
