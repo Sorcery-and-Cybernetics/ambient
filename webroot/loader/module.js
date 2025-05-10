@@ -12,6 +12,7 @@
 
             , _source: ""
             , _onload: null
+            , _tests: null
             
             , construct: function (parent, name, rule) {
                 this._parent = parent._loader? parent: null
@@ -19,6 +20,7 @@
 
                 this._name = name
                 this._rule = rule
+                this._tests = []
 
                 this._loader.modules[this.fullpath()] = this
                 if (this._parent) {
@@ -71,6 +73,11 @@
             , onload: function(source) {
                 this._onload = source
                 return this                
+            }
+
+            , test: function(testname, fntest) {
+                this._tests.push({ modulepath: this.path(), modulename: this._name, testname: testname, fntest: fntest })
+                return this
             }
         }
     })

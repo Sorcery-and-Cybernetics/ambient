@@ -8,7 +8,6 @@ _.ambient.module("base", function (_) {
     _.define = {};
     _.make = {};
     _.model = {};
-    _.core = {};
 
     // Constants
     _.crlf = "\r\n";
@@ -196,33 +195,6 @@ _.ambient.module("base", function (_) {
         } else if (items) {
             fn.call(context, items);
         }
-    };
-
-    //Todo: naar async
-    _.sequence = function (items, fn, next, context) {
-        context = context || this;
-
-        var execute = next;
-        if (items.rofeach) {
-            items.rofeach(function (item, index) {
-                execute = function (xitem, xindex, next) {
-                    fn.call(context, xitem, xindex, next);
-                }.bind(context, item, index, execute);
-            });
-        } else if (items.rofeachchild) {
-            items.rofeachchild(function (item, index) {
-                execute = function (xitem, xindex, next) {
-                    fn.call(context, xitem, xindex, next);
-                }.bind(context, item, index, execute);
-            });
-        } else {
-            _.rofeach(items, function (item, index) {
-                execute = function (xitem, xindex, next) {
-                    fn.call(context, xitem, xindex, next);
-                }.bind(context, item, index, execute);
-            });
-        }
-        return execute();
     };
 
     _.memoize = function (fn) {

@@ -16,7 +16,7 @@
                 var me = this
                 
                 var god = _.make.god(_, name, config)
-                    .onfinished(function(world) {
+                    .onfinish(function(world) {
                         _.debug("World " + name + " is created")
                         me.worlds[world.name] = world
                         next()

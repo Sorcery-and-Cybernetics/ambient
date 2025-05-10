@@ -109,18 +109,21 @@
 
                 _.foreach(result, function(modulename) {
                     var module = _.modules[modulename]
+
+                    me.world.core.__modules.push(module)
                     var source = module.source()
                     if (source) { source(me.world) }
                 })
 
                 me.world.helper.oop.rundefiners()
+                me.world.create()
 
-                _.foreach(result, function(modulename) {
-                    var module = _.modules[modulename]
-                    if (module._onload) { module._onload(me.world) }
-                })
+                // _.foreach(result, function(modulename) {
+                //     var module = _.modules[modulename]
+                //     if (module._onload) { module._onload(me.world) }
+                // })
 
-                me.onfinished()
+                me.onfinish()
             }
             
             , loadmodule: function (module) {
@@ -141,19 +144,18 @@
                 })
             }            
 
-            , onfinished: function(next) {
+            , onfinish: function(next) {
                 if (_.isfunction(next)) {
-                    this._onfinished = next
+                    this._onfinish = next
                     return this
                 }
                 
-                if (this._onfinished) {
-                    var next = this._onfinished
-                    this._onfinished = null
-                    next.call(this, this.world)
+                if (this._onfinish) {
+                    var next = this._onfinish
+                    this._onfinish = null
+                    next.call(this, this.world)                    
                 }                
             }
-
         }
     })
 }) (_.ambient)
