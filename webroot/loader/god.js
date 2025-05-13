@@ -116,12 +116,7 @@
                 })
 
                 me.world.helper.oop.rundefiners()
-                me.world.create()
-
-                // _.foreach(result, function(modulename) {
-                //     var module = _.modules[modulename]
-                //     if (module._onload) { module._onload(me.world) }
-                // })
+                me.world.create();
 
                 me.onfinish()
             }

@@ -16,5 +16,5 @@ _.ambient.module("helper").source(function (_) {
 
         _.helper[name] = helper
         helper.construct()
-    }
+    }    
 })

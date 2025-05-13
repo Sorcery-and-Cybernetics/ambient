@@ -1,6 +1,7 @@
 _.ambient.rootmodule("debug/")
-    .require("sourcery/core/base/")
+//    .require("sourcery/core/base/")
     .include("basicdebug")    
     .include("debug")
+    .include("unittest")
 
 

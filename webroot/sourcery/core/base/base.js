@@ -49,6 +49,10 @@ _.ambient.module("base", function (_) {
         return !!(value && value.constructor == Object);
     };
 
+    _.ispromise = function(obj) {
+        return (typeof obj == "object" && typeof obj.then == "function");
+    }
+
     _.ismodel = function (value) {
         return !!(value && value._modelname);
     };
@@ -376,13 +380,9 @@ _.ambient.module("base", function (_) {
         },
     };
 })
-.onload(function (_) {
-    _.debug.assertstart("basic");
-
-    _.debug.assert(_.isjson([1, 2, 3]), false, "isjson test array");
-    _.debug.assert(_.isjson({ a: 1 }), true, "isjson test json");
-    _.debug.assert(_.isjson(new function () {}), false, "isjson test class");
-
-    _.debug.assertfinish();
+.test("isjson", function (_) {
+    this.assert(_.isjson([1, 2, 3]), false, "isjson test array");
+    this.assert(_.isjson({ a: 1 }), true, "isjson test json");
+    this.assert(_.isjson(new function () {}), false, "isjson test class");
 });
 

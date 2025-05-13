@@ -18,36 +18,17 @@
             }
 
             , create: function() {
-                var me = this
-                var tests = []
-
-                _.foreach(this.core.__modules, function(module) {
-                    var source = module.source()
-                    if (source) { source(me) }
-
-                    tests = tests.concat(module._tests)
-                })
-
-                this.helper.oop.rundefiners()
-
-                if (!tests.length) { return me.load() }
-                
-                _.foreachasync(tests, function(test, next) {
-                    test.fntest.call(test, function() {
-                        next()
-                    })
-                }, function() {
-                    me.load()
-                })
-                return me                
+                this.load()
+                return this
             }
             
             , load: function() {
                 var me = this
-                
+
                 _.foreach(this.core.__modules, function(module) {
                     if (module._onload) { module._onload(me) }
                 }) 
+                
                 return this
             }
         }
