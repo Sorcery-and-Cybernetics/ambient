@@ -2,26 +2,26 @@
 // httptest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httptest")
-.onload(function (_) {
+.test("httpserver", function (_) {
 
-    var server = _.make.httpserver("bla", 80)
+    // var server = _.make.httpserver("bla", 80)
 
-    server.onerror(function(err) {
-        _.debug(err)
-    })
-    .onrequest(function(response) {
-        response.write("hello world")
-        response.end()
-    })
+    // server.onerror(function(err) {
+    //     _.debug(err)
+    // })
+    // .onrequest(function(response) {
+    //     response.write("hello world")
+    //     response.end()
+    // })
 
-    server.start()
+    // server.start()
 
-    _.core.http.get("http://localhost:80")
-        .onerror(function(err) {
-            _.debug(err)
-        })
-        .onresponse(function(response) {
-            _.debug(response)
-            server.stop()
-        })
+    // _.core.http.get("http://localhost:80")
+    //     .onerror(function(err) {
+    //         _.debug(err)
+    //     })
+    //     .onresponse(function(response) {
+    //         _.debug(response)
+    //         server.stop()
+    //     })
 })

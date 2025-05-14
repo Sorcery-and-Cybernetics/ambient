@@ -2,8 +2,6 @@
 // testtest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("unittest", function (_) {
-    //We cannot add code here, we are at the start of the load order.
-    var x = 10
 })
 .onload(function(_) {
     
