@@ -8,11 +8,24 @@ _.ambient.module("file", function (_) {
         this._name = null
         this._extension = null
 
-        this.construct = function (drive, path, name, extension) {
-            this._drive = drive
-            this._path = path
-            this._name = name
-            this._extension = extension
+        this.construct = function (path) {
+            var path = _.path.splitpath(path)
+            this._drive = path.drive
+            this._path = path.path
+            this._name = path.name
+            this._extension = path.extension
+        }
+
+        this.exists = function () {
+            return _.path.fileexists(this.fullpath())
+        }
+
+        this.ensure = function () {
+            if (!this.exists()) {
+                var path = this.drive() + this.path()
+                _.path.makedir(path)
+            }
+            return this
         }
 
         this.drive = function () { return this._drive }
@@ -27,21 +40,37 @@ _.ambient.module("file", function (_) {
 
         //rename file
         this.rename = function (newname) {            
-            this._name = newname
+            if (!newname || !_.isstring(newname)) { throw "Error: newname should be a string" }
 
             var filename = this.fullname()
-            _.path.move(this.fullname(), this.path() + newname)
+            var newfilename = this.path() + newname + "." + this.extension()
+            
+            try {
+                _.path.move(filename, newfilename)
+            } catch (e) {
+                throw new Error("Rename file " + filename + " to " + newfilename)
+            }
+
+            this._name = newname
             return this
         }
 
         //function to move file
         this.move = function (path) {
             if (path instanceof _.model.folder) { path = path.fullpath() }
-            if (!_.isstring(path)) { throw "Error: path should be a string" }
-            if (!_.isdir(path)) { throw "Error: Path is not a path" }
+            if (!path || !_.isstring(path)) { throw "Error: path should be a string" }
+            if (!_.isdir$(path)) { throw "Error: Path is not a path" }
             
-            this._path = path
-            _.path.move(this.fullname(), path + this.name())
+            var filename = this.fullname()
+            var newfilename = path + this.name() + "." + this.extension()
+            
+            try {
+                _.path.move(filename, newfilename)
+            } catch (e) {
+                throw new Error("Move file " + filename + " to " + newfilename)
+            }
+
+            this.construct(newfilename)
             return this
         }
 

@@ -7,10 +7,22 @@ _.ambient.module("folder", function (_) {
         this._path = null
         this._name = null
 
-        this.construct = function (drive, path, name) {
-            this._drive = drive
-            this._path = path + name? (name + "/") : ""
-            this._name = name
+        this.construct = function (path) {
+            var path = _.path.splitpath(path)
+            this._drive = path.drive
+            this._path = path.path
+            this._name = path.name
+        }
+
+        this.exists = function () {
+            return _.path.direxists(this.fullpath())
+        }
+
+        this.ensure = function () {
+            if (!this.exists()) {
+                _.path.makedir(this.fullpath())
+            }
+            return this
         }
 
         this.drive = function () { return this._drive }
@@ -23,20 +35,38 @@ _.ambient.module("folder", function (_) {
         this.isfile = function () { return false }
 
         this.rename = function (newname) {
-            this.name(newname)
+            if (!newname || !_.isstring(newname)) { throw "Error: newname should be a string" }
 
             var foldername = this.fullname()
             var newfoldername = this.parent().path() + newname
-            return _.path.move(foldername, newfoldername)
+
+            try {
+                _.path.move(foldername, newfoldername)
+            } catch (e) {
+                throw new Error("Rename folder " + foldername + " to " + newfoldername)
+            }
+
+            this._name = newname
+            return this
         }
 
         this.move = function (path) {
+            if (path instanceof _.model.folder) { path = path.fullpath() }
+            if (!path || !_.isstring(path)) { throw "Error: path should be a string" }
+            if (!_.isdir$(path)) { throw "Error: Path is not a path" }
+
             var foldername = this.fullname()
             var newfoldername = path + folder.name()
+            
+            try {
+                _.path.move(foldername, newfoldername)
+            } catch (e) {
+                throw new Error("Move folder " + foldername + " to " + newfoldername)
+            }
 
-            return _.path.move(foldername, newfoldername)            
+            this.construct(newfoldername)
+            return this
         }
-
     })
 
 })
