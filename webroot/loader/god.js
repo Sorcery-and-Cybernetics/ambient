@@ -27,7 +27,7 @@
             , require: function(modulepath) {
                 var me = this
 
-                _.debug("Require " + modulepath)
+                //_.debug("Require " + modulepath)
 
                 if (this.requires[modulepath]) { 
                     throw "Required module " + modulepath + " can not be loaded."
@@ -46,7 +46,7 @@
 
                 if (this.isstarted) {
                     setTimeout(function() { 
-                        _.debug("Timeout triggered")
+                        //_.debug("Timeout triggered")
                         me.loadmodules() 
                     }, 1)
                 }
@@ -125,7 +125,7 @@
                 var me = this
 
                 var path = module.fullpath()
-                _.debug(this.name + " is loading: " + path)        
+                //_.debug(this.name + " is loading: " + path)        
                 _.currentpath = path
 
                 path += (module.isrootmodule()? "_root.js": ".js")

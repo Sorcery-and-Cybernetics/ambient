@@ -112,7 +112,7 @@ _.ambient.module("map", function(_) {
         };
     });
 })
-.test("map", function(_) {
+.ontest("map", function(_) {
     var map = _.make.core.map()
 
     map.set("a", 1)

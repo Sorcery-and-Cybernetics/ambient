@@ -199,7 +199,7 @@ _.ambient.module("treebaselist", function (_) {
 
                 function testnode(node, parentnode) {
                     var count = 1;
-                    var result = null;
+                    var result = "";
 
                     var leftnode = node._leftnode;
 

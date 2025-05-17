@@ -187,7 +187,7 @@ _.ambient.module("basicmath", function (_) {
         _.math.pow = Math.pow
         _.math.exp = Math.exp
 })
-.onload(function(_) {
+.ontest("basicmath", function(_) {
     // _.debug("Log chance")
 
     // var maxlevel = 4

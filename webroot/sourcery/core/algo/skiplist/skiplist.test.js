@@ -1,5 +1,5 @@
 _.ambient.module("skiplist.test")
-    .test("skiplist", function(_, next) {
+    .ontest("skiplist", function(_, next) {
         var itemcount = 10
 
         _.debug.assertstart("skiplist")

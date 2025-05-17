@@ -2,7 +2,7 @@
 // httptest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("httptest")
-.test("httpserver", function (_) {
+.ontest("httpserver", function (_) {
 
     // var server = _.make.httpserver("bla", 80)
 

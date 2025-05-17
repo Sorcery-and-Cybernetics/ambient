@@ -16,7 +16,7 @@ _.ambient.module("testobject", function (_) {
 //         }
 //     })
 })
-.onload(function(_) {
+.ontest("testobject", function(_) {
     _.debug("Moo " + _.name)
 
     var test = _.make.testobject()

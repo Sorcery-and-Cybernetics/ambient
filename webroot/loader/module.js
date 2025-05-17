@@ -75,7 +75,7 @@
                 return this                
             }
 
-            , test: function(testname, source) {
+            , ontest: function(testname, source) {
                 this._tests.push({ modulepath: this.path(), modulename: this._name, testname: testname, source: source })
                 return this
             }

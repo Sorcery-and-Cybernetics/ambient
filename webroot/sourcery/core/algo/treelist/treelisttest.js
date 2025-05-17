@@ -1,9 +1,10 @@
 //*************************************************************************************************
 // treelisttest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
-_.ambient.module("treelisttest", function (_) {
-})
-.onload(function (_) {
+_.ambient.module("treelisttest")
+.ontest("treelisttest", function (_) {
+    var me = this
+
     _.define.core.object("core.treelisttestitem", function () {
         this.__name = "";
         this.__value = "";
@@ -34,6 +35,8 @@ _.ambient.module("treelisttest", function (_) {
     var maxx = 3
     var maxy = 3
 
+    this.group("Add item test")
+    
     for (var y = maxy; y >= 1; y--) {
         for (var x = maxx; x >= 1; x--) {
             _.foreach(itemnames, function (key) {
@@ -43,7 +46,7 @@ _.ambient.module("treelisttest", function (_) {
 
                 list.push(item)
 
-                _.debug.assert(list.debugvalidate())
+                me.assert(list.debugvalidate(), true, "additem test " + itemkey)
             })
         }
     }
@@ -52,6 +55,7 @@ _.ambient.module("treelisttest", function (_) {
     
     var counter = 0
 
+    this.group("Remove and add item test")
     while (true) {
         counter++
 
@@ -64,9 +68,9 @@ _.ambient.module("treelisttest", function (_) {
 
         var item = _.make.core.treelisttestitem(itemkey, itemvalue)
         
-        _.debug.assert(list.debugvalidate())
+        this.assert(list.debugvalidate(), true, "removeitem test " + itemkey)    
         list.push(item)    
-        _.debug.assert(list.debugvalidate())
+        this.assert(list.debugvalidate(), true, "additem test " + itemkey)    
     }
     
     if (debugshow) { 
@@ -86,5 +90,5 @@ _.ambient.module("treelisttest", function (_) {
        _.debug()
     }
     
-    _.debug.assert(list.debugvalidate())    
+    this.assert(list.debugvalidate(), true, "Final validation")    
 })    

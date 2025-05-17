@@ -50,7 +50,7 @@ _.ambient.module("base", function (_) {
     };
 
     _.ispromise = function(obj) {
-        return (typeof obj == "object" && typeof obj.then == "function");
+        return obj instanceof Promise;
     }
 
     _.ismodel = function (value) {
@@ -380,7 +380,7 @@ _.ambient.module("base", function (_) {
         },
     };
 })
-.test("isjson", function (_) {
+.ontest("isjson", function (_) {
     this.assert(_.isjson([1, 2, 3]), false, "isjson test array");
     this.assert(_.isjson({ a: 1 }), true, "isjson test json");
     this.assert(_.isjson(new function () {}), false, "isjson test class");

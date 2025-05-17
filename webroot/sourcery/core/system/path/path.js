@@ -111,13 +111,13 @@ _.ambient.module("path", function (_) {
         }
     }
 })
-.test("normalizepath", function(_) {
+.ontest("normalizepath", function(_) {
     this.test("").is("./")
     this.test(_.path.normalize("a/b/c/")).is("a/b/c/")
     this.test(_.path.normalize("a/b/c")).is("a/b/c")
     this.test(_.path.normalize("a/b/../c")).is("a/c")
 })
-.test("splitpath", function(_) {
+.ontest("splitpath", function(_) {
     this.test(_.path.splitpath("a/b/c/")).is({ isdir: true, drive: "./", path: "a/b", name: "c" })
     this.test(_.path.splitpath("a/b/c")).is({ isdir: false, drive: "./", path: "a/b", name: "c" })  
     this.test(_.path.splitpath("a/b/c.d")).is({ isdir: false, drive: "./", path: "a/b", name: "c", extension: "d" })
