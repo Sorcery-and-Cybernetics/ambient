@@ -1,8 +1,10 @@
 _.ambient.module("skiplist.test")
     .ontest("skiplist", function(_, next) {
+        var me = this
+        var showdebug = false
+
         var itemcount = 10
 
-        _.debug.assertstart("skiplist")
         var list = _.make.core.skiplist().segmentsize(2)
 
         // Populate the skiplist with 300 nodes with values 1-300
@@ -51,23 +53,20 @@ _.ambient.module("skiplist.test")
 //                _.debug(index + "\t" + nodeposition + "\t" + foundindex)
 
                 if ((foundindex != index) || (nodeposition != index)) {
-                    _.debug.assert(true, false, "List order mismatch")
+                    me.assert(true, false, "List order mismatch")
                     return _.done
 
                 }
             })
         }
 
-//        segmentdump(list)
-
+        if (showdebug) { segmentdump(list) }
 
         // Verify list structure and ordering
-        _.debug.assert(list.debugvalidate(), undefined, "list.debugvalidate() - ordered index")
+        this.assert(list.debugvalidate(), undefined, "list.debugvalidate() - ordered index")
         testorderindex(list)
 
-        // RANDOM POSITION TESTS
-        // Test findrelativenode with 100 random positions to ensure correct node navigation
-        //_.debug("Testing findrelativenode with random positions:")
+        me.group("Testing findrelativenode with random positions")
         for (var i = 0; i < 100; i++) {
             // Get random start position (1 to itemcount)
             var startpos = Math.floor(Math.random() * (itemcount - 2)) + 2
@@ -87,23 +86,18 @@ _.ambient.module("skiplist.test")
             // Test forward movement - verify we can navigate forward correctly
             var forwardnode = list.findrelativenode(startnode, forwardsteps)
             if (!forwardnode || !forwardnode.value || forwardnode.value() != startpos + forwardsteps) {
-//                var forwardnode = list.findrelativenode(startnode, forwardsteps)
-                _.debug.assert(-1, startpos + forwardsteps, "Forward from " + startpos + " by " + forwardsteps)
+                me.assert(-1, startpos + forwardsteps, "Forward from " + startpos + " by " + forwardsteps)
             }
             
             // Test backward movement - verify we can navigate backward correctly
             var backwardnode = list.findrelativenode(startnode, backwardsteps)
             if (!backwardnode || !backwardnode.value || backwardnode.value() != startpos + backwardsteps) {
                 var backwardnode = list.findrelativenode(startnode, backwardsteps)
-                _.debug.assert(-1, startpos + backwardsteps, "Backward from " + startpos + " by " + backwardsteps)
+                me.assert(-1, startpos + backwardsteps, "Backward from " + startpos + " by " + backwardsteps)
             }
         }
 
-        // BOUNDARY CONDITION TESTS
-        // Test edge cases for findrelativenode to ensure proper handling of boundaries
-        //_.debug("Testing findrelativenode boundary conditions:")
-        
-        // Test navigation from first node
+        me.group("Testing findrelativenode boundary conditions")
         var firstnode = list.nodefirst()
         _.debug.assert(firstnode.value(), 1, "firstnode.value()")
         _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "list.findrelativenode(firstnode, -1)")
@@ -168,7 +162,7 @@ _.ambient.module("skiplist.test")
             list.add(item);
         });
 
-//        segmentdump(list)
+        if (showdebug) { segmentdump(list) }
         _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
 
 
@@ -212,25 +206,19 @@ _.ambient.module("skiplist.test")
             }
         }
 
-        segmentdump(list)  
+        if (showdebug) { segmentdump(list) }
 
         additem(list, "B", 4)
-        segmentdump(list)
+        if (showdebug) { segmentdump(list) }
+        
 
         additem(list, "C", -5, 4)
-        segmentdump(list)
+        if (showdebug) { segmentdump(list) }
 
         additem(list, "A", 7, 4)
-        segmentdump(list)        
+        if (showdebug) { segmentdump(list) }
 
     _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
-
-
-
-        _.debug.assertfinish()
-
-
-
 
         // var result = []
 

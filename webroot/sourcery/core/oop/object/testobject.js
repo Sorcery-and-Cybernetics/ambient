@@ -5,7 +5,7 @@ _.ambient.module("testobject", function (_) {
         this.construct = _.noop
 
         this.test = function() {
-            _.debug("Test is working")
+            return("Test is working")
         }
     })
 //     .extend(function(definer) {
@@ -17,9 +17,7 @@ _.ambient.module("testobject", function (_) {
 //     })
 })
 .ontest("testobject", function(_) {
-    _.debug("Moo " + _.name)
-
     var test = _.make.testobject()
-    test.test()
+    this.test(test.test(), "Test is working")
 })  
 
