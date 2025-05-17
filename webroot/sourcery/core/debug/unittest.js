@@ -171,6 +171,10 @@ _.ambient.module("unittest", function (_) {
         this.debugout = function(showall) {
             var result = []
 
+            if (this.__showall) {
+                debugger
+            }
+
             if (!showall && !this.__showall && (this.__failedcount == 0)) { return }
 
             result.push("")

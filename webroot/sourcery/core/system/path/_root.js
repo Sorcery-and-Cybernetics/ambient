@@ -1,6 +1,5 @@
 _.ambient.rootmodule("path/")
     .require("sourcery/core/system/timer/")
     .include("path")
-    // .include("drive")
-    // .include("file")
-    // .include("folder")
+     .include("file")
+     .include("folder")
