@@ -102,7 +102,7 @@ _.ambient.module("unittest", function (_) {
         this.debugout = function() {
             var result = (this.__failed? "FAIL: " : "PASS: ");
 
-            result += this.__expected + " " + this.__method + " " + this.__expected + " - " + this.__message;
+            result += this.__expected + " " + this.__method + " " + this.__expected + (this.message? " - " + this.__message: "");
             return result;
         }
     })

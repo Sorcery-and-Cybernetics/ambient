@@ -1,5 +1,6 @@
 _.ambient.rootmodule("system/")
     .include("timer/")
+    .include("path/")
     .include("http/")
     .include("ui/")
     .include("webserver/", "server")

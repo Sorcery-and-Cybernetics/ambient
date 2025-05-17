@@ -1,5 +1,5 @@
 _.ambient.rootmodule("http/")
-    .require("sourcery/core/system/timer/")
+    .require("sourcery/core/system/path/")
 
     .include("httphelper", "server")
     .include("httpserver", "server")

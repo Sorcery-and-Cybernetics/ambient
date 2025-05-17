@@ -289,22 +289,25 @@ _.ambient.module("basicstring", function (_) {
     //_.value$ = function (line, delimiter, reverse, keyisleading, keepdelimiter) { }
 
      //
-    _.kvsplit$ = function (line, delimiter, reverse, initial) {
-        line = _.trim$(line)
 
-        initial = initial === undefined ? "" : initial
-
-        delimiter = delimiter || "="
-
-        if (reverse) {
-            var pos = line.lastIndexOf(delimiter)
-        } else {
-            var pos = line.indexOf(delimiter)
-        }
+    _.leftsplit$ = function(line, delimiter) {
+        var pos = line.indexOf(delimiter)
 
         return {
             key: _.trim$(pos >= 0 ? line.substring(0, pos) : line)
-            , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : initial
+            , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : ""
+            , delimiter: delimiter
+            , line: line
+            , pos: pos
+        }
+    }
+
+    _.rightsplit$ = function(line, delimiter) {
+        var pos = line.lastIndexOf(delimiter)
+
+        return {
+            key: _.trim$(pos >= 0 ? line.substring(0, pos) : line)
+            , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : ""
             , delimiter: delimiter
             , line: line
             , pos: pos
@@ -312,19 +315,19 @@ _.ambient.module("basicstring", function (_) {
     }
 
     _.leftof$ = function (line, delimiter) {
-        return _.kvsplit$(line, delimiter).key
+        return _.leftsplit$(line, delimiter).key
     }
 
     _.rightof$ = function (line, delimiter) {
-        return _.kvsplit$(line, delimiter).value
+        return _.leftsplit$(line, delimiter).value
     }
 
     _.leftoflast$ = function (line, delimiter) {
-        return _.kvsplit$(line, delimiter, true).key
+        return _.rightsplit$(line, delimiter).key
     }
 
     _.rightoflast$ = function (line, delimiter) {
-        return _.kvsplit$(line, delimiter, true).value
+        return _.rightsplit$(line, delimiter).value
     }
 
     //Replace $pattern$ in text with params[pattern]

@@ -1,7 +1,7 @@
 //*************************************************************************************************
 // map - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
-_.ambient.module("map", function(_) { 
+_.ambient.module("map", function(_) {
     _.define.core.object("core.map", function (supermodel) {
         this.__value = null;
 
@@ -112,36 +112,31 @@ _.ambient.module("map", function(_) {
         };
     });
 })
-.onload(function(_) {
-    //write tests for map
-    _.debug.assertstart("map")
-    
+.test("map", function(_) {
     var map = _.make.core.map()
+
     map.set("a", 1)
     map.set("b", 2)
     map.set("c", 3)
 
     map.fromjson({ "d": 4, "e": 5} )
 
-    _.debug.assert(map.keys(), ["a", "b", "c", "d", "e"], "map.keys()")
-    _.debug.assert(map.values(), [1, 2, 3, 4, 5], "map.values()")
-    _.debug.assert(map.length(), 5, "map.length()")
-    _.debug.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "d": 4, "e": 5 }, "map.tojson()")
-    _.debug.assert(map.has("d"), true, "map.has()")
+    this.assert(map.keys(), ["a", "b", "c", "d", "e"], "map.keys()")
+    this.assert(map.values(), [1, 2, 3, 4, 5], "map.values()")
+    this.assert(map.length(), 5, "map.length()")
+    this.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "d": 4, "e": 5 }, "map.tojson()")
+    this.assert(map.has("d"), true, "map.has()")
 
-    _.debug.assert(map.get("d"), 4, "map.get()")
+    this.assert(map.get("d"), 4, "map.get()")
 
     map.del("d")
 
-    _.debug(map.tojson())
-    _.debug.assert(map.length(), 4, "map.length()")
-    _.debug.assert(map.get("d"), undefined, "map.get()")
-    _.debug.assert(map.has("d"), false, "map.has()")
-    _.debug.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "e": 5 }, "map.tojson()")
+    this.assert(map.length(), 4, "map.length()")
+    this.assert(map.get("d"), undefined, "map.get()")
+    this.assert(map.has("d"), false, "map.has()")
+    this.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "e": 5 }, "map.tojson()")
 
     map.clear()
-    _.debug.assert(map.length(), 0, "map.length()")
-    _.debug.assert(map.tojson(), {}, "map.tojson()")
-
-    return _.debug.assertfinish()
+    this.assert(map.length(), 0, "map.length()")
+    this.assert(map.tojson(), {}, "map.tojson()")
 })
