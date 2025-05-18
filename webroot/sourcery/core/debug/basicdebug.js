@@ -18,7 +18,7 @@ _.ambient.module("basicdebug", function (_) {
             if (arg && (typeof arg.value == "function")) { arg = arg.value() }
             line += (index ? (index == 1? ": ": ", ") : "") + (typeof arg == "object" ? JSON.stringify(arg, null, (text.length == 1 ? 4 : null)) : arg)
         }
-0
+
         if ((typeof Debug !== "undefined") && Debug.writeln) {
             Debug.writeln(line)
         }

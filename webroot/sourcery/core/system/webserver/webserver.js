@@ -4,18 +4,19 @@
 _.ambient.module("webserver")
 .source(function (_) {
     _.define.core.object("webserver", function() {
-        this.__server = undefined;
-        this.__port = undefined;
-        this.__host = 80;
+        this._server = undefined;
+        this._port = undefined;
+        this._host = 80;
 
         this.construct = function(host, port) {
-            this.__host = host;
-            if (port) { this.__port = port }
+            this._host = host;
+            if (port) { this._port = port }
+
         }
 
         this.start = function() {
             var me = this;            
-            var server = _.make.httpserver(this.__host, this.__port)
+            var server = _.make.httpserver(this._host, this._port)
 
             server.onerror(function(err) {
                 me.handleerror(err);
@@ -24,20 +25,41 @@ _.ambient.module("webserver")
                 me.handleresponse(response)
             })
 
-            this.__server = server;
-            this.__server.start();
+            this._server = server;
+            this._server.start();
             
             return this;
         }
         
         this.stop = function() {
-            this.__server.stop();
+            this._server.stop();
             return this;
+        }
+
+        this.handleerror = function(response, message, errcode) {
+            var errcode = errcode || 404
+            var params = [response.url]
+
+            params.push(sessiontoken)
+
+            if (sessiontoken) { params = params.concat(sessiontoken) }
+
+            response.senderror(errordescription, errcode, params)
+
+            response.senderror(error)
+            return this.onerror(error)
+        }
+
+        this.handlefileresponse = function(response) {
+            //todo: check file exist
+            //todo: check file rights
+
+
         }
 
         this.handleresponse = function(response) {
             var path = response.path
-            var routedef = _.findroute(path)
+            var routedef = null  //_.findroute(path)
 
             if (routedef) {
                 if (!_.isfunction(routedef)) { return this.handleerror(response, "Route not found") }

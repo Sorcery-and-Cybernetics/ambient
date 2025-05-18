@@ -13,8 +13,8 @@ _.ambient.module("debug", function (_) {
             eqnull = !obj.exists()
         }
 
-        if (eqnull && funcname && _.debug.warn) {
-            _.debug.warn("eqnull", funcname, null, "object is missing")
+        if (eqnull && funcname && _.system && _.system.warn) {
+            _.system.warn("eqnull", funcname, null, "object is missing")
         }
         return eqnull
     }
