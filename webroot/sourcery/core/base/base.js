@@ -245,7 +245,7 @@ _.ambient.module("base", function (_) {
 
     // Vartypes
     _.noop = function () {};
-    _.noop.__functiontype = "noop";
+    _.noop._functiontype = "noop";
 
     // Don't change the order
     _.vtnull = 0;
@@ -261,18 +261,16 @@ _.ambient.module("base", function (_) {
     _.vtmodel = 10;
 
     _.define.enum("vartype", [
-        "null",
-        "string",
-        "bool",
-        "number",
-        "date",
-        "regex",
-        "function",
-        "object",
-        "array",
-        "blob",
-        "kind",
-        "record",
+        "null"
+        , "string"
+        , "number"
+        , "bool"
+        , "date"
+        , "regex"
+        , "function"
+        , "array"
+        , "json"
+        , "model"
     ]);
 
     _.vartype = function (value) {
@@ -281,23 +279,14 @@ _.ambient.module("base", function (_) {
         }
 
         switch (value.constructor) {
-            case String:
-                return _.vtstring;
-            case Number:
-                return _.vtnumber;
-            case Boolean:
-                return _.vtboolean;
-            case Function:
-                return _.vtfunction;
-            case Date:
-                return _.vtdate;
-            case RegExp:
-                return _.vtregex;
-            case Array:
-                return _.vtarray;
-            case Object:
-                return _.vtjson;
-            //            case ArrayBuffer: {  return _.vtblob }
+            case String: return _.vtstring
+            case Number: return _.vtnumber
+            case Boolean: return _.vtboolean
+            case Date: return _.vtdate
+            case RegExp: return _.vtregex
+            case Function: return _.vtfunction
+            case Array: return _.vtarray
+            case Object: return _.vtjson
 
             default:
                 if (value._modelname) {
@@ -314,24 +303,15 @@ _.ambient.module("base", function (_) {
     _.var = {
         createempty: function (vartype) {
             switch (vartype) {
-                case _.vtnull:
-                    return null;
-                case _.vtstring:
-                    return "";
-                case _.vtboolean:
-                    return false;
-                case _.vtnumber:
-                    return 0;
-                case _.vtdate:
-                    return _.now();
-                case _.vtregex:
-                    return null;
-                case _.vtfunction:
-                    return _.noop;
-                case _.vtjson:
-                    return {};
-                case _.vtarray:
-                    return [];
+                case _.vtnull: return null
+                case _.vtstring: return ""
+                case _.vtboolean: return false
+                case _.vtnumber: return 0
+                case _.vtdate: return _.now()
+                case _.vtregex: return null
+                case _.vtfunction: return _.noop
+                case _.vtjson: return {}
+                case _.vtarray: return []
             }
         },
 

@@ -9,6 +9,8 @@ _.ambient.module("folder", function (_) {
 
         this.construct = function (path) {
             var path = _.path.splitpath(path)
+            if (!path.isdir) { throw "Error: Path is not a folder" }
+
             this._drive = path.drive
             this._path = path.path
             this._name = path.name
@@ -26,10 +28,10 @@ _.ambient.module("folder", function (_) {
         }
 
         this.drive = function () { return this._drive }
-        this.path = function () { return this._path }
+        this.path = function () { return this._path + this._name + "/" }
         this.name = function () { return this._name }
 
-        this.fullpath = function () { return this._drive + this._path }
+        this.fullpath = function () { return this._drive + this.path() }
 
         this.isfolder = function () { return true }
         this.isfile = function () { return false }

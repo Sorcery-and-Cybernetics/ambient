@@ -13,7 +13,7 @@
     }
 
     _.noop = function () { }
-    _.noop.__functiontype = "noop"
+    _.noop._functiontype = "noop"
     
     _.isfunction = function (value) {
         return !!(value && (value.constructor === Function))

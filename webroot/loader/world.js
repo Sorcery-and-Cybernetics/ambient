@@ -13,7 +13,7 @@
                 this.name = name
 
                 this.core = {
-                    __modules: []
+                    _modules: []
                 }
             }
 
@@ -25,7 +25,7 @@
             , load: function() {
                 var me = this
 
-                _.foreach(this.core.__modules, function(module) {
+                _.foreach(this.core._modules, function(module) {
                     if (module._onload) { module._onload(me) }
                 }) 
                 

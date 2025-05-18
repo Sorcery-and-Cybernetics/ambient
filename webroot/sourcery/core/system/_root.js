@@ -1,4 +1,5 @@
 _.ambient.rootmodule("system/")
+    .include("error/")
     .include("timer/")
     .include("path/")
     .include("http/")

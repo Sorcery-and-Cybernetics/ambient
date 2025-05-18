@@ -284,30 +284,24 @@ _.ambient.module("basicstring", function (_) {
     }
 
 
-    //kvsplit$ replaces
-    //_.key$ = function (line, delimiter, reverse, keyisleading, keepdelimiter) { }
-    //_.value$ = function (line, delimiter, reverse, keyisleading, keepdelimiter) { }
-
-     //
-
     _.leftsplit$ = function(line, delimiter) {
         var pos = line.indexOf(delimiter)
 
         return {
-            key: _.trim$(pos >= 0 ? line.substring(0, pos) : line)
+            key: _.trim$(pos >= 0 ? line.substring(0, pos) : line)  //When delimiter is not found leftsplit$ defaults the key to line
             , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : ""
             , delimiter: delimiter
             , line: line
             , pos: pos
         }
     }
-
+    
     _.rightsplit$ = function(line, delimiter) {
         var pos = line.lastIndexOf(delimiter)
 
         return {
-            key: _.trim$(pos >= 0 ? line.substring(0, pos) : line)
-            , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : ""
+            key: _.trim$(pos >= 0 ? line.substring(0, pos) : "")
+            , value: pos >= 0 ? _.trim$(line.substring(pos + delimiter.length)) : line //When delimiter is not found rightsplit$ defaults the value to line
             , delimiter: delimiter
             , line: line
             , pos: pos
@@ -392,7 +386,7 @@ _.ambient.module("basicstring", function (_) {
 
         _.foreach(_.split$(line, delim), function (command) {
             if (command) {
-                var kv = _.kvsplit$(command, kvdelim)
+                var kv = _.leftsplit$(command, kvdelim)
 
                 result[kv.key.toLowerCase()] = decodeURIComponent(kv.value.replace(/\+/g, '%20'))
             }
@@ -409,6 +403,5 @@ _.ambient.module("basicstring", function (_) {
         var len = value.length
         return _.lcase$(_.right$(str, len)) == _.lcase$(value)
     }
- 
 })
 

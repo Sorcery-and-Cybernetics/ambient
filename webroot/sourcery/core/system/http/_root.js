@@ -1,4 +1,5 @@
 _.ambient.rootmodule("http/")
+    .require("sourcery/core/system/error/")
     .require("sourcery/core/system/path/")
 
     .include("httphelper", "server")

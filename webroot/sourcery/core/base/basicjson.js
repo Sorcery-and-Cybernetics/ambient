@@ -79,7 +79,7 @@ _.ambient.module("basicjson").source(function (_) {
             var changed = false
 
             delim = delim || "."
-            var parts = _.kvsplit$(name, delim)
+            var parts = _.leftsplit$(name, delim)
 
             if (parts.value) {
                 //if (parts.name == "data") { editonly = false }

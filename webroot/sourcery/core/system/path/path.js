@@ -84,7 +84,7 @@ _.ambient.module("path", function (_) {
         path = _.path.normalize(path)
 
         //get drive
-        path.isdir = ((path == "") || (_.right$(path, 1) == "/")) 
+        result.isdir = ((path == "") || (_.right$(path, 1) == "/")) 
 
         var splitted = _.leftsplit$(path, ":/")            
 
@@ -95,19 +95,20 @@ _.ambient.module("path", function (_) {
             result.drive = "./"
         }
 
-        if (path.isdir) { path = _.left$(path, -1) }
+        if (result.isdir) { path = _.left$(path, -1) }
 
         //get name and extension
         var splitted = _.rightsplit$(path, "/")
 
-        path = splitted.key || ""
+        path = (splitted.key? splitted.key + "/": "") 
         var name = splitted.value || ""
 
         if (result.isdir) {
             result.name = name
+            result.extension = ''
             
         } else {
-            var splitted = _.rightsplit$(name, ".")
+            var splitted = _.leftsplit$(name, ".")
 
             result.name = splitted.key
             result.extension = splitted.value
@@ -217,14 +218,11 @@ _.ambient.module("path", function (_) {
         return null
     }
     
-
     _.path.open = function (path) {
-        var path = _.path.splitpath(path)
-
         if (_.path.isdir$(path)) {
-            return _.make.folder(path.drive, path.path, path.name)
+            return _.make.folder(path)
         } else {
-            return _.make.file(path.drive, path.path, path.name, path.extension)
+            return _.make.file(path)
         }
     }
 
@@ -312,31 +310,29 @@ _.ambient.module("path", function (_) {
             fs.closeSync(fddest)
         }
     }
-
-   
 })
 .ontest("normalizepath", function(_) {
-    this.test("").is("./")
     this.test(_.path.normalize("a/b/c/")).is("a/b/c/")
     this.test(_.path.normalize("a/b/c")).is("a/b/c")
     this.test(_.path.normalize("a/b/../c")).is("a/c")
 })
 .ontest("splitpath", function(_) {
-    this.test(_.path.splitpath("a/b/c/")).is({ isdir: true, drive: "./", path: "a/b", name: "c" })
-    this.test(_.path.splitpath("a/b/c")).is({ isdir: false, drive: "./", path: "a/b", name: "c" })  
-    this.test(_.path.splitpath("a/b/c.d")).is({ isdir: false, drive: "./", path: "a/b", name: "c", extension: "d" })
+    this.test(_.path.splitpath("a/b/c/")).is({ isdir: true, drive: "./", path: "a/b/", name: "c", extension: "" })
+    this.test(_.path.splitpath("a/b/c")).is({ isdir: false, drive: "./", path: "a/b/", name: "c", extension: "" })  
+    this.test(_.path.splitpath("a/b/c.d")).is({ isdir: false, drive: "./", path: "a/b/", name: "c", extension: "d" })
+    this.test(_.path.splitpath("c.d")).is({ isdir: false, drive: "./", path: "", name: "c", extension: "d" }, "splitpath extension")
 })
 .ontest("open", function(_) {
     var folder = _.path.open("a/b/c/")
     var file = _.path.open("a/b/c.d")
 
-    this.test(folder.fullpath()).is("a/b/c/", "folder fullpath")
-    this.test(folder instanceof _.model.folder).is(true, "folder is instance of folder")
+    this.test(folder.fullpath()).is("./a/b/c/", "folder fullpath")
+    this.test(folder instanceof _.make.folder).is(true, "folder is instance of folder")
     this.test(folder.name()).is("c", "folder name")
     this.test(folder.path()).is("a/b/c/", "folder path")
 
-    this.test(file.fullpath()).is("a/b/c.d", "file fullpath")
-    this.test(file instanceof _.model.file).is(true, "file is instance of file")
+    this.test(file.fullpath()).is("./a/b/c.d", "file fullpath")
+    this.test(file instanceof _.make.file).is(true, "file is instance of file")
     this.test(file.name()).is("c", "file name")
     this.test(file.path()).is("a/b/", "file path")
     this.test(file.extension()).is("d", "file extension")

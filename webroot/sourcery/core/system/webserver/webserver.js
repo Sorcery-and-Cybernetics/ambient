@@ -1,8 +1,7 @@
 //*************************************************************************************************
 // webserver - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
-_.ambient.module("webserver")
-.source(function (_) {
+_.ambient.module("webserver").source(function (_) {
     _.define.core.object("webserver", function() {
         this._server = undefined;
         this._port = undefined;
@@ -50,11 +49,16 @@ _.ambient.module("webserver")
             return this.onerror(error)
         }
 
+        this.handleerror = function(response, error) {
+            response.senderror(error)
+            return this.onerror(error)
+        }        
+
         this.handlefileresponse = function(response) {
             //todo: check file exist
             //todo: check file rights
-
-
+            //todo: send file
+            return response.sendfile(response.url)
         }
 
         this.handleresponse = function(response) {
@@ -66,21 +70,12 @@ _.ambient.module("webserver")
                 routedef(response)
                 
             } else {
-                 var file = _.make.fileroute(path)
-                 if (!file) { return this.handleerror(response, "File not found") }
-                 file(response)
-
+                 this.handlefileresponse(response)
             }
-        }
-
-        this.handleerror = function(response, error) {
-            response.senderror(error)
-            return this.onerror(error)
         }
 
         this.onerror = _.make.core.basicsignal();
     })
-
 })
 
   

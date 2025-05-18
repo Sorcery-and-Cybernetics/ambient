@@ -37,7 +37,7 @@ _.ambient.module("httpresponse", function (_) {
         this.session = null;
 
         this.construct = function (server, request, response) {
-            var self = this
+            var me = this
 
             this.server = server
 
@@ -69,13 +69,13 @@ _.ambient.module("httpresponse", function (_) {
             }
 
             this.req.on("error", function (error) {
-                if (self.state >= self.created) {
-                    self.senderror(error)
+                if (me.state >= me.states.created) {
+                    me.senderror(error)
                 }
             })
 
             this.res.on("finish", function () {
-                self.destroy()
+                me.destroy()
             })
         }
 
@@ -119,7 +119,7 @@ _.ambient.module("httpresponse", function (_) {
             switch (buffertype) {
                 case _.vtnull:
                     switch (datatype) {
-                        case _.vtobject:
+                        case _.vtjson:
                         case _.vtarray:
                             this.sendbuffer = data
                             break
@@ -128,14 +128,14 @@ _.ambient.module("httpresponse", function (_) {
                     }
                     break
 
-                case _.vtobject:
+                case _.vtjson:
                     this.sendbuffer = [this.sendbuffer]
                     this.sendbuffer.push(data)
                     break
 
                 case _.vtarray:
                     switch (datatype) {
-                        case _.vtobject:
+                        case _.vtjson:
                             this.sendbuffer.push(data)
                             break
 
@@ -169,7 +169,7 @@ _.ambient.module("httpresponse", function (_) {
             if ((this.state == this.states.created) && (!this._mimetype)) {
                 switch (_.vartype(this.sendbuffer)) {
                     case _.vtarray:
-                    case _.vtobject:
+                    case _.vtjson:
                         this.mimetype("json")
                         this.compress = this.server.compress
                         break
@@ -188,7 +188,7 @@ _.ambient.module("httpresponse", function (_) {
 
             switch (_.vartype(data)) {
                 case _.vtarray:
-                case _.vtobject:
+                case _.vtjson:
                     data = JSON.stringify(data)
             }
 
@@ -210,7 +210,7 @@ _.ambient.module("httpresponse", function (_) {
                 this.res.end()
                 this.state = this.states.destroying
             } catch (err) {
-                _.debug("Error", "httpresponse.end", err)
+                _.system.warn(this, "end", err)
                 this.destroy()
             }
             return this
@@ -269,10 +269,10 @@ _.ambient.module("httpresponse", function (_) {
 
                 this.res.end(errormessage)
 
-                _.debug.warn("httpresponse", "senderror", params||[], errormessage)
+                _.system.warn(this, "senderror", params||[], errormessage)
                 this.destroy()
             } else {
-                _.debug.warn("httpresponse", "senderror.trailing", params||[], errormessage)
+                _.system.warn(this, "senderror.trailing", params||[], errormessage)
             }
         }
 
@@ -300,7 +300,7 @@ _.ambient.module("httpresponse", function (_) {
             })
 
             request.on("end", function () {
-                me.state = me.created
+                //me.state = me.states.created
 
                 if (next) {
                     var data = buffer.data
@@ -334,7 +334,7 @@ _.ambient.module("httpresponse", function (_) {
         }
 
         this.sendfile = function (filename) {
-            var self = this
+            var me = this
 
             if (this.state != this.states.created) { throw "Response object cannot send file in current state" }
             filename = filename || this.url
@@ -344,39 +344,37 @@ _.ambient.module("httpresponse", function (_) {
 
             var mimetype = this.mimetype(extension)
 
-//            _.debug("Sendfile", filename, mimetype.byteranged)
-
             if (!mimetype.byteranged) {
                 fs.readFile(fullname, function (err, data) {
                     if (err) {
-                        return self.senderror(err, 404)
+                        return me.senderror(err, 404)
                     }
-                    if (self.state < self.created) {
-                        _.debug.warn("httpresponse", "sendfile", [filename], "After Read, response object cannot send file in current state")
+                    if (me.state < me.states.created) {
+                        _.system.warn(me, "sendfile", [filename], "After Read, response object cannot send file in current state")
                         return
                     }
-                    self.sendbuffer = data
-                    self.end()
+                    me.sendbuffer = data
+                    me.end()
                 })
 
             } else {
                 //stream
                 fs.stat(fullname, function (err, stats) {
                     if (err) {
-                        _.debug("Fail send: " + filename)
+                        _.system.warn("httpresponse", "sendfile", [filename], "After Stat, cannot read file")
 
                         if (err.code === 'ENOENT') {
-                            return self.senderror("File not found: " + filename, 404)
+                            return me.senderror("File not found: " + filename, 404)
                         }
-                        return self.senderror("Cannot read file: " + filename, 400)
+                        return me.senderror("Cannot read file: " + filename, 400)
                     }
 
-                    if (self.state < self.created) {
-                        _.debug.warn("httpresponse", "sendfile", [filename], "After Stat, response object cannot send file in current state")
+                    if (me.state < me.states.created) {
+                        _.system.warn("httpresponse", "sendfile", [filename], "After Stat, response object cannot send file in current state")
                         return
                     }
 
-                    var range = self.req.headers.range
+                    var range = me.req.headers.range
                     var total = stats.size
 
                     if (!range) {
@@ -386,7 +384,7 @@ _.ambient.module("httpresponse", function (_) {
 
                         var chunksize = total
 
-                        self.res.writeHead(200, {
+                        me.res.writeHead(200, {
 
                             "Content-Range": "bytes " + start + "-" + end + "/" + total
                             , "Accept-Ranges": "bytes"
@@ -399,18 +397,13 @@ _.ambient.module("httpresponse", function (_) {
 
                     } else {
                         var positions = range.replace(/bytes=/, "").split("-")
-                        //if (!positions[0] || !positions[1]) {
-                        //    _.debug("Invalid range request", range)
-                        //}
                         var start = parseInt(positions[0], 10)
                         var end = positions[1] ? parseInt(positions[1], 10) : total - 1
 
                         var chunksize = (end - start) + 1
                         if (end < 0) { end = 0 }
 
-//                        _.debug("Range", start, end, chunksize, mimetype.contenttype)
-
-                        self.res.writeHead(206, {
+                        me.res.writeHead(206, {
                             "Content-Range": "bytes " + start + "-" + end + "/" + total
                             , "Accept-Ranges": "bytes"
                             , "Content-Length": chunksize
@@ -426,34 +419,32 @@ _.ambient.module("httpresponse", function (_) {
 
                     var transferred = 0
 
-                    self.sendstream = fs.createReadStream(fullname, { start: start, end: end })
+                    me.sendstream = fs.createReadStream(fullname, { start: start, end: end })
                         .on("open", function () {
-                            if (self.state >= self.created) {
-                                self.sendstream.pipe(self.res)
+                            if (me.state >= me.states.created) {
+                                me.sendstream.pipe(me.res)
                             } else {
-                                self.senderror("Cannot stream file: " + filename, 400)
-                            //    stream.destroy()
-                            //    _.debug.warn("httpresponse", "sendfile", [fullname], "On Open, response object cannot send file in current state")
+                                me.senderror("Cannot stream file: " + filename, 400)
                             }
                         }).on("error", function (err) {
-                            self.senderror(err)
+                            me.senderror(err)
                         })
                         .on("data", function (data) {
                             transferred += data.length
                         })
                         .on("finish", function () {
-                        self.sendstream = null
-                            //                            _.debug("Transfering data (" + filename + " " + total + "): " + transferred + " of " + chunksize)
+                        me.sendstream = null
                         })
 
                 })
             }
         }
 
+        //todo: Move to proxy object
         this.handleproxy = function (url) {
             this.state = this.states.proxying
 
-            var self = this
+            var me = this
             var path = urlutils.parse(url)
 
             var options = {
@@ -469,16 +460,16 @@ _.ambient.module("httpresponse", function (_) {
 
             var redirect = http.request(options, function (serverresponse) {
                 serverresponse.on("data", function (chunk) {
-                    self.res.write(chunk, "binary")
+                    me.res.write(chunk, "binary")
                 })
                 .on("end", function () {
-                    self.end("HTTP/1.1 500 External Server End\r\n")
+                    me.end("HTTP/1.1 500 External Server End\r\n")
                 })
                 .on("error", function (err) {
-                    self.end("HTTP/1.1 500 " + err.message + "\r\n")
+                    me.end("HTTP/1.1 500 " + err.message + "\r\n")
                 })
 
-                self.res.writeHead(this.res.statusCode, this.res.headers)
+                me.res.writeHead(this.res.statusCode, this.res.headers)
             })
 
             redirect.on("error", function (err) {
@@ -490,7 +481,7 @@ _.ambient.module("httpresponse", function (_) {
                 redirect.write(chunk, 'binary');
             })
             .on('error', function (err) {
-                self.senderror(err)
+                me.senderror(err)
                 redirect.end()
             })
             .on('end', function () {
@@ -519,5 +510,4 @@ _.ambient.module("httpresponse", function (_) {
         //this.onerror = _.make.core.signal()
         //this.ondone = _.make.core.signal()
     })
-
 })

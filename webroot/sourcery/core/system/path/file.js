@@ -10,6 +10,8 @@ _.ambient.module("file", function (_) {
 
         this.construct = function (path) {
             var path = _.path.splitpath(path)
+            if (path.isdir) { throw "Error: Path is not a file" }
+
             this._drive = path.drive
             this._path = path.path
             this._name = path.name

@@ -6,18 +6,18 @@ _.ambient.module("unittest", function (_) {
 .onload(function(_) {
     
     _.define.core.object("core.unittestline", function() {
-        this.__unittest = undefined
-        this.__grouptitle = ""
-        this.__assert = undefined
-        this.__expected = undefined
-        this.__message = ""
-        this.__method = ""
-        this.__failed = false 
+        this._unittest = undefined
+        this._grouptitle = ""
+        this._assert = undefined
+        this._expected = undefined
+        this._message = ""
+        this._method = ""
+        this._failed = false 
         
         this.construct = function(unittest, grouptitle, assert) {
-            this.__unittest = unittest
-            this.__grouptitle = grouptitle
-            this.__assert = assert
+            this._unittest = unittest
+            this._grouptitle = grouptitle
+            this._assert = assert
         }
 
         this.is = function(expected, message) {
@@ -37,62 +37,63 @@ _.ambient.module("unittest", function (_) {
         }
 
         this.assert = function(method, expected, message) {
-            this.__method = method
-            this.__expected = expected
-            this.__message = message
+            this._method = method
+            this._expected = expected
+            this._message = message
 
-            if (_.ispromise(this.__assert)) {
-                this.__assert.then(function(value) {
-                    this.__assert = value
+            if (_.ispromise(this._assert)) {
+                this._assert.then(function(value) {
+                    this._assert = value
                     this.evaluate()
-                    this.__unittest.onlinefinish(this)
+                    this._unittest.onlinefinish(this)
                 }.bind(this))
             } else {
                 this.evaluate()
+                this._unittest.onlinefinish(this)
             }
 
             return this
         }
 
         this.evaluate = function() {
-            switch (this.__method) {
+            switch (this._method) {
                 case "is":
-                    if (((this.__expected === undefined) && (this.__assert != null)) || (!_.var.deepcompare(this.__assert, this.__expected))) {
-                        this.failed = true
+                    if (((this._expected === undefined) && (this._assert != null)) || (!_.var.deepcompare(this._assert, this._expected))) {
+                        this._failed = true
                     }
                     break
 
                 case "isnot":
-                    if (((this.__expected === undefined) && (this.__assert == null)) || (_.var.deepcompare(this.__assert, this.__expected))) {
-                        this.failed = true
+                    if (((this._expected === undefined) && (this._assert == null)) || (_.var.deepcompare(this._assert, this._expected))) {
+                        this._failed = true
                     }
                     break
 
                 case "has":
-                    if (this.__result instanceof Array) {
-                        if (!this.__result.includes(this.__expected)) {
-                            this.failed = true
+                    if (this._assert instanceof Array) {
+                        if (!this._assert.includes(this._expected)) {
+                            this._failed = true
                         }
-                    } else if (typeof this.__result == "string") {
-                        if (this.__result.indexOf(this.__expected) == -1) {
-                            this.failed = true
+                    } else if (typeof this._assert == "string") {
+                        if (this._assert.indexOf(this._expected) == -1) {
+                            this._failed = true
                         }
                     } else {
-                        this.failed = true
+                        this._failed = true
                     }
                     break
 
                 case "hasnot":
-                    if (this.__result instanceof Array) {
-                        if (this.__result.includes(this.__expected)) {
-                            this.failed = true
+                    if (this._assert instanceof Array) {
+                        if (this._assert.includes(this._expected)) {
+                            this._failed = true
                         }
-                    } else if (typeof this.__result == "string") {
-                        if (this.__result.indexOf(this.__expected) != -1) {
-                            this.failed = true
+                    } else if (typeof this._assert == "string") {
+                        if (this._assert.indexOf(this._expected) != -1) {
+                            this._failed = true
                         }
                     } else {
-                        this.failed = true
+                        this._failed = true
                     }
                     break
 
@@ -100,69 +101,71 @@ _.ambient.module("unittest", function (_) {
         }
 
         this.debugout = function() {
-            var result = (this.__failed? "FAIL: " : "PASS: ")
+            var result = (this._failed? "FAIL: " : "PASS: ")
 
-            result += this.__expected + " " + this.__method + " " + this.__expected + (this.message? " - " + this.__message: "")
+            result += this._assert + " " + this._method + " " + this._expected + (this._message? " - " + this._message: "")
             return result
         }
     })
 
     _.define.core.object("core.unittest", function() {
-        this.__unittester = null
-        this.__modulename = null
-        this.__testname = null
-        this.__lines = null
-        this.__showall = false
+        this._unittester = null
+        this._modulename = null
+        this._testname = null
+        this._lines = null
+        this._showall = false
 
-        this.__failedcount = 0
-        this.__promisecount = 0
+        this._failcount = 0
+        this._promisecount = 0
 
-        this.__currentgroup = ""
-        this.__source = null
+        this._currentgroup = ""
+        this._source = null
         
         this.construct = function(unittester, modulename, testname, source) {
-            this.__unittester = unittester
-            this.__modulename = modulename
-            this.__testname = testname
-            this.__source = source
-            this.__lines = []
+            this._unittester = unittester
+            this._modulename = modulename
+            this._testname = testname
+            this._source = source
+            this._lines = []
         }
 
         this.group = function(groupname) {
-            this.__currentgroup = groupname
+            this._currentgroup = groupname
         }
 
-        this.failedcount = function() { return this.__failedcount }
-        this.totalcount = function() { return this.__lines.length }
-        this.testname = function() { return this.__modulename + " - " + this.__testname }
-        this.source = function() { return this.__source }
+        this.failcount = function() { return this._failcount }
+        this.totalcount = function() { return this._lines.length }
+        this.testname = function() { return this._modulename + " - " + this._testname }
+        this.source = function() { return this._source }
         this.showall = function(value) { 
-            if (value === undefined) { return this.__showall }
-            this.__showall = value 
+            if (value === undefined) { return this._showall }
+            this._showall = value 
             return this 
         }
 
         this.test = function(assert) {
-            var line = _.make.core.unittestline(this, this.__currentgroup || "", assert)
+            var line = _.make.core.unittestline(this, this._currentgroup || "", assert)
             if (_.ispromise(assert)) {   
-                this.__promisecount++
+                this._promisecount++
             }
-            this.__lines.push(line)
+            this._lines.push(line)
             return line
         }
 
         this.assert = function(assert, expected, message) {
-            return this.test(assert).is(expected, message)
+            this.test(assert).is(expected, message)
         }
 
         this.onlinefinish = function(line) {
-            if (line.__failed) {
-                this.__failedcount++
+            if (line._failed) {
+                this._failcount++
             }
-            this.__promisecount--
+            if (_.ispromise(line._assert) ) {
+                this._promisecount--
 
-            if (this.__promisecount == 0) {
-                this.onfinish()
+                if (this._promisecount == 0) {
+                    this.onfinish()
+                }                
             }
         }
 
@@ -171,22 +174,18 @@ _.ambient.module("unittest", function (_) {
         this.debugout = function(showall) {
             var result = []
 
-            if (this.__showall) {
-                debugger
-            }
-
-            if (!showall && !this.__showall && (this.__failedcount == 0)) { return }
+            if (!showall && !this._showall && (this._failcount == 0)) { return }
 
             result.push("")
-            result.push("Unit test: " + this.__testname + " (" + this.__modulename + ")")
+            result.push("Unit test: " + this._testname + " (" + this._modulename + ")")
 
             var currentgroup = ""
 
-            for (var i = 0; i < this.__lines.length; i++) {
-                var line = this.__lines[i]
+            for (var i = 0; i < this._lines.length; i++) {
+                var line = this._lines[i]
 
-                if (line.__grouptitle !== currentgroup) {
-                    currentgroup = line.__grouptitle
+                if (line._grouptitle !== currentgroup) {
+                    currentgroup = line._grouptitle
                     if (currentgroup) { 
                         result.push("")
                         result.push("Group: " + currentgroup)
@@ -200,20 +199,20 @@ _.ambient.module("unittest", function (_) {
     })
 
     _.define.core.object("core.unittester", function() {
-        this.__tests = null
-        this.__failedcount = 0
+        this._tests = null
+        this._failcount = 0
 
         this.create = function() {
             var me = this
-            me.__unittests = []
+            me._unittests = []
 
-            _.foreach(_.core.__modules, function(module) {
+            _.foreach(_.core._modules, function(module) {
                 var modulename = module.fullpath()
 
                 if (module._tests) { 
                     _.foreach(module._tests, function(test) {
                         var unittest = _.make.core.unittest(this, modulename, test.testname || "", test.source)
-                        me.__unittests.push(unittest)
+                        me._unittests.push(unittest)
                     })
                 }
             })
@@ -221,9 +220,9 @@ _.ambient.module("unittest", function (_) {
         }
 
         this.start = function() {
-            //if (!this.__tests.length) { return this() }
+            //if (!this._tests.length) { return this() }
 
-            // _.foreach(this.__tests, function(test) {
+            // _.foreach(this._tests, function(test) {
             //     test.source().call(test, _)
             // })
 
@@ -231,9 +230,9 @@ _.ambient.module("unittest", function (_) {
 
             var me = this
                     
-            _.foreachasync(this.__unittests, function(unittest, next) {
+            _.foreachasync(this._unittests, function(unittest, next) {
                 unittest.source().call(unittest, _)
-                if (unittest.__promisecount == 0) { 
+                if (unittest._promisecount == 0) { 
                     next() 
                 } else {
                     unittest.onfinish(function() {
@@ -252,8 +251,8 @@ _.ambient.module("unittest", function (_) {
         this.debugout = function(showall) {
             var result = []
 
-            for (var i = 0; i < this.__unittests.length; i++) {
-                var unittest = this.__unittests[i]
+            for (var i = 0; i < this._unittests.length; i++) {
+                var unittest = this._unittests[i]
                 var unittestresult = unittest.debugout(showall)
 
                 if (unittestresult) { 

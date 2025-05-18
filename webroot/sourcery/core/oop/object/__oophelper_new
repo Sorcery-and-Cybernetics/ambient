@@ -82,7 +82,7 @@ _.define.module("oophelper", function (_) {
                     params = _.splittrim$(params, ",")
 
                     _.foreach(params, function (param) {
-                        _.kvsplit$(param, ":")
+                        _.leftsplit$(param, ":")
 
                         me.paramnames.push(key)
                         me.paramdef[key] = _.make.waveparam(param.key, _.vartype(param.value), me.paramnames.length)

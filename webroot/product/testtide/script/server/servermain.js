@@ -4,24 +4,23 @@
 
 _.ambient.module("servermain").source(function (_) {
     _.define.core.object("servermain", function() {
-        this.__server = undefined;
-        this.__port = "localhost";
-        this.__host = 80;
+        this._server = undefined;
+        this._port = "localhost";
+        this._host = 80;
         
         this.construct = function(host, port) {
-            if (host) { this.__host = host; }
-            if (port) { this.__port = port }
+            if (host) { this._host = host; }
+            if (port) { this._port = port }
         }
         
         this.start = function() {
             var me = this;            
-            var server = _.make.webserver(this.__host, this.__port)
+            this._server = _.make.webserver(this._host, this._port)
 
-            server.onerror(function(err) {
+            this._server.onerror(function(err) {
                 me.onerror(err);
             })
-
-            this.__server = server;
+            this._server.start()
 
             return this
         }
@@ -39,6 +38,6 @@ _.ambient.module("servermain").source(function (_) {
         .onerror(function(err) {
             _.debug("Server error: " + err)
         })
-        .start()
+        _.server.start()
     _.debug("Servermain is loaded")
 })
