@@ -2,7 +2,7 @@
 // map - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("map", function(_) {
-    _.define.core.object("core.map", function (supermodel) {
+    _.define.object("map", function (supermodel) {
         this.__value = null;
 
         this.construct = function () {
@@ -113,7 +113,7 @@ _.ambient.module("map", function(_) {
     });
 })
 .ontest("map", function(_) {
-    var map = _.make.core.map()
+    var map = _.make.map()
 
     map.set("a", 1)
     map.set("b", 2)

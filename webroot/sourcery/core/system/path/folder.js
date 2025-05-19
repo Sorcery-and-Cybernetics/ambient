@@ -2,7 +2,7 @@
 // folder - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("folder", function (_) {
-    _.define.core.object("folder", function (supermodel) {
+    _.define.object("folder", function (supermodel) {
         this._drive = null
         this._path = null
         this._name = null

@@ -2,7 +2,7 @@
 // treebaselist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("treebaselist", function (_) {
-    _.define.core.object("core.treebaselist", function () {
+    _.define.object("treebaselist", function () {
         this._rootnode = null
 
         this.count = function() {
@@ -12,7 +12,7 @@ _.ambient.module("treebaselist", function (_) {
         //todo: if item is in another list, remove from other list first.
         this.makenode = function (item) {
             if (item._indexof) { throw "error" }
-            var node = _.make.core.treelistnode(this, item)
+            var node = _.make.treelistnode(this, item)
 
             return node
         }

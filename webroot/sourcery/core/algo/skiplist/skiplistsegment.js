@@ -2,7 +2,25 @@
 // skiplistsegmentlevel - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("skiplistsegment", function (_) {
-    _.define.core.object("core.skiplistsegment", function (supermodel) {
+    var segmentvaluecompare = function(searchvalue, matchvaluefloor, matchvalueceil, option) {
+        if (!matchvalueceil) { matchvalueceil = matchvaluefloor }
+
+        switch(option) {
+            case "<=":
+                return searchvalue <= matchvalueceil;
+            case ">=":
+                return searchvalue >= matchvaluefloor;
+            case ">":
+                return searchvalue > matchvaluefloor;
+            case "<":
+                return searchvalue < matchvalueceil;
+            default: // "==" or undefined
+                return searchvalue >= matchvaluefloor && searchvalue <= matchvalueceil;
+        }
+    }
+
+
+    _.define.object("skiplistsegment", function (supermodel) {
         this.__base = null;
         this.__level = 0;
         this.__upsegment = null;
@@ -18,7 +36,7 @@ _.ambient.module("skiplistsegment", function (_) {
                 if (!this.__downsegment) {
                     this.__level = segmentdown.__level + 1;
                     this.__downsegment = segmentdown;
-                    this.__base = (segmentdown instanceof _.make.core.skiplistsegment ? segmentdown.__base : segmentdown);
+                    this.__base = (segmentdown instanceof _.make.skiplistsegment ? segmentdown.__base : segmentdown);
                     this.__base.__topsegment = this;
 
                     if (this.isroot()) {
@@ -33,7 +51,7 @@ _.ambient.module("skiplistsegment", function (_) {
                     if (this.__upsegment) {
                         this.__upsegment.construct(this, level - 1);
                     } else {
-                        this.__upsegment = _.make.core.skiplistsegment(this, level - 1);
+                        this.__upsegment = _.make.skiplistsegment(this, level - 1);
                     }
                 }                    
             };
@@ -147,9 +165,9 @@ _.ambient.module("skiplistsegment", function (_) {
                 }
 
                 do {
-                    if (cursor instanceof _.make.core.skiplistsegment) { 
+                    if (cursor instanceof _.make.skiplistsegment) { 
                         childcount += cursor.__childcount;
-                    } else if (cursor instanceof _.make.core.skiplistnode) {
+                    } else if (cursor instanceof _.make.skiplistnode) {
                         childcount++;
                     }
                     cursor = cursor.segmentnext();
@@ -195,7 +213,7 @@ _.ambient.module("skiplistsegment", function (_) {
             };
 
             this.valueinsegment = function(search, option) {
-                return _.core.segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option);
+                return segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option);
             };
         });
 

@@ -2,7 +2,7 @@
 // Timer - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("timer", function(_) {  
-    _.define.core.globalobject("core.timer", function (supermodel) {
+    _.define.globalobject("timer", function (supermodel) {
         var performancetimer = null
     
         if (false) {//(typeof window != 'undefined') && window.requestAnimationFrame) {
@@ -44,7 +44,7 @@ _.ambient.module("timer", function(_) {
             me._parent = scope
             me.now = _.now()
 
-            me.timers = _.make.core.treesortlist(this)
+            me.timers = _.make.treesortlist(this)
             me.render()
         }
 
@@ -145,27 +145,27 @@ _.ambient.module("timer", function(_) {
         }
 
         this.gettimer = function (parent, name) {
-            var timer =  _.make.core.timerevent(parent, name)
+            var timer =  _.make.timerevent(parent, name)
             this.timers.push(timer)
             return timer
         }
 
         this.waituntil = function (time, name) {
-            var timerevent = _.make.core.timerevent(null, name)
+            var timerevent = _.make.timerevent(null, name)
             timerevent.waituntil(time)
             this.timers.push(timerevent)
             return timerevent
         }
 
         this.waitfor = function (time, name) {
-            var timerevent = _.make.core.timerevent(null, name, immediate)
+            var timerevent = _.make.timerevent(null, name, immediate)
             timerevent.waitfor(time)
             this.timers.push(timerevent)
             return timerevent
         }
 
         this.pulse = function (interval, duration, name) {
-            var timerevent = _.make.core.timerevent(null, name)
+            var timerevent = _.make.timerevent(null, name)
             timerevent.pulse(interval, duration)
             this.timers.push(timerevent)
             return timerevent
@@ -176,12 +176,12 @@ _.ambient.module("timer", function(_) {
             supermodel.destroy.call(this)
         }
 
-        this.onpulse = _.make.core.signal()
-        this.onsecond = _.make.core.signal()
-        this.onminute = _.make.core.signal()
-        this.onhour = _.make.core.signal()
-        this.onday = _.make.core.signal()
-        this.onweek = _.make.core.signal()
-        this.onmonth = _.make.core.signal()
+        this.onpulse = _.make.signal()
+        this.onsecond = _.make.signal()
+        this.onminute = _.make.signal()
+        this.onhour = _.make.signal()
+        this.onday = _.make.signal()
+        this.onweek = _.make.signal()
+        this.onmonth = _.make.signal()
     })   
 })

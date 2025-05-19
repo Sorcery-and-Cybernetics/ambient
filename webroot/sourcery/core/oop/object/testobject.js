@@ -1,5 +1,5 @@
 _.ambient.module("testobject", function (_) {
-    _.define.core.object("testobject", function(supermodel) {
+    _.define.object("testobject", function(supermodel) {
         this._modelname = "testobject"
         this.modelname = function () { return this._modelname }
         this.construct = _.noop

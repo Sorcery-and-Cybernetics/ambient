@@ -3,7 +3,7 @@
 //*************************************************************************************************
 
 _.ambient.module("aliasdb", function(_) {    
-    _.define.core.object("alias.db", function (supermodel) {
+    _.define.object("alias.db", function (supermodel) {
         this.nodes = null
         this.connection = ""
 

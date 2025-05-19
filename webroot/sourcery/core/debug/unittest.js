@@ -5,7 +5,7 @@ _.ambient.module("unittest", function (_) {
 })
 .onload(function(_) {
     
-    _.define.core.object("core.unittestline", function() {
+    _.define.object("unittestline", function() {
         this._unittest = undefined
         this._grouptitle = ""
         this._assert = undefined
@@ -108,7 +108,7 @@ _.ambient.module("unittest", function (_) {
         }
     })
 
-    _.define.core.object("core.unittest", function() {
+    _.define.object("unittest", function() {
         this._unittester = null
         this._modulename = null
         this._testname = null
@@ -144,7 +144,7 @@ _.ambient.module("unittest", function (_) {
         }
 
         this.test = function(assert) {
-            var line = _.make.core.unittestline(this, this._currentgroup || "", assert)
+            var line = _.make.unittestline(this, this._currentgroup || "", assert)
             if (_.ispromise(assert)) {   
                 this._promisecount++
             }
@@ -169,7 +169,7 @@ _.ambient.module("unittest", function (_) {
             }
         }
 
-        this.onfinish = _.make.core.basicsignal()
+        this.onfinish = _.make.basicsignal()
 
         this.debugout = function(showall) {
             var result = []
@@ -198,7 +198,7 @@ _.ambient.module("unittest", function (_) {
         }
     })
 
-    _.define.core.object("core.unittester", function() {
+    _.define.object("unittester", function() {
         this._tests = null
         this._failcount = 0
 
@@ -206,12 +206,12 @@ _.ambient.module("unittest", function (_) {
             var me = this
             me._unittests = []
 
-            _.foreach(_.core._modules, function(module) {
+            _.foreach(_._modules, function(module) {
                 var modulename = module.fullpath()
 
                 if (module._tests) { 
                     _.foreach(module._tests, function(test) {
-                        var unittest = _.make.core.unittest(this, modulename, test.testname || "", test.source)
+                        var unittest = _.make.unittest(this, modulename, test.testname || "", test.source)
                         me._unittests.push(unittest)
                     })
                 }
@@ -246,7 +246,7 @@ _.ambient.module("unittest", function (_) {
             return this         
         }
 
-        this.onfinish = _.make.core.basicsignal()
+        this.onfinish = _.make.basicsignal()
 
         this.debugout = function(showall) {
             var result = []
@@ -265,7 +265,7 @@ _.ambient.module("unittest", function (_) {
     })
 
 
-    var unittester = _.make.core.unittester(this)
+    var unittester = _.make.unittester(this)
         .create()
         .onfinish(function() {
             var result = unittester.debugout()

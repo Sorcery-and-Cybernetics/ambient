@@ -16,7 +16,7 @@ _.ambient.module("httptest")
 
     // server.start()
 
-    // _.core.http.get("http://localhost:80")
+    // _.http.get("http://localhost:80")
     //     .onerror(function(err) {
     //         _.debug(err)
     //     })

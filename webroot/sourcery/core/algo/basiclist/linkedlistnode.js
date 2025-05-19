@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("linkedlistnode", function (_) {
 
-    _.define.core.object("core.linkedlistnode", function (supermodel) {
+    _.define.object("linkedlistnode", function (supermodel) {
         this.__nodenext = null;
         this.__nodeprev = null;
 
@@ -20,7 +20,7 @@ _.ambient.module("linkedlistnode", function (_) {
                 if (cursor == this) { return this; }
                 if (this.__list) { this.unlink(); }
 
-                var list = (cursor instanceof _.make.core.linkedlist ? cursor : cursor.__list);
+                var list = (cursor instanceof _.make.linkedlist ? cursor : cursor.__list);
 
 //                if (index > 0) { index -= 1; }
 

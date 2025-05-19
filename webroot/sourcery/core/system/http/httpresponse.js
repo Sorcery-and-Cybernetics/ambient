@@ -13,7 +13,7 @@ _.ambient.module("httpresponse", function (_) {
 
     _.define.enum("httpresponse", ["destroyed", "destroying", "error", "cancelled", "done", "none", "created", "receiving", "sending", "proxying"], -5)
 
-    _.define.core.object("httpresponse", function () {
+    _.define.object("httpresponse", function () {
         this.state = 0;
         this.states = _.enum.httpresponse;
 
@@ -506,8 +506,8 @@ _.ambient.module("httpresponse", function (_) {
         }
 
         //todo: add listeners
-        //this.ondestroy = _.make.core.signal()
-        //this.onerror = _.make.core.signal()
-        //this.ondone = _.make.core.signal()
+        //this.ondestroy = _.make.signal()
+        //this.onerror = _.make.signal()
+        //this.ondone = _.make.signal()
     })
 })

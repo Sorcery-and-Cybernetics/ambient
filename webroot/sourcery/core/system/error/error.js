@@ -4,7 +4,7 @@
 
 //todo: Lazy implement error object, depending on debug mode settings, not all is necessary to parse. Turn all properties into traits.
 _.ambient.module("error").source(function (_) {
-    _.define.core.object("error", function () {
+    _.define.object("error", function () {
         var argumentstostring = function (args) {
             if (!args) { return "" }
 

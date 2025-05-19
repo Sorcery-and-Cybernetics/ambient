@@ -4,7 +4,7 @@
 _.ambient.module("dom", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
 
-    _.define.core.globalobject("dom", function (supermodel) {
+    _.define.globalobject("dom", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 

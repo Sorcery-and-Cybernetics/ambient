@@ -3,7 +3,7 @@
 //*************************************************************************************************
 
 _.ambient.module("servermain").source(function (_) {
-    _.define.core.object("servermain", function() {
+    _.define.object("servermain", function() {
         this._server = undefined;
         this._port = "localhost";
         this._host = 80;
@@ -30,7 +30,7 @@ _.ambient.module("servermain").source(function (_) {
             return this;
         }
         
-        this.onerror = _.make.core.basicsignal();
+        this.onerror = _.make.basicsignal();
     })
 })
 .onload(function(_) {

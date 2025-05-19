@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("listcursor", function (_) {
     
-    _.define.core.object("listcursor", function (supermodel) {
+    _.define.object("listcursor", function (supermodel) {
         return {
             _list: null
             , _currentnode: null

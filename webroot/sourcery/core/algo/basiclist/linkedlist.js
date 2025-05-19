@@ -2,7 +2,7 @@
 // linkedlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("linkedlist", function(_) {    
-    _.define.core.object("core.linkedlist", function (supermodel) {
+    _.define.object("linkedlist", function (supermodel) {
         this.__nodenext = null
         this.__nodeprev = null
         this.__count = 0
@@ -32,8 +32,8 @@ _.ambient.module("linkedlist", function(_) {
             this.nodelast = function () { return this.__nodeprev.isroot()? null: this.__nodeprev }
 
             this.__makenode = function(item) {
-                if (item instanceof _.make.core.linkedlistnode) { return item } 
-                return _.make.core.linkedlistnode(item)
+                if (item instanceof _.make.linkedlistnode) { return item } 
+                return _.make.linkedlistnode(item)
             }
             
             this.foreach = function(fn) {

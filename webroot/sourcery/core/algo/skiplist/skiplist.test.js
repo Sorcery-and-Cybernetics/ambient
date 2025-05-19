@@ -5,11 +5,11 @@ _.ambient.module("skiplist.test")
 
         var itemcount = 10
 
-        var list = _.make.core.skiplist().segmentsize(2)
+        var list = _.make.skiplist().segmentsize(2)
 
         // Populate the skiplist with 300 nodes with values 1-300
         for (var index = 1; index <= itemcount; index++) {
-            _.make.core.skiplistnode(index).assign(list, -1)
+            _.make.skiplistnode(index).assign(list, -1)
         }
 
         // Helper function to output list structure
@@ -134,14 +134,14 @@ _.ambient.module("skiplist.test")
             _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
             testorderindex(list)
 
-             _.make.core.skiplistnode(value).assign(list, -1)
+             _.make.skiplistnode(value).assign(list, -1)
             
              _.debug.assert(list.debugvalidate(), undefined, "List validation after reinserting value " + value)
              testorderindex(list)
         } 
 
 
-        var list = _.make.core.skiplist();
+        var list = _.make.skiplist();
         list.issortlist(true)
     
         // Create a shuffled list of items
@@ -166,7 +166,7 @@ _.ambient.module("skiplist.test")
         _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
 
 
-        _.define.core.object("testskiplistitem", function(supermodel) {
+        _.define.object("testskiplistitem", function(supermodel) {
             this.__value = null;
             this.__order = 0
 
@@ -193,7 +193,7 @@ _.ambient.module("skiplist.test")
         }
 
 
-        var list = _.make.core.skiplist("value")
+        var list = _.make.skiplist("value")
 
         // Create a shuffled list of items
         var itemcount = 3;

@@ -2,40 +2,7 @@
 // skiplist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("skiplist", function(_) {    
-    _.core.segmentvaluecompare = function(searchvalue, matchvaluefloor, matchvalueceil, option) {
-        if (!matchvalueceil) { matchvalueceil = matchvaluefloor }
-
-        switch(option) {
-            case "<=":
-                return searchvalue <= matchvalueceil;
-            case ">=":
-                return searchvalue >= matchvaluefloor;
-            case ">":
-                return searchvalue > matchvaluefloor;
-            case "<":
-                return searchvalue < matchvalueceil;
-            default: // "==" or undefined
-                return searchvalue >= matchvaluefloor && searchvalue <= matchvalueceil;
-        }
-    }
-
-    _.core.valuecompare = function(searchvalue, matchvalue, option) {
-
-        switch(option) {
-            case "<=":
-                return searchvalue <= matchvalue;
-            case ">=":
-                return searchvalue >= matchvalue;
-            case ">":
-                return searchvalue > matchvalue;
-            case "<":
-                return searchvalue < matchvalue;
-            default: // "==" or undefined
-                return searchvalue == matchvalue;
-        }
-    }
-
-    _.define.core.linkedlist("core.skiplist", function (supermodel) {
+    _.define.linkedlist("skiplist", function (supermodel) {
         this.__upsegment = null;
         this.__topsegment = null;
 
@@ -54,7 +21,7 @@ _.ambient.module("skiplist", function(_) {
                 this.__sortvaluename = sortvaluename
                 if (sortvaluename) { this.__issortlist = true }
 
-                this.__upsegment = _.make.core.skiplistsegment(this, this.__segmentlevel);
+                this.__upsegment = _.make.skiplistsegment(this, this.__segmentlevel);
             };
 
             this.sortvaluename = function(value) {
@@ -68,8 +35,8 @@ _.ambient.module("skiplist", function(_) {
             };
 
             this.__makenode = function(value) {
-                if (value instanceof _.make.core.skiplistnode) { return value; } 
-                return _.make.core.skiplistnode(value);
+                if (value instanceof _.make.skiplistnode) { return value; } 
+                return _.make.skiplistnode(value);
             };
 
             this.issortlist = function(value) {

@@ -2,7 +2,7 @@
 // webserver - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("webserver").source(function (_) {
-    _.define.core.object("webserver", function() {
+    _.define.object("webserver", function() {
         this._server = undefined;
         this._port = undefined;
         this._host = 80;
@@ -74,7 +74,7 @@ _.ambient.module("webserver").source(function (_) {
             }
         }
 
-        this.onerror = _.make.core.basicsignal();
+        this.onerror = _.make.basicsignal();
     })
 })
 

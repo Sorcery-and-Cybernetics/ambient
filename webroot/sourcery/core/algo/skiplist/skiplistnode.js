@@ -2,7 +2,23 @@
 // skiplistnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("skiplistnode", function(_) {    
-    _.define.core.linkedlistnode("core.skiplistnode", function (supermodel) {
+
+    var valuecompare = function(searchvalue, matchvalue, option) {
+        switch(option) {
+            case "<=":
+                return searchvalue <= matchvalue;
+            case ">=":
+                return searchvalue >= matchvalue;
+            case ">":
+                return searchvalue > matchvalue;
+            case "<":
+                return searchvalue < matchvalue;
+            default: // "==" or undefined
+                return searchvalue == matchvalue;
+        }
+    }
+
+    _.define.linkedlistnode("skiplistnode", function (supermodel) {
         this.__upsegment = null;
         this.__topsegment = null;            
         this.__level = 1;
@@ -16,7 +32,7 @@ _.ambient.module("skiplistnode", function(_) {
                     var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel());
 
                     if (level > 1) {
-                        this.__upsegment = _.make.core.skiplistsegment(this, level - 1);
+                        this.__upsegment = _.make.skiplistsegment(this, level - 1);
                     } else {
                         this.__topsegment = this;
                     }
@@ -64,7 +80,7 @@ _.ambient.module("skiplistnode", function(_) {
                 if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
 
                 if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
-                return this.__nodeprev instanceof _.make.core.skiplist? 1: this.__nodeprev.orderindex() + 1;
+                return this.__nodeprev instanceof _.make.skiplist? 1: this.__nodeprev.orderindex() + 1;
             };           
         });
 
@@ -96,7 +112,7 @@ _.ambient.module("skiplistnode", function(_) {
         
         this.searchbehavior = _.behavior(function() {
             this.valueinsegment = function(searchvalue, option) {
-                return _.core.valuecompare(searchvalue, this.sortvalue(), option);
+                return valuecompare(searchvalue, this.sortvalue(), option);
             }
         });
                

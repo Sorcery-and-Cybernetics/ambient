@@ -1,6 +1,6 @@
 _.ambient.module("stacklist.test")
 .ontest("stacklist", function(_) {
-    var stack = _.make.core.stacklist()
+    var stack = _.make.stacklist()
     var pushednode = stack.push(10)
     var pushednode = stack.push(20)
     var pushednode = stack.push(30)

@@ -28,7 +28,7 @@ var buffer = require('buffer');
 
     _.define.enum("httprequest", ["destroyed", "destroying", "ended", "cancelled", "error", "none", "created", "sending", "receiving"], -5)
 
-    _.define.core.object("core.httprequest", function () {
+    _.define.object("httprequest", function () {
         this.state = 0;
         this.states = _.enum.httprequest;
 
@@ -159,16 +159,16 @@ var buffer = require('buffer');
             request.end()
         }
 
-        this.onresponse = _.make.core.basicsignal()
-        this.onerror = _.make.core.basicsignal()
+        this.onresponse = _.make.basicsignal()
+        this.onerror = _.make.basicsignal()
     })
 
-    _.core.http = {        
+    _.http = {        
         "get": function (url, params, next) {
-            return _.make.core.httprequest("get", url, params, null, next)
+            return _.make.httprequest("get", url, params, null, next)
         }
         , "post": function (url, params, next) {
-            return _.make.core.httprequest("post", url, params, null, next)
+            return _.make.httprequest("post", url, params, null, next)
         }
     }    
 })    

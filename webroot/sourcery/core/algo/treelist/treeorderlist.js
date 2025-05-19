@@ -2,7 +2,7 @@
 // treeorderlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("treeorderlist", function (_) {
-    _.define.core.treebaselist("core.treeorderlist", function () {
+    _.define.treebaselist("treeorderlist", function () {
         this._rootnode = null;
 
         this.pushfirst = function (item) {

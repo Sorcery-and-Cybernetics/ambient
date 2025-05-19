@@ -6,7 +6,7 @@ _.ambient.module("httpserver", function (_) {
     var https = require('https')
     var fs = require("fs")
 
-    _.define.core.object("httpserver", function (supermodel) {
+    _.define.object("httpserver", function (supermodel) {
         this.certpath = "./config/";
         this.httpserver = null;
         this.httpsserver = null;
@@ -29,8 +29,8 @@ _.ambient.module("httpserver", function (_) {
             return this;
         };
 
-        this.onrequest = _.make.core.basicsignal();
-        this.onerror = _.make.core.basicsignal();
+        this.onrequest = _.make.basicsignal();
+        this.onerror = _.make.basicsignal();
 
         this.loadcert = function(certname, certpassword) {
             this.certkey = fs.readFileSync(this.certpath + this.certname + ".key");

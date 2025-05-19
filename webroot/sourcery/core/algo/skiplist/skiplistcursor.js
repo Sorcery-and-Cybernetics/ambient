@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("skiplistcursor", function (_) {
     
-    _.define.core.object("core.skiplistcursor", function (supermodel) {
+    _.define.object("skiplistcursor", function (supermodel) {
         this._list = null;
         this._current = null;
 

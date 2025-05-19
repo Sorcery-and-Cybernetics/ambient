@@ -2,7 +2,7 @@
 // signaldata - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("signaldata", function(_) {    
-    _.define.core.object("core.signaldatanode", function (supermodel) {
+    _.define.object("signaldatanode", function (supermodel) {
         this.fnevent = null;
         this._nodenext = null;
         this._nodeprev = null;
@@ -29,7 +29,7 @@ _.ambient.module("signaldata", function(_) {
         };
     })
 
-    _.define.core.object("core.signaldatalist", function (supermodel) {
+    _.define.object("signaldatalist", function (supermodel) {
         this._parent = null;
         this._name = null;
         this._nodenext = null;
@@ -45,7 +45,7 @@ _.ambient.module("signaldata", function(_) {
         };
 
         this.add = function(fnevent) {
-            var node = _.make.core.signaldatanode(fnevent);
+            var node = _.make.signaldatanode(fnevent);
 
             node._nodeprev = this._nodeprev;
             node._nodenext = this._nodeprev._nodenext;
@@ -78,7 +78,7 @@ _.ambient.module("signaldata", function(_) {
         };
     })
 
-    _.define.core.object("core.signaldata", function (supermodel) {
+    _.define.object("signaldata", function (supermodel) {
         this.object = null;
         this.signals = null;
 
@@ -101,7 +101,7 @@ _.ambient.module("signaldata", function(_) {
         this.addsignal = function(name, fnevent) {
             var list = this.signals[name];
             if (!list) {
-                list = _.make.core.signaldatalist(this, name);
+                list = _.make.signaldatalist(this, name);
                 this.signals[name] = list;
             }
             list.add(fnevent);

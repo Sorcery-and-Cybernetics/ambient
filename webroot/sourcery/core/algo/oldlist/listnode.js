@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("listnode", function (_) {
 
-    _.define.core.object("listnode", function (supermodel) {
+    _.define.object("listnode", function (supermodel) {
         return {
             __nodenext: null
             , __nodeprev: null

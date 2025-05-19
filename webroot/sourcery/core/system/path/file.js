@@ -2,7 +2,7 @@
 // file - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("file", function (_) {
-    _.define.core.object("file", function (supermodel) {
+    _.define.object("file", function (supermodel) {
         this._drive = null
         this._path = null
         this._name = null

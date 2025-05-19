@@ -5,7 +5,7 @@ _.ambient.module("treelisttest")
 .ontest("treelisttest", function (_) {
     var me = this
 
-    _.define.core.object("core.treelisttestitem", function () {
+    _.define.object("treelisttestitem", function () {
         this.__name = "";
         this.__value = "";
         this.__indexof = null;
@@ -26,7 +26,7 @@ _.ambient.module("treelisttest")
 
     var debugshow = false
 
-    var list = _.make.core.treesortlist()
+    var list = _.make.treesortlist()
 
     var itemnames = ["A", "B", "C"]
     var x = 0
@@ -42,7 +42,7 @@ _.ambient.module("treelisttest")
             _.foreach(itemnames, function (key) {
                 var itemkey = key + (x || "")
 
-                var item = _.make.core.treelisttestitem(itemkey, itemkey)
+                var item = _.make.treelisttestitem(itemkey, itemkey)
 
                 list.push(item)
 
@@ -66,7 +66,7 @@ _.ambient.module("treelisttest")
         var itemvalue = item.value()
         item.destroy()
 
-        var item = _.make.core.treelisttestitem(itemkey, itemvalue)
+        var item = _.make.treelisttestitem(itemkey, itemvalue)
         
         this.assert(list.debugvalidate(), true, "removeitem test " + itemkey)    
         list.push(item)    

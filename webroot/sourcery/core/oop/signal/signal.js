@@ -2,7 +2,7 @@
 // signal - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("signal", function (_) {
-    _.define.defextender("core.signal", function(supermodel) {
+    _.define.defextender("signal", function(supermodel) {
         // this.fndefault = null;
 
         this.construct = function(fndefault) {
@@ -12,7 +12,7 @@ _.ambient.module("signal", function (_) {
         this.definetrait = function (modeldef, traitname) {
             return function (event) {
                 if (_.isfunction(event)) {
-                    var signaldata = this.__signaldata || (this.__signaldata = _.make.core.signaldata(this, this.fndefault));
+                    var signaldata = this.__signaldata || (this.__signaldata = _.make.signaldata(this, this.fndefault));
                     signaldata.addsignal(traitname, event);
                 } else {
                     if (this.__signaldata) { this.__signaldata.firesignal(traitname, event); }

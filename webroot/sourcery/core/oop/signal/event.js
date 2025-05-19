@@ -2,7 +2,7 @@
 // Event - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("event", function (_) {
-    _.define.core.object("core.event", function () {
+    _.define.object("event", function () {
         this.name = "";
         this.source = null;
         this.cancelled = false;

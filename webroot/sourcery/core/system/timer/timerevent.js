@@ -10,7 +10,7 @@ _.ambient.module("timerevent", function(_) {
         return (time + 0)
     }    
 
-    _.define.core.object("core.timerevent", function (supermodel) {
+    _.define.object("timerevent", function (supermodel) {
         this.construct = function (runimmediate) {
             this.__runimmediate = runimmediate
         };
@@ -106,7 +106,7 @@ _.ambient.module("timerevent", function(_) {
             return this.name() + " - " + (this.value() - _.timer.now) + ", interval: " + this.interval() + " time left: " + (this.timeend()? this.timeend() - _.timer.now: "---");
         };
 
-        this.ontimer = _.make.core.basicsignal();
+        this.ontimer = _.make.basicsignal();
     });
 
 })
