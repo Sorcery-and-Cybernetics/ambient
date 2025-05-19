@@ -234,7 +234,7 @@ _.ambient.module("base", function (_) {
             values[itemname] = value;
             names[value] = itemname;
 
-            value = value ? value << 1 : 1;
+            value = (value ? value << 1 : 1);
         });
 
         _.enum[name] = values;

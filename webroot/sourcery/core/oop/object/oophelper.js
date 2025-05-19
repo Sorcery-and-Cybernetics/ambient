@@ -110,9 +110,9 @@ _.ambient.module("oophelper", function (_) {
         }
 
         this.definetrait = function(modeldef, traitname, traitdef) {
-            var method = traitdef.definetrait(modeldef, traitname)
+            var trait = traitdef.definetrait(modeldef, traitname)
 
-            modeldef[traitname] = method
+            modeldef[traitname] = trait
         }
 
         this.extendmodeldef = function (modeldef, extenddef, duplicatewarn) {
@@ -121,18 +121,20 @@ _.ambient.module("oophelper", function (_) {
                 if (extenddef.hasOwnProperty(traitname)) {
                     
                     switch (traitname) {
+                        case "_modelname":
                         case "_definition":
                             //Filter out protected keys
                             break
 
                         default:
                             var traitdef = extenddef[traitname]
-
+                            //todo: What to do with json?
                             //for now the warning, in the future, we can merge the traits
                             // if (duplicatewarn && modeldef[traitname]) {
                             //     _.debug("Duplicate trait " + traitname + " in " + modeldef._modelname)
                             // }
 
+                            //todo: recognizing what a trait definition is, should go through definition. Or we need a standard way how to define and construct traits
                             if (traitdef && _.isfunction(traitdef.definetrait)) {
                                 this.definetrait(modeldef, traitname, traitdef)
 
