@@ -1,8 +1,14 @@
 {
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Full Launch",
+            "configurations": ["Launch Client", "Launch Server"]
+        }
+    ],
     "configurations": [                
         {
-            "name": "Launch Chrome",
+            "name": "Launch Client",
             "request": "launch",
             "type": "chrome",
             "url": "http://localhost:80",
@@ -11,7 +17,7 @@
         },
 
         {
-            "name": "Launch Program",
+            "name": "Launch Server",
             "type": "node",
             "request": "launch",
             "skipFiles": [
@@ -19,14 +25,7 @@
             ],
             "program": "${workspaceFolder}/webroot/product/testtide/server.js",
             "cwd":     "${workspaceFolder}/webroot/product/testtide/"
-        }, 
-        // {
-        //     "name": "Attach to Process",
-        //     "type": "node",
-        //     "request": "attach",
-        //     "processId": "${command:PickProcess}",
-        //     "skipFiles": ["<node_internals>/**"]
-        // },
+        },
         {
             "name": "Ambient Extension",
             "type": "extensionHost",

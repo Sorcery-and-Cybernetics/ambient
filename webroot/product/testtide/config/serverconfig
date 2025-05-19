@@ -31,6 +31,6 @@
   
   , "worlds": [
         { "name": "server", "roles": ["server", "debugmode"], "requires": ["script/"] }
-//        , { "name": "client", "roles": ["client"], "requires": ["script/"] }
+        //        , { "name": "client", "roles": ["client"], "requires": ["script/"] }
   ]
 }

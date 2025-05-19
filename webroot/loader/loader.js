@@ -3,12 +3,12 @@
 //*************************************************************************************************
 
 if (typeof global == "undefined") {
-    _ = _ || {}
+    var _ = _ || {}
     var isserver = false
 
 } else {
     global._ = global._ || {} 
-    _ = global._
+    var _ = global._
     var isserver = true
 }
 
@@ -20,8 +20,8 @@ _.ambient.libpath = ""
 _.system = null
 
 
-; (function(_) {
-    _.isserver  =  isserver
+; (function(_) {    
+    _.isserver = isserver
 
     _.modules = {}
     _.worlds = {}

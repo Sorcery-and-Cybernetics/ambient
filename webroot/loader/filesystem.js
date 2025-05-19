@@ -2,7 +2,9 @@
 // filesystem - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 ; (function (_) {
-    var fs = require("fs")
+    if (_.isserver) {
+        var fs = require("fs")
+    }
 
     _.filesystem = {
         normalizepath: function (path) {
