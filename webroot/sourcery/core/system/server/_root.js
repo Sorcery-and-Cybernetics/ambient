@@ -1,3 +1,3 @@
-_.ambient.rootmodule("webserver/")
+_.ambient.rootmodule("server/")
     .require("sourcery/core/system/http/")
     .include("webserver")
