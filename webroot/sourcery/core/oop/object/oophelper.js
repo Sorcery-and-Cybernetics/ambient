@@ -102,7 +102,7 @@ _.ambient.module("oophelper", function (_) {
         }
 
         this.getmodel = function(name) {
-            return this.getvalue(_.model, name)
+            return this.getvalue(_.make, name)
         }
 
         this.getdefiner = function(name) {
@@ -221,7 +221,7 @@ _.ambient.module("oophelper", function (_) {
 
                 definermodel.prototype.init(supermodelname, modelname, modeldef)
 
-                me.addvalue(_.model, "definer." + modelname, definermodel)
+                me.addvalue(_.make, "definer." + modelname, definermodel)
                 me.adddefiner(modelname)
     
                 var definer = new definermodel()
@@ -235,10 +235,17 @@ _.ambient.module("oophelper", function (_) {
             var supermodel = this.getmodel(supermodelname)
             var model = this.makemodel(modelname, supermodel, modeldef)
 
-            this.addvalue(_.model, modelname, model)
             this.addmaker(modelname, model)
 
             return model
-        }        
+        }
+        
+        this.delmodel = function(modelname) {
+            delete _.make[modelname]
+            delete _.define[modelname]
+            delete this.definers[modelname]
+
+            return this
+        }
     })   
 })

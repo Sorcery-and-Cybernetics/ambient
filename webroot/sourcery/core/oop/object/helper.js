@@ -10,7 +10,7 @@ _.ambient.module("helper").source(function (_) {
             source = context
         }
         
-        var helper = new _.model.object()
+        var helper = new _.make.object()
 
         _.json.merge(helper, source)
 

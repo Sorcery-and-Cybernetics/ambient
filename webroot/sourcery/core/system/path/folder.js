@@ -53,7 +53,7 @@ _.ambient.module("folder", function (_) {
         }
 
         this.move = function (path) {
-            if (path instanceof _.model.folder) { path = path.fullpath() }
+            if (path instanceof _.make.folder) { path = path.fullpath() }
             if (!path || !_.isstring(path)) { throw "Error: path should be a string" }
             if (!_.isdir$(path)) { throw "Error: Path is not a path" }
 

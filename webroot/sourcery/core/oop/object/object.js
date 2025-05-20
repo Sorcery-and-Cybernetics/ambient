@@ -2,9 +2,9 @@
 // object - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("object").source(function (_) {
-    _.model.object = function () { }
+    _.make.object = function () { }
 
-    _.model.object.prototype = {
+    _.make.object.prototype = {
         _modelname: "object"
         , _supermodel: null
         , _phase: 0

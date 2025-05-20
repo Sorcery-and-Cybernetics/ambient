@@ -28,8 +28,8 @@ _.ambient.module("modeldefiner", function (_) {
         }
     }
 
-    var modeldefiner = _.helper.oop.makemodel("modeldefiner", _.model.object, definerprototype)
+    var modeldefiner = _.helper.oop.makemodel("modeldefiner", _.make.object, definerprototype)
 
-    helper.addvalue(_.model, "definer.object", modeldefiner)
+    helper.addvalue(_.make, "definer.object", modeldefiner)
     helper.adddefiner("object")
  })

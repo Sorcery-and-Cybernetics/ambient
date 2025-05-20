@@ -6,15 +6,13 @@
         return {
             system: null
             , name: null
-            , core: null
+            , _modules: null
             
             , construct: function (system, name) {
                 this.system = system
                 this.name = name
 
-                this.core = {
-                    _modules: []
-                }
+                this._modules = []                
             }
 
             , create: function() {
@@ -25,7 +23,7 @@
             , load: function() {
                 var me = this
 
-                _.foreach(this.core._modules, function(module) {
+                _.foreach(this._modules, function(module) {
                     if (module._onload) { module._onload(me) }
                 }) 
                 

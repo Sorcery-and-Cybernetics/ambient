@@ -110,7 +110,7 @@
                 _.foreach(result, function(modulename) {
                     var module = _.modules[modulename]
 
-                    me.world.core._modules.push(module)
+                    me.world._modules.push(module)
                     var source = module.source()
                     if (source) { source(me.world) }
                 })

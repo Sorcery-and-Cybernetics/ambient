@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("timerevent", function(_) {    
     var toms = function (time) {
-        // if (time instanceof _.model.date) {
+        // if (time instanceof _.make.date) {
         //     return time.utc()
         // }
 
