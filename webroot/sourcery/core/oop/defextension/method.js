@@ -1,5 +1,5 @@
 //*************************************************************************************************
-// method - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
+// method - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("method", function (_) {
     var makemethod = function (def, proto) {      
