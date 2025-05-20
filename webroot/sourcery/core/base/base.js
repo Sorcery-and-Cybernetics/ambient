@@ -6,7 +6,6 @@ _.ambient.module("base", function (_) {
     _.enum = {};
     _.helper = {};
     _.define = {};
-    _.make = {};
 
     // Constants
     _.crlf = "\r\n";
