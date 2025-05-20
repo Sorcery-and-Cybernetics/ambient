@@ -21,7 +21,7 @@ _.ambient.module("oophelper", function (_) {
 
             if (this.defined) {
                 definer = new definer()
-                _.debug("Later Making", definer.babyname, definer.supermodelname)
+                //_.debug("Later Making", definer.babyname, definer.supermodelname)
                 definer.make()
             }
         }
@@ -34,7 +34,7 @@ _.ambient.module("oophelper", function (_) {
             this.defined = true
             _.foreach(this.definers, function(modeldefiner) {
                 var definer = new modeldefiner()                        
-                _.debug("Making", definer.babyname, definer.supermodelname)
+                //_.debug("Making", definer.babyname, definer.supermodelname)
 
                 switch (definer.modelname()) {
                     case "object":
