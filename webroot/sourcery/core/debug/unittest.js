@@ -268,7 +268,7 @@ _.ambient.module("unittest", function (_) {
     var unittester = _.model.unittester(this)
         .create()
         .onfinish(function() {
-            var result = unittester.debugout(true)
+            var result = unittester.debugout(false)
 
             _.foreach(result, function(line) {
                 _.debug(line)

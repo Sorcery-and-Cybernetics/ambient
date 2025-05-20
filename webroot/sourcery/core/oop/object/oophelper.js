@@ -14,21 +14,36 @@ _.ambient.module("oophelper", function (_) {
             var paramstr = _.innercut$(fn.toString(), "(", ")")
 
             return _.splittrim$(paramstr)
-        }        
-
-        this.registerdefiner = function(definer) {
-            this.definers[definer.babyname] = definer
+        } 
+        
+        this.addmodeldefiner = function(modelname, definer) {
+            this.addvalue(this.definers, modelname, definer)
 
             if (this.defined) {
-//                _.debug("Making", definer.babyname, definer.supermodelname)
+                definer = new definer()
+                _.debug("Later Making", definer.babyname, definer.supermodelname)
                 definer.make()
             }
         }
 
+        this.getmodeldefiner = function(modelname) {
+            return this.getvalue(this.definers, modelname)
+        }
+
         this.rundefiners = function() {
             this.defined = true
-            _.foreach(this.definers, function(definer) {
-                definer.make()
+            _.foreach(this.definers, function(modeldefiner) {
+                var definer = new modeldefiner()                        
+                _.debug("Making", definer.babyname, definer.supermodelname)
+
+                switch (definer.modelname()) {
+                    case "object":
+                    case "modeldefiner":                        
+                        break
+
+                    default:
+                        definer.make()
+                }
             })
         }
 
@@ -205,7 +220,7 @@ _.ambient.module("oophelper", function (_) {
                 modeldef = context
             }
 
-            var model = this.getmodel(name)
+            var model = this.getmodeldefiner(name)
             _.json.merge(model.prototype, modeldef)
             return model
         }
@@ -214,18 +229,15 @@ _.ambient.module("oophelper", function (_) {
             var me = this
 
             me.addvalue(_.define, supermodelname, function (modelname, modeldef) {
-                var superdefiner = me.getmodel("definer." + supermodelname)
+                var superdefiner = me.getmodeldefiner(supermodelname)
                 var definermodel = me.makemodel(modelname, superdefiner, null)
 
-                var definer = new definermodel()
-
                 definermodel.prototype.init(supermodelname, modelname, modeldef)
-
-                me.addvalue(_.model, "definer." + modelname, definermodel)
+//                
+                me.addmodeldefiner(modelname, definermodel)
                 me.adddefiner(modelname)
     
                 var definer = new definermodel()
-                me.registerdefiner(definer)
     
                 return definer
             })

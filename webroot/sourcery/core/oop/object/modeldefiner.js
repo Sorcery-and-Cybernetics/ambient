@@ -6,7 +6,7 @@ _.ambient.module("modeldefiner", function (_) {
     var helper = _.helper.oop
 
     definerprototype = {
-        babyname: null
+        babyname: "object"
         , babydef: null        
         , supermodelname: null
 
@@ -22,7 +22,8 @@ _.ambient.module("modeldefiner", function (_) {
         }
 
         , extend: function(def) {
-            helper.overwritemodel("definer." + this.babyname, def)
+//            helper.overwritemodel("definer." + this.babyname, def)
+            helper.overwritemodel(this.babyname, def)
 
             return this
         }
@@ -30,6 +31,6 @@ _.ambient.module("modeldefiner", function (_) {
 
     var modeldefiner = _.helper.oop.makemodel("modeldefiner", _.model.object, definerprototype)
 
-    helper.addvalue(_.model, "definer.object", modeldefiner)
+    helper.addmodeldefiner("object", modeldefiner)
     helper.adddefiner("object")
  })
