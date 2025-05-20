@@ -150,7 +150,7 @@ _.ambient.module("error").source(function (_) {
         }
 
         var doerror = function (me, obj, funcname, args, description, level) {
-            var error = _.make.error(description)
+            var error = _.model.error(description)
                 .errorinfo(obj, funcname, args, level)
 
             _.debug.write(false, error.type, error.message)

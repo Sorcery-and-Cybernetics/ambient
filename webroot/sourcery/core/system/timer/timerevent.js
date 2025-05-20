@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("timerevent", function(_) {    
     var toms = function (time) {
-        // if (time instanceof _.make.date) {
+        // if (time instanceof _.model.date) {
         //     return time.utc()
         // }
 
@@ -106,7 +106,7 @@ _.ambient.module("timerevent", function(_) {
             return this.name() + " - " + (this.value() - _.timer.now) + ", interval: " + this.interval() + " time left: " + (this.timeend()? this.timeend() - _.timer.now: "---");
         };
 
-        this.ontimer = _.make.basicsignal();
+        this.ontimer = _.model.basicsignal();
     });
 
 })

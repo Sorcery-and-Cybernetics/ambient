@@ -15,7 +15,7 @@ _.ambient.module("webserver").source(function (_) {
 
         this.start = function() {
             var me = this;            
-            var server = _.make.httpserver(this._host, this._port)
+            var server = _.model.httpserver(this._host, this._port)
 
             server.onerror(function(err) {
                 me.handleerror(err);
@@ -74,7 +74,7 @@ _.ambient.module("webserver").source(function (_) {
             }
         }
 
-        this.onerror = _.make.basicsignal();
+        this.onerror = _.model.basicsignal();
     })
 })
 

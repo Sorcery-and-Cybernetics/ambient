@@ -85,19 +85,19 @@ _.define.module("oophelper", function (_) {
                         _.leftsplit$(param, ":")
 
                         me.paramnames.push(key)
-                        me.paramdef[key] = _.make.waveparam(param.key, _.vartype(param.value), me.paramnames.length)
+                        me.paramdef[key] = _.model.waveparam(param.key, _.vartype(param.value), me.paramnames.length)
                     })
 
                 } else if (_.isarray(params)) {
                     _.foreach(params, function (key) {
                         me.paramnames.push(key)
-                        me.paramdef[key] = _.make.waveparam(key, null, me.paramnames.length)
+                        me.paramdef[key] = _.model.waveparam(key, null, me.paramnames.length)
                     })
 
                 } else if (_.isobject(params)) {
                     _.foreach(params, function (value, key) {
                         me.paramnames.push(key)
-                        me.paramdef[key] = _.make.waveparam(key, value, me.paramnames.length)
+                        me.paramdef[key] = _.model.waveparam(key, value, me.paramnames.length)
 
                         me.paramnames.push(key)
                     })
@@ -144,8 +144,8 @@ _.define.module("oophelper", function (_) {
         }
 
         , createmaker: function (name, def) {
-            //_.make[name] = function() { return new object(arguments) }
-            _.oophelper.appendvalue(_.make, name, function () {
+            //_.model[name] = function() { return new object(arguments) }
+            _.oophelper.appendvalue(_.model, name, function () {
                 var kind = new def()
                 kind.create.apply(kind, arguments)
                 return kind

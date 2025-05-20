@@ -144,7 +144,7 @@ _.ambient.module("unittest", function (_) {
         }
 
         this.test = function(assert) {
-            var line = _.make.unittestline(this, this._currentgroup || "", assert)
+            var line = _.model.unittestline(this, this._currentgroup || "", assert)
             if (_.ispromise(assert)) {   
                 this._promisecount++
             }
@@ -169,7 +169,7 @@ _.ambient.module("unittest", function (_) {
             }
         }
 
-        this.onfinish = _.make.basicsignal()
+        this.onfinish = _.model.basicsignal()
 
         this.debugout = function(showall) {
             var result = []
@@ -211,7 +211,7 @@ _.ambient.module("unittest", function (_) {
 
                 if (module._tests) { 
                     _.foreach(module._tests, function(test) {
-                        var unittest = _.make.unittest(this, modulename, test.testname || "", test.source)
+                        var unittest = _.model.unittest(this, modulename, test.testname || "", test.source)
                         me._unittests.push(unittest)
                     })
                 }
@@ -246,7 +246,7 @@ _.ambient.module("unittest", function (_) {
             return this         
         }
 
-        this.onfinish = _.make.basicsignal()
+        this.onfinish = _.model.basicsignal()
 
         this.debugout = function(showall) {
             var result = []
@@ -265,7 +265,7 @@ _.ambient.module("unittest", function (_) {
     })
 
 
-    var unittester = _.make.unittester(this)
+    var unittester = _.model.unittester(this)
         .create()
         .onfinish(function() {
             var result = unittester.debugout(true)

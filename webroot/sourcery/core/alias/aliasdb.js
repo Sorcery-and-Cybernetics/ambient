@@ -9,7 +9,7 @@ _.ambient.module("aliasdb", function(_) {
 
         this.construct = function(connection) {
             this.connection = connection
-            this.nodes = _.make.alias.map()
+            this.nodes = _.model.alias.map()
         }
 
         this.destroy = function() {

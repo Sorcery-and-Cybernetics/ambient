@@ -32,8 +32,8 @@ _.ambient.module("linkedlist", function(_) {
             this.nodelast = function () { return this.__nodeprev.isroot()? null: this.__nodeprev }
 
             this.__makenode = function(item) {
-                if (item instanceof _.make.linkedlistnode) { return item } 
-                return _.make.linkedlistnode(item)
+                if (item instanceof _.model.linkedlistnode) { return item } 
+                return _.model.linkedlistnode(item)
             }
             
             this.foreach = function(fn) {

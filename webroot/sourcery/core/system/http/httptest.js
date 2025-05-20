@@ -4,7 +4,7 @@
 _.ambient.module("httptest")
 .ontest("httpserver", function (_) {
 
-    // var server = _.make.httpserver("bla", 80)
+    // var server = _.model.httpserver("bla", 80)
 
     // server.onerror(function(err) {
     //     _.debug(err)

@@ -12,7 +12,7 @@ _.ambient.module("basicsignal", function (_) {
         this.definetrait = function (modeldef, traitname) {
             return function (event) {
                 if (_.isfunction(event)) {
-                    var signaldata = this.__signaldata || (this.__signaldata = _.make.signaldata(this, this.fndefault));
+                    var signaldata = this.__signaldata || (this.__signaldata = _.model.signaldata(this, this.fndefault));
                     signaldata.addbasicsignal(traitname, event);
                 } else {
                     if (this.__signaldata) { this.__signaldata.firebasicsignal(traitname, event); }

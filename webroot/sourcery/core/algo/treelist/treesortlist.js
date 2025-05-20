@@ -18,7 +18,7 @@ _.ambient.module("treesortlist", function (_) {
 
         this.findnodefirst = function (search, findclosest) {
             var list = this;
-            //var searchtoken = _.make.listsearchtoken(search);
+            //var searchtoken = _.model.listsearchtoken(search);
 
             var cursor = list._rootnode;
             var closest = cursor;
@@ -44,7 +44,7 @@ _.ambient.module("treesortlist", function (_) {
 
         this.findnodelast = function (search, findclosest) {
             var list = this;
-            //var searchtoken = _.make.listsearchtoken(search);
+            //var searchtoken = _.model.listsearchtoken(search);
 
             var cursor = list._rootnode;
             var closest;

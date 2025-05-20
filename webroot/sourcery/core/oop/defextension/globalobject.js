@@ -6,7 +6,7 @@ _.ambient.module("globalobject", function (_) {
         .extend(function(definer) {
             this.make = function() {
                 _.helper.oop.addmodel(this.babyname, this.supermodelname, this.babydef)
-                _[this.babyname] = _.make[this.babyname](_)
+                _[this.babyname] = _.model[this.babyname](_)
             }            
         })
 })

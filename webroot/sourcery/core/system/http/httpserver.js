@@ -29,8 +29,8 @@ _.ambient.module("httpserver", function (_) {
             return this;
         };
 
-        this.onrequest = _.make.basicsignal();
-        this.onerror = _.make.basicsignal();
+        this.onrequest = _.model.basicsignal();
+        this.onerror = _.model.basicsignal();
 
         this.loadcert = function(certname, certpassword) {
             this.certkey = fs.readFileSync(this.certpath + this.certname + ".key");
@@ -49,7 +49,7 @@ _.ambient.module("httpserver", function (_) {
             var me = this;
 
             var requesthandler = function (req, res) {
-                var response = _.make.httpresponse(me, req, res);
+                var response = _.model.httpresponse(me, req, res);
     
                 if (me.blockrequests) {
                     response.senderror("Server Unavailable", 503);

@@ -45,7 +45,7 @@ _.ambient.module("signaldata", function(_) {
         };
 
         this.add = function(fnevent) {
-            var node = _.make.signaldatanode(fnevent);
+            var node = _.model.signaldatanode(fnevent);
 
             node._nodeprev = this._nodeprev;
             node._nodenext = this._nodeprev._nodenext;
@@ -101,7 +101,7 @@ _.ambient.module("signaldata", function(_) {
         this.addsignal = function(name, fnevent) {
             var list = this.signals[name];
             if (!list) {
-                list = _.make.signaldatalist(this, name);
+                list = _.model.signaldatalist(this, name);
                 this.signals[name] = list;
             }
             list.add(fnevent);

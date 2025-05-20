@@ -109,9 +109,9 @@ _.ambient.module("path", function (_) {
     
     _.path.open = function (path) {
         if (_.path.isdir$(path)) {
-            return _.make.folder(path)
+            return _.model.folder(path)
         } else {
-            return _.make.file(path)
+            return _.model.file(path)
         }
     }
 
@@ -205,12 +205,12 @@ _.ambient.module("path", function (_) {
     var file = _.path.open("a/b/c.d")
 
     this.test(folder.fullpath()).is("./a/b/c/", "folder fullpath")
-    this.test(folder instanceof _.make.folder).is(true, "folder is instance of folder")
+    this.test(folder instanceof _.model.folder).is(true, "folder is instance of folder")
     this.test(folder.name()).is("c", "folder name")
     this.test(folder.path()).is("a/b/c/", "folder path")
 
     this.test(file.fullpath()).is("./a/b/c.d", "file fullpath")
-    this.test(file instanceof _.make.file).is(true, "file is instance of file")
+    this.test(file instanceof _.model.file).is(true, "file is instance of file")
     this.test(file.name()).is("c", "file name")
     this.test(file.path()).is("a/b/", "file path")
     this.test(file.extension()).is("d", "file extension")

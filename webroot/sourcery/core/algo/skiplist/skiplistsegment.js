@@ -36,7 +36,7 @@ _.ambient.module("skiplistsegment", function (_) {
                 if (!this.__downsegment) {
                     this.__level = segmentdown.__level + 1;
                     this.__downsegment = segmentdown;
-                    this.__base = (segmentdown instanceof _.make.skiplistsegment ? segmentdown.__base : segmentdown);
+                    this.__base = (segmentdown instanceof _.model.skiplistsegment ? segmentdown.__base : segmentdown);
                     this.__base.__topsegment = this;
 
                     if (this.isroot()) {
@@ -51,7 +51,7 @@ _.ambient.module("skiplistsegment", function (_) {
                     if (this.__upsegment) {
                         this.__upsegment.construct(this, level - 1);
                     } else {
-                        this.__upsegment = _.make.skiplistsegment(this, level - 1);
+                        this.__upsegment = _.model.skiplistsegment(this, level - 1);
                     }
                 }                    
             };
@@ -165,9 +165,9 @@ _.ambient.module("skiplistsegment", function (_) {
                 }
 
                 do {
-                    if (cursor instanceof _.make.skiplistsegment) { 
+                    if (cursor instanceof _.model.skiplistsegment) { 
                         childcount += cursor.__childcount;
-                    } else if (cursor instanceof _.make.skiplistnode) {
+                    } else if (cursor instanceof _.model.skiplistnode) {
                         childcount++;
                     }
                     cursor = cursor.segmentnext();

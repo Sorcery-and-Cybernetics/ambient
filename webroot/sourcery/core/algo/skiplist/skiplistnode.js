@@ -32,7 +32,7 @@ _.ambient.module("skiplistnode", function(_) {
                     var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel());
 
                     if (level > 1) {
-                        this.__upsegment = _.make.skiplistsegment(this, level - 1);
+                        this.__upsegment = _.model.skiplistsegment(this, level - 1);
                     } else {
                         this.__topsegment = this;
                     }
@@ -80,7 +80,7 @@ _.ambient.module("skiplistnode", function(_) {
                 if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
 
                 if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
-                return this.__nodeprev instanceof _.make.skiplist? 1: this.__nodeprev.orderindex() + 1;
+                return this.__nodeprev instanceof _.model.skiplist? 1: this.__nodeprev.orderindex() + 1;
             };           
         });
 

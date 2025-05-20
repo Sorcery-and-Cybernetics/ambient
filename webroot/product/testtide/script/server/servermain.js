@@ -15,7 +15,7 @@ _.ambient.module("servermain").source(function (_) {
         
         this.start = function() {
             var me = this;            
-            this._server = _.make.webserver(this._host, this._port)
+            this._server = _.model.webserver(this._host, this._port)
 
             this._server.onerror(function(err) {
                 me.onerror(err);
@@ -30,11 +30,11 @@ _.ambient.module("servermain").source(function (_) {
             return this;
         }
         
-        this.onerror = _.make.basicsignal();
+        this.onerror = _.model.basicsignal();
     })
 })
 .onload(function(_) {
-    _.server = _.make.servermain("localhost", 80)
+    _.server = _.model.servermain("localhost", 80)
         .onerror(function(err) {
             _.debug("Server error: " + err)
         })

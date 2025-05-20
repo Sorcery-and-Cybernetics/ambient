@@ -159,16 +159,16 @@ var buffer = require('buffer');
             request.end()
         }
 
-        this.onresponse = _.make.basicsignal()
-        this.onerror = _.make.basicsignal()
+        this.onresponse = _.model.basicsignal()
+        this.onerror = _.model.basicsignal()
     })
 
     _.http = {        
         "get": function (url, params, next) {
-            return _.make.httprequest("get", url, params, null, next)
+            return _.model.httprequest("get", url, params, null, next)
         }
         , "post": function (url, params, next) {
-            return _.make.httprequest("post", url, params, null, next)
+            return _.model.httprequest("post", url, params, null, next)
         }
     }    
 })    

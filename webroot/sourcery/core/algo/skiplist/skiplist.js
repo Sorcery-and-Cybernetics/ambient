@@ -21,7 +21,7 @@ _.ambient.module("skiplist", function(_) {
                 this.__sortvaluename = sortvaluename
                 if (sortvaluename) { this.__issortlist = true }
 
-                this.__upsegment = _.make.skiplistsegment(this, this.__segmentlevel);
+                this.__upsegment = _.model.skiplistsegment(this, this.__segmentlevel);
             };
 
             this.sortvaluename = function(value) {
@@ -35,8 +35,8 @@ _.ambient.module("skiplist", function(_) {
             };
 
             this.__makenode = function(value) {
-                if (value instanceof _.make.skiplistnode) { return value; } 
-                return _.make.skiplistnode(value);
+                if (value instanceof _.model.skiplistnode) { return value; } 
+                return _.model.skiplistnode(value);
             };
 
             this.issortlist = function(value) {
@@ -67,7 +67,7 @@ _.ambient.module("skiplist", function(_) {
 
                 if (value > this.__segmentlevel) { 
                     this.__segmentlevel = value;
-                    _.make.skiplistsegment(this, value - 1);
+                    _.model.skiplistsegment(this, value - 1);
                 }
                 return this;
             };

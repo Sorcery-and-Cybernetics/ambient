@@ -17,7 +17,7 @@ _.ambient.module("testobject", function (_) {
 //     })
 })
 .ontest("testobject", function(_) {
-    var test = _.make.testobject()
+    var test = _.model.testobject()
 
     this.test(test.test(), "Test is working")
 

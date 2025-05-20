@@ -293,7 +293,7 @@ _.ambient.module("httpresponse", function (_) {
 
             request.setEncoding(mimetype.encoding)
 
-            var buffer = _.make.asyncstream()
+            var buffer = _.model.asyncstream()
 
             request.on("data", function (chunk) {
                 buffer.write(chunk)
@@ -506,8 +506,8 @@ _.ambient.module("httpresponse", function (_) {
         }
 
         //todo: add listeners
-        //this.ondestroy = _.make.signal()
-        //this.onerror = _.make.signal()
-        //this.ondone = _.make.signal()
+        //this.ondestroy = _.model.signal()
+        //this.onerror = _.model.signal()
+        //this.ondone = _.model.signal()
     })
 })

@@ -20,7 +20,7 @@ _.ambient.module("linkedlistnode", function (_) {
                 if (cursor == this) { return this; }
                 if (this.__list) { this.unlink(); }
 
-                var list = (cursor instanceof _.make.linkedlist ? cursor : cursor.__list);
+                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor.__list);
 
 //                if (index > 0) { index -= 1; }
 

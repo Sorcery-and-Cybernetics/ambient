@@ -26,7 +26,7 @@ _.ambient.module("treelisttest")
 
     var debugshow = false
 
-    var list = _.make.treesortlist()
+    var list = _.model.treesortlist()
 
     var itemnames = ["A", "B", "C"]
     var x = 0
@@ -42,7 +42,7 @@ _.ambient.module("treelisttest")
             _.foreach(itemnames, function (key) {
                 var itemkey = key + (x || "")
 
-                var item = _.make.treelisttestitem(itemkey, itemkey)
+                var item = _.model.treelisttestitem(itemkey, itemkey)
 
                 list.push(item)
 
@@ -66,7 +66,7 @@ _.ambient.module("treelisttest")
         var itemvalue = item.value()
         item.destroy()
 
-        var item = _.make.treelisttestitem(itemkey, itemvalue)
+        var item = _.model.treelisttestitem(itemkey, itemvalue)
         
         this.assert(list.debugvalidate(), true, "removeitem test " + itemkey)    
         list.push(item)    

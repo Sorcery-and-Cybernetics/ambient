@@ -12,7 +12,7 @@ _.ambient.module("treebaselist", function (_) {
         //todo: if item is in another list, remove from other list first.
         this.makenode = function (item) {
             if (item._indexof) { throw "error" }
-            var node = _.make.treelistnode(this, item)
+            var node = _.model.treelistnode(this, item)
 
             return node
         }
