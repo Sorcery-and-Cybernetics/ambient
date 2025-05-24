@@ -5,4 +5,4 @@ _.ambient.rootmodule("oop/")
     .include("defextension/")
     .include("signal/")
 
-    .include("testobject", "debugmode")
+    .include("tests/", "debugmode")

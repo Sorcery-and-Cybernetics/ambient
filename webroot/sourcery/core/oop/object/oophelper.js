@@ -124,34 +124,109 @@ _.ambient.module("oophelper", function (_) {
             return this.getvalue(_.define, name)
         }
 
-        this.definetrait = function(modeldef, traitname, traitdef) {
-            var trait = traitdef.definetrait(modeldef, traitname)
+        this.mergetraitdef = function (targetdef, superdef) {
+            for (propertyname in superdef) {
+                value = superdef[propertyname]
 
-            modeldef[traitname] = trait
+                if (superdef.hasOwnProperty(propertyname)) {
+                    switch (propertyname) {
+                        case "__proto__":
+                            throw "error"
+
+                        default:
+                            if (_.isarray(value)) {
+                                if (targetdef[propertyname]) {
+                                    targetdef[propertyname] = value.concat(targetdef[propertyname])
+                                } else {
+                                    targetdef[propertyname] = value.slice(0)
+                                }
+
+                            } else if (!targetdef.hasOwnProperty(propertyname)) {
+                                targetdef[propertyname] = value
+
+                            } else {
+                                throw "Nothing to merge"
+                            }
+                    }
+                }
+            }
+            return targetdef
+        }
+
+        //traitdef is an object, we turn it into a model. We add a function to modeldef that returns an instance of the trait
+        this.addmodeltrait = function(modeldef, traitname, traitdef) {
+            if (traitdef._phase) { throw "error: trait should not have been assigned." }
+
+            if (modeldef[traitname]) {
+                var supertrait = modeldef[traitname].traitmodel
+                var traitoverride = true
+            } else {
+                var traitoverride = false
+            }
+            
+            var traitmodel = function() { }
+
+            traitmodel.prototype = traitdef
+            traitmodel.prototype._modelname = traitname
+            traitmodel.prototype._supermodel = supertrait || traitdef._supermodel
+            traitmodel.prototype._definition = traitmodel
+
+            var internalname = "_" + traitname
+
+            var method = function () {
+                if (!this[internalname]) {
+                    this[internalname] = new traitmodel().assign(this, traitname)
+                }
+
+                return this[internalname]
+            }
+            method.name = traitname
+            method.traitmodel = traitmodel          
+
+            modeldef[traitname] = method
+        }
+
+        this.adddefextendertrait = function (modeldef, traitname, traitdef) {
+            //Defextender traits are not allowed to override existing traits
+            if (modeldef[traitname]) {
+                throw "error: duplicate trait in model: " + modeldef._modelname + ", trait: " + traitname
+            }
+
+            var method = traitdef.definetrait(modeldef, traitname)
+            if (!_.isfunction(method)) {  throw "error: method expected from definetrait" }
+            
+            method.name = traitname
+            modeldef[traitname] = method
         }
 
         this.extendmodeldef = function (modeldef, extenddef, duplicatewarn) {
-
             for (var traitname in extenddef) {
                 if (extenddef.hasOwnProperty(traitname)) {
                     
                     switch (traitname) {
                         case "_modelname":
+                        case "_supermodel":    
                         case "_definition":
+                            
                             //Filter out protected keys
                             break
 
                         default:
                             var traitdef = extenddef[traitname]
-                            //todo: What to do with json?
-                            //for now the warning, in the future, we can merge the traits
-                            // if (duplicatewarn && modeldef[traitname]) {
-                            //     _.debug("Duplicate trait " + traitname + " in " + modeldef._modelname)
-                            // }
+                            var modeltrait = modeldef[traitname]
 
-                            //todo: recognizing what a trait definition is, should go through definition. Or we need a standard way how to define and construct traits
-                            if (traitdef && _.isfunction(traitdef.definetrait)) {
-                                this.definetrait(modeldef, traitname, traitdef)
+                                
+                            if (_.ismodel(traitdef)) { //def extender object
+                                if (_.isfunction(traitdef.definetrait)) {
+                                    this.adddefextendertrait(modeldef, traitname, traitdef)
+
+                                } else {
+                                    this.addmodeltrait(modeldef, traitname, traitdef)
+                                }
+
+                            } else if (modeltrait && _.isjson(traitdef)) {
+                                if (!_.isjson(modeltrait)) { throw "error" }
+                                modeldef[traitname] = _.merge(modeltrait || {}, traitdef)                                
 
                             } else {
                                 modeldef[traitname] = traitdef

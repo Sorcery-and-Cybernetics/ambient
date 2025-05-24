@@ -6,9 +6,12 @@ _.ambient.module("object").source(function (_) {
     _.model.object = function () { }
 
     _.model.object.prototype = {
-        _modelname: "object"
-        , _supermodel: null
+        _parent: undefined
+        , _name: undefined
+        , _modelname: "object"
+        , _supermodel: undefined
         , _phase: 0
+        , _definition: undefined
         
         , modelname: function () { return this._modelname }
         , supermodel: function() { return this._supermodel }
@@ -22,8 +25,12 @@ _.ambient.module("object").source(function (_) {
             }
             return false;
          }        
-        , construct: _.noop
-        , assign: _.noop
+        , construct: _.noop        
+        , assign: function(parent, name) {
+            this._parent = parent
+            this._name = name
+            return this
+        }
         , destroy: _.noop
 
         , debugout: function() {}
