@@ -4,7 +4,7 @@
 
 _.ambient.module("aliasdb", function(_) {    
     _.define.object("alias.db", function (supermodel) {
-        this.nodes = null
+        this.nodes = undefined
         this.connection = ""
 
         this.construct = function(connection) {

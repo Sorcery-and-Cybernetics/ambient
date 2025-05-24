@@ -100,7 +100,7 @@ _.ambient.module("dom", function(_) {
             } else {
                 element.parentNode.removeChild(element)
             }
-            return null
+            return undefined
         } 
     })    
 })

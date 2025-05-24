@@ -43,7 +43,7 @@ _.define.module("oophelper", function (_) {
 
                 if (superdef.hasOwnProperty(prop)) {
                     switch (prop) {
-                        case "__proto__":
+                        case "_proto_":
                             throw "error"
 
                         default:
@@ -108,7 +108,7 @@ _.define.module("oophelper", function (_) {
         }
 
         , updatewrapper: function (def, methodwrapper) {
-            var params = null
+            var params = undefined
 
             if (!_.length(def.paramnames)) {
                 if (def._source) {
@@ -157,21 +157,21 @@ _.define.module("oophelper", function (_) {
             _.oophelper.appendvalue(_, name, function () {
                 var kind = new def()
 
-                kind.__defcreate.apply(kind, arguments)
+                kind._defcreate.apply(kind, arguments)
                 return kind
             })
         }
 
         , linkmodels: function (supermodel, childmodel, inlined, parentmodel, traitoverride) {
             //if (nested) {
-            //    _.debug("relink " + parentmodel.__kindname + ", " + childmodel.__kindname + ", " + childmodel._key + ", " + nested)
+            //    _.debug("relink " + parentmodel._kindname + ", " + childmodel._kindname + ", " + childmodel._key + ", " + nested)
             //} else {
-            //    _.debug("link " + parentmodel.__kindname + ", " + childmodel.__kindname )
+            //    _.debug("link " + parentmodel._kindname + ", " + childmodel._kindname )
             //}
 
-            childmodel._fullmodelname = (inlined ? parentmodel.__kindname + "." + childmodel._key : childmodel.__kindname)
+            childmodel._fullmodelname = (inlined ? parentmodel._kindname + "." + childmodel._key : childmodel._kindname)
 
-            var key = (inlined ? (traitoverride ? "self": parentmodel.__kindname + "." + childmodel._key) : childmodel.__kindname)
+            var key = (inlined ? (traitoverride ? "self": parentmodel._kindname + "." + childmodel._key) : childmodel._kindname)
 
             childmodel._supermodel = supermodel
             if (!supermodel._submodel) { supermodel._submodel = {} }
@@ -186,14 +186,14 @@ _.define.module("oophelper", function (_) {
                 parentmodel._childmodel[key] = childmodel
 
             } else {
-                childmodel._parentmodel = null
+                childmodel._parentmodel = undefined
             }
         }
 
         , addtrait: function (target, key, traitmodel) {
             traitmodel._key = key
-            traitmodel._submodel = null
-            traitmodel._childmodel = null
+            traitmodel._submodel = undefined
+            traitmodel._childmodel = undefined
 
             if (target[key]) {
                 var supermodel = target[key]._definition
@@ -203,17 +203,17 @@ _.define.module("oophelper", function (_) {
                 var traitoverride = false
             }
 
-            if (!supermodel || (supermodel.__kindname !== traitmodel.__kindname)) { throw "error" }
+            if (!supermodel || (supermodel._kindname !== traitmodel._kindname)) { throw "error" }
 
             var traitmodel = _.oophelper.mergedef(supermodel, traitmodel)
             _.oophelper.linkmodels(supermodel, traitmodel, true, target, traitoverride)
 
-            var method = traitmodel.__defextend(target, key)
+            var method = traitmodel._defextend(target, key)
 
             if (method) {
                 if (_.isfunction(method)) {
                 } else {
-                    throw "error: method expected from __defextend"
+                    throw "error: method expected from _defextend"
                 }
                 method._definition = traitmodel
                 target[key] = method
@@ -229,7 +229,7 @@ _.define.module("oophelper", function (_) {
             
 
                 //if (trait._modelname) {
-                //    var custommodelname = target.__modelname + "." + key
+                //    var custommodelname = target._modelname + "." + key
                 //    _.oophelper.appendvalue(_.kind, custommodelname, traitdef)
                 //}
 
@@ -308,10 +308,10 @@ _.define.module("oophelper", function (_) {
 
                         default:
                             if (duplicatewarn && target[key]) {
-                                _.debug("Duplicate trait " + key + " in " + target.__kindname)
+                                _.debug("Duplicate trait " + key + " in " + target._kindname)
                             }
 
-                            if (traitdef && _.isfunction(traitdef.__defextend)) {
+                            if (traitdef && _.isfunction(traitdef._defextend)) {
                                 if (key)
                                 _.oophelper.addtrait(target, key, traitdef)
 
@@ -334,10 +334,10 @@ _.define.module("oophelper", function (_) {
 
             if (_.isfunction(prototype)) {
                 if (_super) { //Get intellisense to work
-                    var __clone = function () { }
-                    __clone.prototype = _super.prototype
-                    __clone = new __clone()
-                    prototype = prototype.call(null, __clone)
+                    var _clone = function () { }
+                    _clone.prototype = _super.prototype
+                    _clone = new _clone()
+                    prototype = prototype.call(null, _clone)
 
                 } else {
                     prototype = prototype(null)
@@ -367,7 +367,7 @@ _.define.module("oophelper", function (_) {
             //var innerscope = prototype._scope
             //prototype._scope = undefined
 
-            if (!prototype.construct && !__clone) {
+            if (!prototype.construct && !_clone) {
                 prototype.construct = _.noop
             }
 
@@ -375,17 +375,17 @@ _.define.module("oophelper", function (_) {
 
             //trick to get instanceof working
             if (_super) {
-                function __() { } 
-                __.prototype = _super.prototype
-                fn.prototype = new __()
+                function _() { } 
+                _.prototype = _super.prototype
+                fn.prototype = new _()
             }
 
-            fn.prototype.__kindname = name
+            fn.prototype._kindname = name
 
-            fn.prototype._childmodel = _super? _.shallowclone(_super.prototype._childmodel): null
-            fn.prototype._submodel = null
-            fn.prototype._supermodel = null
-            fn.prototype._parentmodel = null
+            fn.prototype._childmodel = _super? _.shallowclone(_super.prototype._childmodel): undefined
+            fn.prototype._submodel = undefined
+            fn.prototype._supermodel = undefined
+            fn.prototype._parentmodel = undefined
 
             //if (_super) {
             //    _.oophelper.extendprototype(fn.prototype, _super.prototype)

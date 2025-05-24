@@ -7,8 +7,8 @@ _.ambient.module("modeldefiner", function (_) {
 
     definerprototype = {
         babyname: "object"
-        , babydef: null        
-        , supermodelname: null
+        , babydef: undefined        
+        , supermodelname: undefined
 
         , init: function (supermodelname, babyname, babydef) {
             this.babyname = babyname

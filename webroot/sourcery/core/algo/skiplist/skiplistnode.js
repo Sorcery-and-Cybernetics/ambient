@@ -6,135 +6,134 @@ _.ambient.module("skiplistnode", function(_) {
     var valuecompare = function(searchvalue, matchvalue, option) {
         switch(option) {
             case "<=":
-                return searchvalue <= matchvalue;
+                return searchvalue <= matchvalue
             case ">=":
-                return searchvalue >= matchvalue;
+                return searchvalue >= matchvalue
             case ">":
-                return searchvalue > matchvalue;
+                return searchvalue > matchvalue
             case "<":
-                return searchvalue < matchvalue;
+                return searchvalue < matchvalue
             default: // "==" or undefined
-                return searchvalue == matchvalue;
+                return searchvalue == matchvalue
         }
     }
 
     _.define.linkedlistnode("skiplistnode", function (supermodel) {
-        this.__upsegment = null;
-        this.__topsegment = null;            
-        this.__level = 1;
+        this._upsegment = undefined
+        this._topsegment = undefined            
+        this._level = 1
 
         this.constructbehavior = _.behavior(function() {
             this.assign = function(cursor, index) {
-                supermodel.assign.call(this, cursor, index);
+                supermodel.assign.call(this, cursor, index)
 
                 //todo: For now we do a simple random level 
-                if (!this.__topsegment) {
-                    var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel());
+                if (!this._topsegment) {
+                    var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel())
 
                     if (level > 1) {
-                        this.__upsegment = _.model.skiplistsegment(this, level - 1);
+                        this._upsegment = _.model.skiplistsegment(this, level - 1)
                     } else {
-                        this.__topsegment = this;
+                        this._topsegment = this
                     }
                 }
 
-                if (this.__upsegment) {  
-                    this.__upsegment.link();
+                if (this._upsegment) {  
+                    this._upsegment.link()
                 }
 
-                this.segmentleftup().calcsegment(true, true);
+                this.segmentleftup().calcsegment(true, true)
 
-                return this;
-            };
+                return this
+            }
 
             this.unlink = function() {
-                if (this.__upsegment) { this.__upsegment.unlink(); }
-                this.__topsegment = null;
+                if (this._upsegment) { this._upsegment.unlink() }
+                this._topsegment = undefined
                 
-                var nodeprev = this.__nodeprev;
-                supermodel.unlink.call(this);
-                nodeprev.segmentleftup().calcsegment(false, true);
-                return this;
-            };
+                var nodeprev = this._nodeprev
+                supermodel.unlink.call(this)
+                nodeprev.segmentleftup().calcsegment(false, true)
+                return this
+            }
 
             this.destroy = function() {
-                this.unlink();
-                return null;
-            };            
-        });
+                this.unlink()
+                return undefined
+            }
+        })
 
         this.modelbehavior = _.behavior(function() {
             this.value = function() { 
-                return this.__value; 
-            };
+                return this._value
+            }
 
             this.sortvalue = function(list) { 
-                list = list || this.list();
+                list = list || this.list()
                 var sortvaluename = list.sortvaluename()
-                if (sortvaluename) { return this.__value.get(sortvaluename); }
-                return this.__value; 
-            };            
+                if (sortvaluename) { return this._value.get(sortvaluename) }
+                return this._value
+            }          
 
             this.orderindex = function(relativenode) {
-                if (this.isroot()) { return 0; }
-                if (relativenode) { return this.orderindex() - relativenode.orderindex(); }
+                if (this.isroot()) { return 0 }
+                if (relativenode) { return this.orderindex() - relativenode.orderindex() }
 
-                if (this.__upsegment) { return this.__upsegment.orderindex() + 1; }
-                return this.__nodeprev instanceof _.model.skiplist? 1: this.__nodeprev.orderindex() + 1;
-            };           
-        });
+                if (this._upsegment) { return this._upsegment.orderindex() + 1 }
+                return this._nodeprev instanceof _.model.skiplist? 1: this._nodeprev.orderindex() + 1
+            }           
+        })
 
         this.navigationbehavior = _.behavior(function() {
-            this.isroot = function() { return false; };
-            this.base = function() { return this; };
-            this.segmenttop = function() { return this.__topsegment; };
-            this.level = function() { return 1; };
+            this.isroot = function() { return false }
+            this.base = function() { return this }
+            this.segmenttop = function() { return this._topsegment }
+            this.level = function() { return 1 }
 
-            this.segmentnext = function() { return this.__nodenext; };            
-            this.segmentprev = function() { return this.__nodeprev; };
-            this.segmentdown = function() { return null; };
+            this.segmentnext = function() { return this._nodenext }            
+            this.segmentprev = function() { return this._nodeprev }
+            this.segmentdown = function() { return undefined }
 
             this.segmentleftup = function() {
-                if (this.__upsegment) {  return this.__upsegment; }
-                if (this.isroot()) { return null; }
+                if (this._upsegment) {  return this._upsegment }
+                if (this.isroot()) { return undefined }
 
-                var cursor = this;
+                var cursor = this
 
                 while (cursor) {
-                    if (cursor.__upsegment) { return cursor.__upsegment; }
-                    cursor = cursor.__nodeprev;
+                    if (cursor._upsegment) { return cursor._upsegment }
+                    cursor = cursor._nodeprev
                 }
-            };
+            }
             
-            this.segmentrightup = function() { return this.segmentleftup().__nextsegment; };                
-            this.segmentup = function() { return this.__upsegment || undefined; };
-        }); 
+            this.segmentrightup = function() { return this.segmentleftup()._nextsegment }                
+            this.segmentup = function() { return this._upsegment || undefined }
+        })
         
         this.searchbehavior = _.behavior(function() {
             this.valueinsegment = function(searchvalue, option) {
-                return valuecompare(searchvalue, this.sortvalue(), option);
+                return valuecompare(searchvalue, this.sortvalue(), option)
             }
-        });
+        })
                
-        this.debugbehavior = _.behavior(function () {
+        this.debugbehavior = _.behavior(function () {            
             this.debugout = function() {
                 var result = this.value() + ", segments ["                
-                var cursor = this.segmentup();
+                var cursor = this.segmentup()
 
                 while (cursor) {
-                    result += cursor.__childcount;
-                    cursor = cursor.segmentup();
-                    if (cursor) { result += ", "; }
+                    result += cursor._childcount
+                    cursor = cursor.segmentup()
+                    if (cursor) { result += ", " }
                 }
-                result += "]";
-                return result;
+                result += "]"
+                return result
             }
 
             this.debugvalidate = function() {
-                var errors = (this.__upsegment? this.__upsegment.debugvalidate(): undefined);
-
-                return errors? errors: undefined;
+                var errors = (this._upsegment? this._upsegment.debugvalidate(): undefined)
+                return errors? errors: undefined
             }
-        });            
-    });
+        })            
+    })
 })

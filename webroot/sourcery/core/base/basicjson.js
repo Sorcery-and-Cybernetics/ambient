@@ -10,14 +10,14 @@ _.ambient.module("basicjson").source(function (_) {
                     , value: obj[index]
                 }
             }
-            return null
+            return undefined
         }
 
         _.json.parse = function (data) {
             try {
                 return JSON.parse(data)
             } catch (e) {
-                return null
+                return undefined
             }
         }
 
@@ -37,7 +37,7 @@ _.ambient.module("basicjson").source(function (_) {
         _.json.stringify = JSON.stringify
 
         _.json.keys = function (json) {
-            return json ? Object.keys(json) : null
+            return json ? Object.keys(json) : undefined
         }
         //, trim: function (json) {
         //    var keys = _.json.keys(json)
@@ -397,7 +397,7 @@ _.ambient.module("basicjson").source(function (_) {
             for (prop in source) {
                 if (source.hasOwnProperty(prop)) {
                     switch (prop) {
-                        case "__proto__":
+                        case "_proto_":
                             break
 
                         default:
@@ -492,7 +492,7 @@ _.ambient.module("basicjson").source(function (_) {
 
         _.filter = function (items, filter, context) {
             var result = []
-            var fnfilter = null
+            var fnfilter = undefined
 
             if (_.isfunction(filter)) {
                 fnfilter = filter.bind(context)
@@ -525,7 +525,7 @@ _.ambient.module("basicjson").source(function (_) {
                 for (var keyindex = 0; keyindex < keys.length; keyindex++) {
                     var key = keys[keyindex]
                     var initial = initialvalues[key]
-                    var value = valueindex < values.length ? values[valueindex] : null
+                    var value = valueindex < values.length ? values[valueindex] : undefined
 
                     if (initial != Function) {
                         if (_.isfunction(value)) {
@@ -540,7 +540,7 @@ _.ambient.module("basicjson").source(function (_) {
                             valueindex++
                         } else {
                             //Error???
-                            result[key] = (initial == Function ? null : initial)
+                            result[key] = (initial == Function ? undefined : initial)
                         }
                     }
                 }

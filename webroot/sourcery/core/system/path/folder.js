@@ -3,9 +3,9 @@
 //*************************************************************************************************
 _.ambient.module("folder", function (_) {
     _.define.object("folder", function (supermodel) {
-        this._drive = null
-        this._path = null
-        this._name = null
+        this._drive = undefined
+        this._path = undefined
+        this._name = undefined
 
         this.construct = function (path) {
             var path = _.path.splitpath(path)

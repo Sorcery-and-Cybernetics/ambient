@@ -3,114 +3,114 @@
 //*************************************************************************************************
 _.ambient.module("map", function(_) {
     _.define.object("map", function (supermodel) {
-        this.__value = null;
+        this._value = undefined
 
         this.construct = function () {
-            this.__value = {};
-        };
+            this._value = {}
+        }
 
         this.get = function (key) {
-            if (key == null) { throw "Map.get: key is null"; }
-            return this.__value[key];
-        };
+            if (key == null) { throw "Map.get: key is null" }
+            return this._value[key]
+        }
 
         this.set = function (key, value) {
-            if (key == null) { throw "Map.set: key is null"; }
+            if (key == null) { throw "Map.set: key is null" }
 
-            this.__value[key] = value;
-            return this;
-        };
+            this._value[key] = value
+            return this
+        }
 
         this.has = function (key) {
-            if (key == null) { throw "Map.has: key is null"; }
-            return (this.__value[key] !== undefined);
-        };
+            if (key == null) { throw "Map.has: key is null" }
+            return (this._value[key] !== undefined)
+        }
 
         this.del = function (key) {
-            if (key == null) { throw "Map.del: key is null"; }
-            delete this.__value[key];
-        };
+            if (key == null) { throw "Map.del: key is null" }
+            delete this._value[key]
+        }
 
         this.foreach = function (next) {
-            var me = this;
+            var me = this
 
-            for (var key in this.__value) {
-                var result = next(this.__value[key], key);
+            for (var key in this._value) {
+                var result = next(this._value[key], key)
 
                 switch (result) {
                     case _.done:
-                        return;
+                        return
 
                     case _.remove:
-                        me.del(key);
-                        break;
+                        me.del(key)
+                        break
                 }
             }
-        };
+        }
 
         this.clear = function () {
-            var me = this;
+            var me = this
 
-            for (var key in this.__value) {
-                me.del(key);
+            for (var key in this._value) {
+                me.del(key)
             }
-        };
+        }
 
-        this.length = function () {                
-            var count = 0;
+        this.length = function () {
+            var count = 0
 
-            for (var key in this.__value) {
-                count++;
+            for (var key in this._value) {
+                count++
             }
-            return count;
-        };
+            return count
+        }
 
         this.destroy = function () {
-            this.clear();
-            supermodel.destroy.call(this);
-        };
-        
+            this.clear()
+            supermodel.destroy.call(this)
+        }
+
         this.keys = function () {
-            var result = [];
-            
+            var result = []
+
             this.foreach(function (value, key) {
-                result.push(key);
-            });
-            return result;
-        };
-        
+                result.push(key)
+            })
+            return result
+        }
+
         this.values = function () {
-            var result = [];
-            
+            var result = []
+
             this.foreach(function (value, key) {
-                result.push(value);
-            });
-            return result;
-        };
+                result.push(value)
+            })
+            return result
+        }
 
         this.tojson = function () {
-            var result = {};
-            
+            var result = {}
+
             this.foreach(function (value, key) {
-                result[key] = value;
-            });
-            return result;                
-        };
-        
+                result[key] = value
+            })
+            return result
+        }
+
         this.fromjson = function (data) {
-            var me = this;
+            var me = this
 
             _.foreach(data, function (value, key) {
-                me.set(key, value);
-            });
-        };
+                me.set(key, value)
+            })
+        }
 
         this.debugbehavior = function() {
             this.debugout = function () {
-                _.debug(this.tojson());
-            };
-        };
-    });
+                _.debug(this.tojson())
+            }
+        }
+    })
 })
 .ontest("map", function(_) {
     var map = _.model.map()

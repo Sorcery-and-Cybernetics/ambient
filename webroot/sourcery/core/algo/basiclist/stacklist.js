@@ -8,7 +8,7 @@ _.ambient.module("stacklist", function (_) {
                 throw "error"
             }
 
-            if (!(value instanceof _.model.linkedlistnode)) { value = this.__makenode(value) }
+            if (!(value instanceof _.model.linkedlistnode)) { value = this._makenode(value) }
             //return value.assignbefore(this)
             return value.assign(this, -1)
         }
@@ -29,7 +29,7 @@ _.ambient.module("stacklist", function (_) {
                 throw "error"
             }
 
-            if (!(value instanceof _.model.linkedlistnode)) { value = this.__makenode(value) }
+            if (!(value instanceof _.model.linkedlistnode)) { value = this._makenode(value) }
 //            return value.assignafter(this)
             return value.assign(this, 1)
         }
@@ -39,7 +39,7 @@ _.ambient.module("stacklist", function (_) {
             var value
 
             if (cursor) {
-                value = cursor.__value
+                value = cursor._value
                 cursor.destroy()
             }
             return value

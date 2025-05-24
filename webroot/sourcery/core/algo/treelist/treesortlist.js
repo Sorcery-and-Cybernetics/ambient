@@ -3,16 +3,16 @@
 //*************************************************************************************************
 _.ambient.module("treesortlist", function (_) {
     _.define.treebaselist("treesortlist", function () {
-        this._rootnode = null;
+        this._rootnode = undefined
 
 //        this.sortkey = _.property("key");
 
         this.push = function (item) {
-            var node = this.makenode(item);
-            var value = this.nodesortvalue(item);
-            var found = this.findnodelast(value, true);
+            var node = this.makenode(item)
+            var value = this.nodesortvalue(item)
+            var found = this.findnodelast(value, true)
 
-            this.insertnodeafter(found, node);
+            this.insertnodeafter(found, node)
             return this;
         };
 
@@ -20,64 +20,64 @@ _.ambient.module("treesortlist", function (_) {
             var list = this;
             //var searchtoken = _.model.listsearchtoken(search);
 
-            var cursor = list._rootnode;
-            var closest = cursor;
-            var found;
+            var cursor = list._rootnode
+            var closest = cursor
+            var found
 
             while (cursor) {
                 switch (list._compare(this.nodesortvalue(cursor), search, false)) {  //searchtoken.key, searchtoken.findlike)) {
                     case 0:
-                        found = cursor;
+                        found = cursor
                         //nobreak
                     case 1:
-                        closest = cursor;
-                        cursor = cursor._leftnode;
-                        break;
+                        closest = cursor
+                        cursor = cursor._leftnode
+                        break
 
                     case -1:
-                        cursor = cursor._rightnode;
-                        break;
+                        cursor = cursor._rightnode
+                        break
                 }
             }
-            return findclosest == true ? closest : found;
-        };
+            return findclosest == true ? closest : found
+        }
 
         this.findnodelast = function (search, findclosest) {
-            var list = this;
+            var list = this
             //var searchtoken = _.model.listsearchtoken(search);
 
-            var cursor = list._rootnode;
-            var closest;
-            var found;
+            var cursor = list._rootnode
+            var closest
+            var found
 
             while (cursor) {
 
                 switch (list._compare(this.nodesortvalue(cursor), search, false)) { //searchtoken.key, searchtoken.findlike)) {
                     case 0:
-                        found = cursor;
+                        found = cursor
                         //nobreak
                     case -1:
-                        closest = cursor;
-                        cursor = cursor._rightnode;
-                        break;
+                        closest = cursor
+                        cursor = cursor._rightnode
+                        break
 
                     case 1:
-                        cursor = cursor._leftnode;
-                        break;
+                        cursor = cursor._leftnode
+                        break
                 }
             }
 
-            return findclosest == true ? closest : found;
-        };
+            return findclosest == true ? closest : found
+        }
 
         this.findfirstposition = function (search) {
-            var node = this.findnodefirst(search);
-            return node ? node.position() : 0;
-        };
+            var node = this.findnodefirst(search)
+            return node ? node.position() : 0
+        }
 
         this.findlastposition = function (search) {
-            var node = this.findnodelast(search);
-            return node ? node.position() : 0;
-        };
-    });
+            var node = this.findnodelast(search)
+            return node ? node.position() : 0
+        }
+    })
 })

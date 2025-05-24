@@ -7,9 +7,9 @@ _.ambient.module("basicarray", function (_) {
     //Polyfill
     if (!Array.prototype.last) {
         Array.prototype.last = function () {
-            return this[this.length - 1];
-        };
-    };
+            return this[this.length - 1]
+        }
+    }
 
     _.last = function (array) {
         return array && array.length ? array[array.length - 1] : null
@@ -91,15 +91,14 @@ _.ambient.module("basicarray", function (_) {
 
         if (ignorecase) { search = _.lcase$(search) }
 
-    
         for (var index = 0; index < ar.length; index++) {
             if (key) {
                 item = ar[index][key]
             } else {
                 item = ar[index]
             }
-            
-            if(_.isfunction(item)){
+
+            if (_.isfunction(item)) {
                 item = item.call(ar[index])
             }
             if (ignorecase) {
@@ -109,7 +108,7 @@ _.ambient.module("basicarray", function (_) {
                 result.push(ar[index])
             }
         }
-        
+
         return result
     }
 
@@ -276,7 +275,7 @@ _.ambient.module("basicarray", function (_) {
         var result = true
         var i = 0
 
-        while (result && i < len) { 
+        while (result && i < len) {
             result = ar1[i] == ar2[i]
             i++
         }
@@ -294,12 +293,12 @@ _.ambient.module("basicarray", function (_) {
             var keya = keyfn(a)
             var keyb = keyfn(b)
 
-            if (keya == keyb) { return 0; }
+            if (keya == keyb) { return 0 }
             if (keya > keyb) {
-                return 1;
+                return 1
             }
             else {
-                return -1;
+                return -1
             }
         })
     }
@@ -321,7 +320,6 @@ _.ambient.module("basicarray", function (_) {
         for (var index = lbound; index <= ubound; index++) {
             var swappos = _.math.random(lbound, ubound)
             _.array.swap(result, index, swappos)
-            
         }
 
         return result

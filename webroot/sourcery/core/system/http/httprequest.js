@@ -29,14 +29,14 @@ var buffer = require('buffer');
     _.define.enum("httprequest", ["destroyed", "destroying", "ended", "cancelled", "error", "none", "created", "sending", "receiving"], -5)
 
     _.define.object("httprequest", function () {
-        this.state = 0;
-        this.states = _.enum.httprequest;
+        this.state = 0
+        this.states = _.enum.httprequest
 
-        this.timestart = 0;
-        this.method = null;
-        this.url = null;
-        this.params = null;
-        this.headers = null;
+        this.timestart = 0
+        this.method = undefined
+        this.url = undefined
+        this.params = undefined
+        this.headers = undefined
 
         this.construct = function(method, url, params, headers) {
             var me = this;
@@ -44,7 +44,7 @@ var buffer = require('buffer');
             this.state = this.states.created
 
             var buffer = ""
-            var postdata = null
+            var postdata = undefined
             var path = "/"
             var ishttps = _.left$(url, 5) == "https"
 
@@ -92,7 +92,7 @@ var buffer = require('buffer');
                 , path: uri.path
                 , method: method
                 , headers: headers
-                , agent: null
+                , agent: undefined
             }
 
             

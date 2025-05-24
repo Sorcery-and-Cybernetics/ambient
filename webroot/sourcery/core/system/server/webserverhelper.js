@@ -4,7 +4,7 @@ _.define.module("webserverhelper", function (_) {
             var routes = this.routes["http"]
 
             if (!path || !path.length || !path[0]) {
-                return routes["*"] || null
+                return routes["*"] || undefined
             }
 
             for (var index = 0; index < path.length; index++) {
@@ -12,7 +12,7 @@ _.define.module("webserverhelper", function (_) {
 
                 if (subpath) {
                     if (!routes[subpath]) {
-                        routes = routes["*"] || null
+                        routes = routes["*"] || undefined
 
                         if (!routes || _.isfunction(routes)) {
                             return routes

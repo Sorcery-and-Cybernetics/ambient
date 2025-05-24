@@ -3,14 +3,14 @@
 //*************************************************************************************************
 _.ambient.module("basicdate", function (_) {
     _.helper.date = {
-        months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        monthsshort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        daysshort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        daysmin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-        am: ["AM", "PM"],
-        ampm: ["AM", "PM"],
-        ampmLower: ["am", "pm"]
+        months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        , monthsshort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        , days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        , daysshort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        , daysmin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+        , am: ["AM", "PM"]
+        , ampm: ["AM", "PM"]
+        , ampmLower: ["am", "pm"]
     }
 
     var helper = _.helper.date
@@ -18,7 +18,7 @@ _.ambient.module("basicdate", function (_) {
     //Low level function. But actual timing it is better to use async or timer object.
     _.immediate = _.immediate || function () {
         return typeof setImmediate == "function" ? function (next, scope) { return setImmediate(next, scope) } : function (next, scope) { setTimeout(next, 0, scope) }
-    }()    
+    }()
 
     _.now = Date.now || function () {
         return new Date().getTime()

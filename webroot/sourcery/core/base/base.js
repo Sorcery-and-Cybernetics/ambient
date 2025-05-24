@@ -3,178 +3,199 @@
 //*************************************************************************************************
 _.ambient.module("base", function (_) {
     // Reserved collections
-    _.enum = {};
-    _.helper = {};
-    _.define = {};
+    _.enum = {}
+    _.helper = {}
+    _.define = {}
 
     // Constants
-    _.crlf = "\r\n";
-    _.lf = "\n";
-    _.cr = "\r";
+    _.crlf = "\r\n"
+    _.lf = "\n"
+    _.cr = "\r"
 
-    _.__uniqueid = 1;
+    _._uniqueid = 1
 
     _.uniqueid = function () {
-        return _.__uniqueid++;
-    };
+        return _._uniqueid++
+    }
 
     // Typecasting
     _.undef = function (value, initial) {
-        return value === undefined ? initial : value;
-    };
+        return value === undefined ? initial : value
+    }
 
     _.isstring = function (value) {
-        return !!(value && value.constructor == String);
-    };
+        return !!(value && value.constructor == String)
+    }
 
     _.isnumber = function (value) {
-        return !!((value != null) && value.constructor == Number);
-    };
+        return !!((value != null) && value.constructor == Number)
+    }
 
     _.isdate = function (value) {
-        return !!(value && value.constructor == Date);
-    };
+        return !!(value && value.constructor == Date)
+    }
 
     _.isarray = function (value) {
-        return !!(value && value.constructor == Array);
-    };
+        return !!(value && value.constructor == Array)
+    }
 
     _.isfunction = function (value) {
-        return !!(value && value.constructor == Function);
-    };
+        return !!(value && value.constructor == Function)
+    }
 
     _.isjson = function (value) {
-        return !!(value && value.constructor == Object);
-    };
+        return !!(value && value.constructor == Object)
+    }
 
     _.ispromise = function(obj) {
-        return obj instanceof Promise;
+        return obj instanceof Promise
     }
 
     _.ismodel = function (value) {
-        return !!(value && value._modelname);
-    };
+        return !!(value && value._modelname)
+    }
 
     _.isarraybuffer = function (value) {
-        return !!(value && value.constructor == ArrayBuffer);
-    };
+        return !!(value && value.constructor == ArrayBuffer)
+    }
 
     _.isregex = function (value) {
-        return !!(value && value.constructor == RegExp);
-    };
+        return !!(value && value.constructor == RegExp)
+    }
 
     _.iselement = function (value) {
-        return !!(value && value.nodeType == 1);
-    };
+        return !!(value && value.nodeType == 1)
+    }
 
     _.isempty = function (value) {
-        return value == "" || value == null;
-    };
+        return value == "" || value == null
+    }
 
     _.isemptyobject = function (obj) {
-        if (obj == null) return true;
+        if (obj == null) return true
 
-        if (obj.length > 0) return false;
-        if (obj.length === 0) return true;
+        if (obj.length > 0) return false
+        if (obj.length === 0) return true
 
         for (var prop in obj) {
             if (typeof obj.prop != "function") {
-                return false;
+                return false
             }
         }
-        return true;
-    };
+        return true
+    }
 
     _.isodd = function (value) {
-        return !!(value % 2);
-    };
+        return !!(value % 2)
+    }
 
     _.iseven = function (value) {
-        return !(value % 2);
-    };
+        return !(value % 2)
+    }
 
     _.iserror = function (value) {
-        return !!(value && (value.constructor == Error || value instanceof _.kind.error));
-    };
+        return !!(value && (value.constructor == Error || value instanceof _.kind.error))
+    }
 
     _.isnumeric = function (value) {
-        return !_.isarray(value) && value - parseFloat(value) + 1 == 1;
-    };
+        return !_.isarray(value) && value - parseFloat(value) + 1 == 1
+    }
 
     _.normalize = function (value, context) {
-        return _.isfunction(value) ? value.call(context) : value;
-    };
+        return _.isfunction(value) ? value.call(context) : value
+    }
 
     _.cint = function (value) {
-        return Math.round(value || 0);
-    };
+        return Math.round(value || 0)
+    }
 
     _.cstr = function (str) {
-        return str == null ? "" : str.toString();
-    };
+        return str == null ? "" : str.toString()
+    }
 
     _.tostring = function (value) {
         if (!value) {
-            return "";
+            return ""
         } else if (_.isjson(value) || _.isarray(value)) {
-            return JSON.stringify(value);
+            return JSON.stringify(value)
         } else {
-            return value.toString();
+            return value.toString()
         }
-    };
+    }
 
     _.length = function (value) {
         if (!value) {
-            return 0;
+            return 0
         } else if (_.isstring(value)) {
-            return value.length;
+            return value.length
         } else if (_.isarray(value)) {
-            return value.length;
+            return value.length
         } else if (_.isjson(value)) {
-            return Object.keys(value).length;
+            return Object.keys(value).length
         } else {
-            return 1;
+            return 1
         }
-    };
+    }
 
     _.cbool = function (value) {
-        var __truevalues = {
-            y: true,
-            yes: true,
-            t: true,
-            true: true,
-            ja: true,
-            j: true,
-        };
+        var _truevalues = {
+            y: true
+            , yes: true
+            , t: true
+            , true: true
+            , ja: true
+            , j: true
+        }
 
         if (typeof value == "string") {
-            return __truevalues[value.toLowerCase()] || false;
+            return _truevalues[value.toLowerCase()] || false
         }
-        return !!value;
-    };
+        return !!value
+    }
 
     _.arg2array = function (args) {
-        return Array.prototype.slice.call(args);
-    };
+        return Array.prototype.slice.call(args)
+    }
 
     // Loops and optimization
-    _.done = new Error("done");
-    _.done.cancel = true;
-    _.remove = new Error("remove");
+    _.done = new Error("done")
+    _.done.cancel = true
+    _.remove = new Error("remove")
 
     _.foreach = function (items, fn, context) {
-        context = context || this;
+        context = context || this
 
         if (_.isarray(items)) {
             for (var index = 0; index < items.length; index++) {
-                if (fn.call(context, items[index], index) == _.done) return false;
+                if (fn.call(context, items[index], index) == _.done) return false
             }
         } else if (_.isjson(items)) {
             for (var index in items) {
-                if (fn.call(context, items[index], index) == _.done) return false;
+                if (fn.call(context, items[index], index) == _.done) return false
             }
         } else if (items) {
-            fn.call(context, items);
+            fn.call(context, items)
+        }
+    }
+
+    _.rofeach = function (items, fn, context) {
+        context = context || this
+
+        if (_.isarray(items)) {
+            index = items.length
+            while (index--) {
+                if (fn.call(context, items[index], index, items) == _.done) return false
+            }
+        } else if (_.isjson(items)) {
+            var keys = Object.keys(items)
+            index = 0 | keys.length
+
+            while (index--) {
+                var key = keys[index]
+                if (fn.call(context, items[key], key, items) == _.done) return false
+            }
+        } else if (items) {
+            fn.call(context, items)
         }
     };
 
@@ -273,7 +294,7 @@ _.ambient.module("base", function (_) {
 
     _.vartype = function (value) {
         if (value == null) {
-            return _.vtnull;
+            return _.vtnull
         }
 
         switch (value.constructor) {
@@ -288,79 +309,79 @@ _.ambient.module("base", function (_) {
 
             default:
                 if (value._modelname) {
-                    return _.vtmodel;
+                    return _.vtmodel
                 }
         }
-        return undefined;
-    };
+        return undefined
+    }
 
     _.typename = function (value) {
-        return _.enum.vartypename[_.vartype(value)];
-    };
+        return _.enum.vartypename[_.vartype(value)]
+    }
 
-    _.var = {
-        createempty: function (vartype) {
-            switch (vartype) {
-                case _.vtnull: return null
-                case _.vtstring: return ""
-                case _.vtboolean: return false
-                case _.vtnumber: return 0
-                case _.vtdate: return _.now()
-                case _.vtregex: return null
-                case _.vtfunction: return _.noop
-                case _.vtjson: return {}
-                case _.vtarray: return []
+    _.var = {}
+
+    _.var.createempty = function (vartype) {
+        switch (vartype) {
+            case _.vtnull: return null
+            case _.vtstring: return ""
+            case _.vtboolean: return false
+            case _.vtnumber: return 0
+            case _.vtdate: return _.now()
+            case _.vtregex: return null
+            case _.vtfunction: return _.noop
+            case _.vtjson: return {}
+            case _.vtarray: return []
+        }
+    }
+
+    _.var.deepcompare = function (value1, value2) {
+        // Handle null/undefined cases
+        if (value1 === value2) return true
+        if (!value1 || !value2) return false
+
+        var type1 = _.vartype(value1)
+        var type2 = _.vartype(value2)
+
+        // Different types
+        if (type1 !== type2) return false
+
+        // Handle arrays
+        if (_.isarray(value1)) {
+            if (value1.length !== value2.length) return false
+
+            for (var i = 0; i < value1.length; i++) {
+                if (!_.var.deepcompare(value1[i], value2[i])) return false
             }
-        },
+            return true
+        }
 
-        deepcompare: function (value1, value2) {
-            // Handle null/undefined cases
-            if (value1 === value2) return true;
-            if (!value1 || !value2) return false;
+        // Handle objects
+        if (_.isjson(value1)) {
+            var keys1 = Object.keys(value1)
+            var keys2 = Object.keys(value2)
 
-            var type1 = _.vartype(value1);
-            var type2 = _.vartype(value2);
+            if (keys1.length !== keys2.length) return false
 
-            // Different types
-            if (type1 !== type2) return false;
-
-            // Handle arrays
-            if (_.isarray(value1)) {
-                if (value1.length !== value2.length) return false;
-
-                for (var i = 0; i < value1.length; i++) {
-                    if (!_.var.deepcompare(value1[i], value2[i])) return false;
-                }
-                return true;
+            for (var key of keys1) {
+                if (!value2.hasOwnProperty(key)) return false
+                if (!_.var.deepcompare(value1[key], value2[key])) return false
             }
+            return true
+        }
 
-            // Handle objects
-            if (_.isjson(value1)) {
-                var keys1 = Object.keys(value1);
-                var keys2 = Object.keys(value2);
+        // Handle dates
+        if (_.isdate(value1)) {
+            return value1.getTime() === value2.getTime()
+        }
 
-                if (keys1.length !== keys2.length) return false;
-
-                for (var key of keys1) {
-                    if (!value2.hasOwnProperty(key)) return false;
-                    if (!_.var.deepcompare(value1[key], value2[key])) return false;
-                }
-                return true;
-            }
-
-            // Handle dates
-            if (_.isdate(value1)) {
-                return value1.getTime() === value2.getTime();
-            }
-
-            // Handle primitive values
-            return value1 === value2;
-        },
-    };
+        // Handle primitive values
+        return value1 === value2
+    }
 })
 .ontest("isjson", function (_) {
-    this.assert(_.isjson([1, 2, 3]), false, "isjson test array");
-    this.assert(_.isjson({ a: 1 }), true, "isjson test json");
-    this.assert(_.isjson(new function () {}), false, "isjson test class");
+    this.assert(_.isjson([1, 2, 3]), false, "isjson test array")
+    this.assert(_.isjson({ a: 1 }), true, "isjson test json")
+    this.assert(_.isjson(new function () {}), false, "isjson test class")
 });
 

@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("oophelper", function (_) {
     _.define.helper("oop", function() {
-        this.definers = null
+        this.definers = undefined
         this.defined = false
 
         this.construct = function () {
@@ -70,7 +70,7 @@ _.ambient.module("oophelper", function (_) {
                         if (jsonvalue) {
                             if (_.isjson(jsonvalue)) {
                                 //transfer all keys from jsonvalue to json
-                                cursor[namepart] = null
+                                cursor[namepart] = undefined
                                 _.json.merge(value, jsonvalue)
                             } else {
                                 throw "helper.oop.appendvalue: Value " + name + " already exists"
@@ -91,7 +91,7 @@ _.ambient.module("oophelper", function (_) {
 
                 if (index < parts.length - 1) {
                     if (!cursor[namepart]) {
-                        return null
+                        return undefined
                     }
                     cursor = cursor[namepart]
                 } else {
@@ -130,7 +130,7 @@ _.ambient.module("oophelper", function (_) {
 
                 if (superdef.hasOwnProperty(propertyname)) {
                     switch (propertyname) {
-                        case "__proto__":
+                        case "_proto_":
                             throw "error"
 
                         default:

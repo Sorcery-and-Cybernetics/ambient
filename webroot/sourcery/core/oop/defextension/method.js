@@ -7,8 +7,8 @@ _.ambient.module("method", function (_) {
     }
 
     _.define.defextender("method", function(supermodel) {
-        this.params = null
-        this.paramnames = null
+        this.params = undefined
+        this.paramnames = undefined
 
         this.construct = function(source, args) {
             this.params = {}

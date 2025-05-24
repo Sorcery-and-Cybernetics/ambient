@@ -4,8 +4,8 @@
 
 _.ambient.module("aliasnode", function(_) {    
     _.define.object("alias.node", function (supermodel) {
-        this._object = null;
-        this._links = null
+        this._object = undefined
+        this._links = undefined
 
         this.construct = function(object) {
             this._object = object
@@ -17,15 +17,15 @@ _.ambient.module("aliasnode", function(_) {
         }
 
         this.getvalue = function(name) {
-            return this._object? this._object.get(name) : null
+            return this._object? this._object.get(name) : undefined
         }
 
         this.clear = function() {
-            if (this.links) {
-                _.foreach(this.links, function(link) {
+            if (this._links) {
+                _.foreach(this._links, function(link) {
                     link.destroy()
                 })
-                this.links = null
+                this._links = undefined
             }
         } 
         

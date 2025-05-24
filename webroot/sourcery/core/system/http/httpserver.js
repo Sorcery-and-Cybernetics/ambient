@@ -8,39 +8,39 @@ _.ambient.module("httpserver", function (_) {
 
     _.define.object("httpserver", function (supermodel) {
         this.certpath = "./config/";
-        this.httpserver = null;
-        this.httpsserver = null;
+        this.httpserver = undefined
+        this.httpsserver = undefined
 
-        this.ip = null;
+        this.ip = undefined
         this.port = 443;
-        this.certname = null;
-        this.certpassword = null;
-        this.certpfx = null;
-        this.compress = false;
+        this.certname = undefined
+        this.certpassword = undefined
+        this.certpfx = undefined
+        this.compress = false
 
-        this.blockrequests = false;
+        this.blockrequests = false
 
-        // this._onrequest = null;
-        // this._onerror = null;
+        // this._onrequest = undefined
+        // this._onerror = undefined
 
         this.construct = function (name, port) {
             this.name = name;
-            if (port) { this.port = port; }
-            return this;
+            if (port) { this.port = port }
+            return this
         };
 
-        this.onrequest = _.model.basicsignal();
-        this.onerror = _.model.basicsignal();
+        this.onrequest = _.model.basicsignal()
+        this.onerror = _.model.basicsignal()
 
         this.loadcert = function(certname, certpassword) {
-            this.certkey = fs.readFileSync(this.certpath + this.certname + ".key");
-            this.cert = fs.readFileSync(this.certpath + this.certname + ".crt");
-            this.certpassword = this.certpassword;
+            this.certkey = fs.readFileSync(this.certpath + this.certname + ".key")
+            this.cert = fs.readFileSync(this.certpath + this.certname + ".crt")
+            this.certpassword = this.certpassword
             return this;
         };
 
         this.hascertificate = function() {
-            return false;
+            return false
             //this.loadcert()
             //return this.certname && this.certpassword
         };
@@ -49,56 +49,55 @@ _.ambient.module("httpserver", function (_) {
             var me = this;
 
             var requesthandler = function (req, res) {
-                var response = _.model.httpresponse(me, req, res);
+                var response = _.model.httpresponse(me, req, res)
     
                 if (me.blockrequests) {
-                    response.senderror("Server Unavailable", 503);
-                    return;
+                    response.senderror("Server Unavailable", 503)
+                    return
                 }
     
-                me.onrequest(response);
+                me.onrequest(response)
             };                
 
             if (this.hascertificate()) {
                 var options = {
-                    key: this.certkey,
-                    cert: this.cert,
-                    passphrase: this.certpassword
+                    key: this.certkey
+                    , cert: this.cert
+                    , passphrase: this.certpassword
                 };
 
-                var server = https.createServer(options, requesthandler);
+                var server = https.createServer(options, requesthandler)
 
             } else {                    
-                var server = http.createServer(requesthandler);
+                var server = http.createServer(requesthandler)
             }
 
             server
                 .on("listening", function (result) {
-                    var serverinfo = server.address();
-                    _.debug("Server " + me.name + " online on " + serverinfo.address + ":" + me.port);
+                    var serverinfo = server.address()
+                    _.debug("Server " + me.name + " online on " + serverinfo.address + ":" + me.port)
                 })
                 .on("error", function (error) {
-                    me.onerror("Error - httpserver.createserver " + error.message);
+                    me.onerror("Error - httpserver.createserver " + error.message)
 
                     // if (!server.listening) {
                     //     _.timer.waitfor(1000, "retry port binding").ontimer(function () { _.createserver(servername, ip, port, cert, serverhandler) })
                     // }
                 })
                 .on("close", function (result) {
-                    _.debug("Server " + me.name + " closed");
+                    _.debug("Server " + me.name + " closed")
                 });
                 
 
-            this.httpserver = server;
-            server.listen(this.port, this.ip || undefined);
+            this.httpserver = server
+            server.listen(this.port, this.ip || undefined)
                 
-
-            return this;
-        };
+            return this
+        }
 
         this.stop = function() {
-            this.httpserver.close();
-            return this;
+            this.httpserver.close()
+            return this
         };
     });
 

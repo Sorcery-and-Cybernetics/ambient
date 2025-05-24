@@ -7,227 +7,227 @@ _.ambient.module("skiplistsegment", function (_) {
 
         switch(option) {
             case "<=":
-                return searchvalue <= matchvalueceil;
+                return searchvalue <= matchvalueceil
             case ">=":
-                return searchvalue >= matchvaluefloor;
+                return searchvalue >= matchvaluefloor
             case ">":
-                return searchvalue > matchvaluefloor;
+                return searchvalue > matchvaluefloor
             case "<":
-                return searchvalue < matchvalueceil;
+                return searchvalue < matchvalueceil
             default: // "==" or undefined
-                return searchvalue >= matchvaluefloor && searchvalue <= matchvalueceil;
+                return searchvalue >= matchvaluefloor && searchvalue <= matchvalueceil
         }
     }
 
 
-    _.define.object("skiplistsegment", function (supermodel) {
-        this.__base = null;
-        this.__level = 0;
-        this.__upsegment = null;
-        this.__downsegment = null;
+    _.define.object("skiplistsegment", function () {
+        this._base = undefined
+        this._level = 0
+        this._upsegment = undefined
+        this._downsegment = undefined
 
-        this.__nextsegment = null;
-        this.__prevsegment = null;
+        this._nextsegment = undefined
+        this._prevsegment = undefined
 
-        this.__childcount = 0;
+        this._childcount = 0
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function(segmentdown, level) {
-                if (!this.__downsegment) {
-                    this.__level = segmentdown.__level + 1;
-                    this.__downsegment = segmentdown;
-                    this.__base = (segmentdown instanceof _.model.skiplistsegment ? segmentdown.__base : segmentdown);
-                    this.__base.__topsegment = this;
+                if (!this._downsegment) {
+                    this._level = segmentdown._level + 1
+                    this._downsegment = segmentdown
+                    this._base = (segmentdown instanceof _.model.skiplistsegment ? segmentdown._base : segmentdown)
+                    this._base._topsegment = this
 
                     if (this.isroot()) {
-                        this.__nextsegment = this;
-                        this.__prevsegment = this;
+                        this._nextsegment = this
+                        this._prevsegment = this
                     } else {
-                        this.link();
+                        this.link()
                     }
                 }
 
                 if (level > 1) {
-                    if (this.__upsegment) {
-                        this.__upsegment.construct(this, level - 1);
+                    if (this._upsegment) {
+                        this._upsegment.construct(this, level - 1)
                     } else {
-                        this.__upsegment = _.model.skiplistsegment(this, level - 1);
+                        this._upsegment = _.model.skiplistsegment(this, level - 1)
                     }
                 }                    
-            };
+            }
 
             this.link = function() {
-                this.__nextsegment = this.segmentnext();
-                this.__prevsegment = this.segmentprev();
+                this._nextsegment = this.segmentnext()
+                this._prevsegment = this.segmentprev()
 
-                this.__nextsegment.__prevsegment = this;
-                this.__prevsegment.__nextsegment = this;
+                this._nextsegment._prevsegment = this
+                this._prevsegment._nextsegment = this
 
-                if (this.__upsegment) { this.__upsegment.link(); }
-            };
+                if (this._upsegment) { this._upsegment.link() }
+            }
 
             this.unlink = function() {
-                if (this.__upsegment) { this.__upsegment.unlink(); }
-                this.__prevsegment.__nextsegment = this.__nextsegment;
-                this.__nextsegment.__prevsegment = this.__prevsegment;
-                this.__prevsegment = null;
-                this.__nextsegment = null;
-            };
-        });
+                if (this._upsegment) { this._upsegment.unlink() }
+                this._prevsegment._nextsegment = this._nextsegment
+                this._nextsegment._prevsegment = this._prevsegment
+                this._prevsegment = undefined
+                this._nextsegment = undefined
+            }
+        })
 
         this.navigationbehavior = _.behavior(function() {
-            this.isroot = function () { return this.__base.isroot(); };
-            this.base = function () { return this.__base; };
-            this.segmenttop = function () { return this.__base.__topsegment; };
+            this.isroot = function () { return this._base.isroot() }
+            this.base = function () { return this._base }
+            this.segmenttop = function () { return this._base._topsegment }
 
             this.level = function() { 
-                return this.__level;
+                return this._level
                 
-                // var result = 0;
-                // var cursor = this;
+                // var result = 0
+                // var cursor = this
 
                 // while (cursor) {
-                //     result++;
-                //     cursor = cursor.__downsegment;
+                //     result++
+                //     cursor = cursor._downsegment
                 // }
-                // return result;
-            };
+                // return result
+            }
 
             this.segmentnext = function () {
-                if (this.__nextsegment) { 
-                    return this.__nextsegment; 
+                if (this._nextsegment) { 
+                    return this._nextsegment 
                 } else {
-                    return this.segmentdown().segmentrightup();
+                    return this.segmentdown().segmentrightup()
                 }
-            };
+            }
             
             this.segmentprev = function () { 
-                if (this.__prevsegment) { 
-                    return this.__prevsegment; 
+                if (this._prevsegment) { 
+                    return this._prevsegment 
                 } else {
-                    return this.segmentdown().segmentleftup();
+                    return this.segmentdown().segmentleftup()
                 }
-            };
+            }
 
             this.segmentdown = function () { 
-                return this.__downsegment;
-            };
+                return this._downsegment
+            }
 
             this.segmentleftup = function() {
-                if (this.__upsegment) {  return this.__upsegment; }
-                if (this.isroot()) { return null; }
+                if (this._upsegment) {  return this._upsegment }
+                if (this.isroot()) { return undefined }
 
-                var cursor = this;
+                var cursor = this
 
                 while (cursor) {
-                    if (cursor.__upsegment) { return cursor.__upsegment; }
-                    cursor = cursor.__prevsegment;
+                    if (cursor._upsegment) { return cursor._upsegment }
+                    cursor = cursor._prevsegment
                 }
-            };
+            }
             this.segmentrightup = function() {
-                return this.segmentleftup().__nextsegment;
-            };
+                return this.segmentleftup()._nextsegment
+            }
 
             this.segmentup = function () { 
-                return this.__upsegment || undefined;
-            };
+                return this._upsegment || undefined
+            }
 
             this.segmentroot = function() {
-                return this.__base.__topsegment;
-            };
-        });
+                return this._base._topsegment
+            }
+        })
 
         this.modelbehavior = _.behavior(function() {
             this.orderindex = function() {
-                var index = 0;
-                var cursor = this;
+                var index = 0
+                var cursor = this
 
                 while (cursor) {
-                    if (cursor.__segmentup) { cursor = cursor.segmenttop() }
-                    cursor = cursor.__prevsegment;
-                    index += cursor.__childcount;
+                    if (cursor._segmentup) { cursor = cursor.segmenttop() }
+                    cursor = cursor._prevsegment
+                    index += cursor._childcount
 
-                    if (cursor.isroot()) { break; }
+                    if (cursor.isroot()) { break }
                 }
-                return index;
-            };  
+                return index
+            }  
             
             this.calcsegment = function(calcprevsegment, recursive) {
-                var childcount = 0;
+                var childcount = 0
 
-                var cursor = this.segmentdown();
+                var cursor = this.segmentdown()
 
-                var segmentright = this.__nextsegment;
-                var segmentend = segmentright.segmentdown();
+                var segmentright = this._nextsegment
+                var segmentend = segmentright.segmentdown()
 
                 if (!cursor.isroot() && calcprevsegment){
-                    this.segmentprev().calcsegment(false, false);
+                    this.segmentprev().calcsegment(false, false)
                 }
 
                 do {
                     if (cursor instanceof _.model.skiplistsegment) { 
-                        childcount += cursor.__childcount;
+                        childcount += cursor._childcount
                     } else if (cursor instanceof _.model.skiplistnode) {
-                        childcount++;
+                        childcount++
                     }
-                    cursor = cursor.segmentnext();
-                } while (cursor != segmentend);
+                    cursor = cursor.segmentnext()
+                } while (cursor != segmentend)
 
-                this.__childcount = childcount;
+                this._childcount = childcount
 
 
                 if (recursive) {
-                    var segmentleftup = this.segmentleftup();
+                    var segmentleftup = this.segmentleftup()
 
                     if (calcprevsegment) {
                         if (segmentleftup.isroot() || this.segmentprev().segmentleftup() == segmentleftup) {
-                            calcprevsegment = false;
+                            calcprevsegment = false
                         }
                     }
 
                     if (segmentleftup) {
-                        segmentleftup.calcsegment(calcprevsegment, recursive);
+                        segmentleftup.calcsegment(calcprevsegment, recursive)
                     }
                 } 
-                return this;
-            };            
-        });
+                return this
+            }            
+        })
 
         this.searchbehavior = _.behavior(function() {
             this.segmentfloor = function() {
                 if (this.isroot()) { 
-                    var segmentnode = this.base().segmentnext();
+                    var segmentnode = this.base().segmentnext()
                 } else {
-                    var segmentnode = this.base();
+                    var segmentnode = this.base()
                 }
 
-                if (segmentnode.isroot()) { return undefined; }
-                return segmentnode.sortvalue();
-            };
+                if (segmentnode.isroot()) { return undefined }
+                return segmentnode.sortvalue()
+            }
 
             this.segmentceil = function() {
-                var segmentnode = this.segmentnext().base().segmentprev();
-                if (segmentnode.isroot()) { return undefined; }
+                var segmentnode = this.segmentnext().base().segmentprev()
+                if (segmentnode.isroot()) { return undefined }
 
-                return segmentnode.sortvalue();
-            };
+                return segmentnode.sortvalue()
+            }
 
             this.valueinsegment = function(search, option) {
-                return segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option);
-            };
-        });
+                return segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option)
+            }
+        })
 
         this.debugbehavior = _.behavior(function() {
-            this.debugout = function() {};
+            this.debugout = function() {}
             this.debugvalidate = function() {
-                var errors = (this.__segmentup ? this.__segmentup.debugvalidate() : []);
+                var errors = (this._segmentup ? this._segmentup.debugvalidate() : [])
 
-                if (!this.__nextsegment || this.__nextsegment.__prevsegment !== this) { errors.push("Next segment mismatch"); }
-                if (!this.__prevsegment || this.__prevsegment.__nextsegment !== this) { errors.push("Prev segment mismatch"); }
-                if (this.__downsegment.__upsegment !== this) { errors.push("Down segment mismatch"); }
-                if (!this.__upsegment && this.__base.__topsegment !== this) { errors.push("Up segment mismatch"); } 
-                return errors.length ? errors : undefined;
-            };
-        });
-    });
-});
+                if (!this._nextsegment || this._nextsegment._prevsegment !== this) { errors.push("Next segment mismatch") }
+                if (!this._prevsegment || this._prevsegment._nextsegment !== this) { errors.push("Prev segment mismatch") }
+                if (this._downsegment._upsegment !== this) { errors.push("Down segment mismatch") }
+                if (!this._upsegment && this._base._topsegment !== this) { errors.push("Up segment mismatch") } 
+                return errors.length ? errors : undefined
+            }
+        })
+    })
+})

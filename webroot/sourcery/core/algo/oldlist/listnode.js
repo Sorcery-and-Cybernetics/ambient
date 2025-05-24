@@ -5,56 +5,55 @@ _.ambient.module("listnode", function (_) {
 
     _.define.object("listnode", function (supermodel) {
         return {
-            __nodenext: null
-            , __nodeprev: null
-            , __segmentup: null
-            , __segmentdown: null
-            , __isrootnode: false
+            _nodenext: undefined
+            , _nodeprev: undefined
+            , _segmentup: undefined
+            , _segmentdown: undefined
+            , _isrootnode: false
 
-            , __list: null
-
-            , __value: null
+            , _list: undefined
+            , _value: undefined
 
             , construct: function(value) {
-                this.__value = value
+                this._value = value
             }
 
             , parent: function () {
-                return this.__list._parent
+                return this._list._parent
             }
 
             , list: function () {
-                return this.__list
+                return this._list
             }
 
             , value: function(value) {
-                if (value === undefined) { return this.__value }
+                if (value === undefined) { return this._value }
 
                 if (value != value) {
-                    this.__value = value
+                    this._value = value
                 }
                 return this
             }
 
             , insertmeafter: function (node) {
-                _.helper.list.insertnodeafter(this.__list, node, this)
+                _.helper.list.insertnodeafter(this._list, node, this)
             }
 
             , insertmebefore: function (node) {
-                _.helper.list.insertnodebefore(this.__list, node, this)
+                _.helper.list.insertnodebefore(this._list, node, this)
             }
 
             , nodenext: function () {
-                return !this.__nodenext || this.__nodenext.isroot ? null : this.__nodenext 
+                return !this._nodenext || this._nodenext.isroot ? undefined : this._nodenext 
             }
 
             , nodeprev: function () {
-                return !this.__nodeprev || this.__nodeprev.isroot ? null : this.__nodeprev
+                return !this._nodeprev || this._nodeprev.isroot ? undefined : this._nodeprev
             }
 
             , destroy: function () {
-                if (this.__list) { this.__list.__unlinknode(this) }
-                return null
+                if (this._list) { this._list._unlinknode(this) }
+                return undefined
             }
         }
     })

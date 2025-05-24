@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("timer", function(_) {  
     _.define.globalobject("timer", function (supermodel) {
-        var performancetimer = null
+        var performancetimer = undefined
     
         if (false) {//(typeof window != 'undefined') && window.requestAnimationFrame) {
             performancetimer = window["requestAnimationFrame"]
@@ -11,32 +11,32 @@ _.ambient.module("timer", function(_) {
             performancetimer = function (next) { setTimeout(next, 16.666) }
         }
     
-        this.now = 0;
-        this.second = -1;
-        this.minute = -1;
-        this.hour = -1;
-        this.day = -1;
-//        this.week = 0;
-        this.month = -1;
-//        this.year = 0;
+        this.now = 0
+        this.second = -1
+        this.minute = -1
+        this.hour = -1
+        this.day = -1
+//        this.week = 0
+        this.month = -1
+//        this.year = 0
 
-        this.msday = 24 * 60 * 60 * 1000;
-        this.mshour = 60 * 60 * 1000;
-        this.msminute = 60000;
-        this.mssecond = 1000;
+        this.msday = 24 * 60 * 60 * 1000
+        this.mshour = 60 * 60 * 1000
+        this.msminute = 60000
+        this.mssecond = 1000
 
-        this.timers = null;
+        this.timers = undefined
 
-        this.datestring = "";
-        this.timestring = "";
-        this.datetimestring = "";
+        this.datestring = ""
+        this.timestring = ""
+        this.datetimestring = ""
 
-        this.utcdatestring = "";
-        this.utctimestring = "";
-        this.utcdatetimestring = "";
+        this.utcdatestring = ""
+        this.utctimestring = ""
+        this.utcdatetimestring = ""
 
-        this.prevdatestring = "";
-        this.prevutcdatestring = "";
+        this.prevdatestring = ""
+        this.prevutcdatestring = ""
 
         this.construct = function (scope, initial) {
             var me = this
@@ -104,7 +104,7 @@ _.ambient.module("timer", function(_) {
                         me.minute = minute
                         me.onminute()
 
-                        timeframe = _.math.floorto(timeframe / 60, 1);
+                        timeframe = _.math.floorto(timeframe / 60, 1)
                         var hour = timeframe % 24
                         if (hour != me.hour) {
                             me.hour = hour

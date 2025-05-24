@@ -9,17 +9,17 @@ _.ambient.module("path", function (_) {
 
     _.path.fileexists = function (src) {
         try {
-            return fs.statSync(src).isFile();
+            return fs.statSync(src).isFile()
         } catch (err) {
-            return false;
+            return false
         }
     }
 
     _.path.direxists = function (path) {
         try {
-            return fs.lstatSync(path).isDirectory();
+            return fs.lstatSync(path).isDirectory()
         } catch (e) {
-            return false;
+            return false
         }
     }
 
@@ -31,7 +31,7 @@ _.ambient.module("path", function (_) {
 
         var fileresult = []
         var dirresult = []
-        var subfolders = recursive ? [] : null
+        var subfolders = recursive ? [] : undefined
 
         _.foreach(files, function (file) {
             var fullname = path + file
@@ -104,7 +104,7 @@ _.ambient.module("path", function (_) {
         } catch (e) {
             throw new Error("Append file " + filename)
         }
-        return null
+        return undefined
     }
     
     _.path.open = function (path) {

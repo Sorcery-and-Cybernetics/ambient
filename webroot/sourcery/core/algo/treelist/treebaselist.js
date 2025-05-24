@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("treebaselist", function (_) {
     _.define.object("treebaselist", function () {
-        this._rootnode = null
+        this._rootnode = undefined
 
         this.count = function() {
             return this._rootnode ? this._rootnode._count : 0
@@ -128,19 +128,19 @@ _.ambient.module("treebaselist", function (_) {
                         return current
                 }
             }
-            return null
+            return undefined
         }
 
         this.firstitem = function(){
             var cursor = this.nodefirst()
 
-            return cursor? cursor.item(): null
+            return cursor? cursor.item(): undefined
         }
 
         this.lastitem = function () {
             var cursor = this.nodelast()
 
-            return cursor ? cursor.item() : null
+            return cursor ? cursor.item() : undefined
         }
 
         this.nodefirst = function () {

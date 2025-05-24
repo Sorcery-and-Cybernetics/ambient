@@ -4,100 +4,100 @@
 _.ambient.module("linkedlistnode", function (_) {
 
     _.define.object("linkedlistnode", function (supermodel) {
-        this.__nodenext = null;
-        this.__nodeprev = null;
+        this._nodenext = undefined
+        this._nodeprev = undefined
 
-        this.__list = null;
-        this.__value = null;
+        this._list = undefined
+        this._value = undefined
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function(value) {
-                this.__value = value;
-            };
+                this._value = value
+            }
 
             this.assign = function(cursor, index) {
                 if (!cursor) { throw "Error: linkedlistnode.insertmebefore. Cursor is null"; }
-                if (cursor == this) { return this; }
-                if (this.__list) { this.unlink(); }
+                if (cursor == this) { return this }
+                if (this._list) { this.unlink() }
 
-                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor.__list);
+                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor._list)
 
 //                if (index > 0) { index -= 1; }
 
                 while (index) {
                     if (index < 0) {
-                        if (cursor == list) { break; }
-                        cursor = cursor.__nodeprev;
-                        index += 1;
+                        if (cursor == list) { break }
+                        cursor = cursor._nodeprev
+                        index += 1
 
                     } else {
-                        cursor = cursor.__nodenext;
-                        if (cursor.__nodenext == list) { break; }
-                        index -= 1;
+                        cursor = cursor._nodenext
+                        if (cursor._nodenext == list) { break }
+                        index -= 1
                     }
                 }
 
-                this.__list = list;
-                list.__count += 1;
+                this._list = list
+                list._count += 1
 
-                this.__nodenext = cursor;
-                this.__nodeprev = cursor.__nodeprev;
+                this._nodenext = cursor
+                this._nodeprev = cursor._nodeprev
 
-                this.__nodeprev.__nodenext = this;
-                this.__nodenext.__nodeprev = this;
+                this._nodeprev._nodenext = this
+                this._nodenext._nodeprev = this
 
-                return this;
-            };
+                return this
+            }
 
             this.unlink = function() {
                 if (this.list()) {
-                    this.__list.__count -= 1;
+                    this._list._count -= 1
                 }
-    
-                if (this.__nodenext) { this.__nodenext.__nodeprev = this.__nodeprev; }
-                if (this.__nodeprev) { this.__nodeprev.__nodenext = this.__nodenext; }
-    
-                this.__list = null;
-                this.__nodenext = null;
-                this.__nodeprev = null;
-            };
-    
+
+                if (this._nodenext) { this._nodenext._nodeprev = this._nodeprev }
+                if (this._nodeprev) { this._nodeprev._nodenext = this._nodenext }
+
+                this._list = undefined
+                this._nodenext = undefined
+                this._nodeprev = undefined
+            }
+
             this.destroy = function () {
-                if (this.__list) { this.unlink(); }
-                return null;
-            };            
+                if (this._list) { this.unlink() }
+                return undefined
+            }
         });
 
         this.modelbehavior = _.behavior(function() {
             this.parent = function () {
-                return this.__list._parent;
-            };
+                return this._list._parent
+            }
 
             this.list = function () {
-                return this.__list;
-            };
+                return this._list
+            }
 
-            this.isroot = function() { return false; };
+            this.isroot = function() { return false }
 
             this.value = function(value) {
-                if (value === undefined) { return this.__value; }
+                if (value === undefined) { return this._value }
 
                 if (value != value) {
-                    this.__value = value;
+                    this._value = value
                 }
-                return this;
-            }; 
+                return this
+            }
         });
 
         this.navigationbehavior = _.behavior(function() {
             this.nodenext = function () {
-                return !this.__nodenext || (this.__nodenext == this.__list ? null : this.__nodenext);
-            };
+                return !this._nodenext || (this._nodenext == this._list ? undefined : this._nodenext)
+            }
 
             this.nodeprev = function () {
-                return !this.__nodeprev || (this.__nodeprev == this.__list ? null : this.__nodeprev);
-            };
-        });
-    });
+                return !this._nodeprev || (this._nodeprev == this._list ? undefined : this._nodeprev)
+            }
+        })
+    })
 
-});
+})

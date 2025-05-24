@@ -27,7 +27,7 @@ _.ambient.module("skiplist.test")
 
                 var cursor = node.segmentup()
                 while (cursor) {
-                    line += "\t" + cursor.__childcount
+                    line += "\t" + cursor._childcount
                     cursor = cursor.segmentup()
                 }
                 return line
@@ -145,21 +145,21 @@ _.ambient.module("skiplist.test")
         list.issortlist(true)
     
         // Create a shuffled list of items
-        var itemcount = 5;
-        var valuecount = 7;
-        var items = [];
+        var itemcount = 5
+        var valuecount = 7
+        var items = []
         
         for (var i = 0; i < itemcount; i++) {
             for (var j = 0; j < valuecount; j++) {
-                var value = String.fromCharCode(65 + i) + j; 
-                items.push(value);                
+                var value = String.fromCharCode(65 + i) + j 
+                items.push(value)               
             }
         }
        
-        items = _.array.shuffle(items);
+        items = _.array.shuffle(items)
 
         _.foreach(items, function(item) {
-            list.add(item);
+            list.add(item)
         });
 
         if (showdebug) { segmentdump(list) }
@@ -167,21 +167,21 @@ _.ambient.module("skiplist.test")
 
 
         _.define.object("testskiplistitem", function(supermodel) {
-            this.__value = null;
-            this.__order = 0
+            this._value = undefined
+            this._order = 0
 
             this.construct = function(value, order) {
-                this.__value = value;
-                this.__order = order
+                this._value = value
+                this._order = order
             }
 
             this.get = function(name) {
-                if (name == "value") { return this.__value; }
-                if (name == "order") { return this.__order; }
+                if (name == "value") { return this._value }
+                if (name == "order") { return this._order }
             }
 
             this.debugout = function() {
-                return this.__value + "\t" + this.__order;
+                return this._value + "\t" + this._order
             }            
         })
 
@@ -196,13 +196,13 @@ _.ambient.module("skiplist.test")
         var list = _.model.skiplist("value")
 
         // Create a shuffled list of items
-        var itemcount = 3;
-        var valuecount = 3;
-        var items = [];
+        var itemcount = 3
+        var valuecount = 3
+        var items = []
         
         for (var i = 0; i < itemcount; i++) {
             for (var j = 1; j <= valuecount; j++) {
-                additem(list, String.fromCharCode(65 + i), j);
+                additem(list, String.fromCharCode(65 + i), j)
             }
         }
 
@@ -223,7 +223,7 @@ _.ambient.module("skiplist.test")
         // var result = []
 
         // list.foreach(function(node) {
-        //     var level = node.__topsegment.__level
+        //     var level = node._topsegment._level
         //     result[level] = (result[level] || 0) + 1
         // })
 

@@ -6,22 +6,22 @@ _.ambient.module("treelisttest")
     var me = this
 
     _.define.object("treelisttestitem", function () {
-        this.__name = "";
-        this.__value = "";
-        this.__indexof = null;
+        this._name = ""
+        this._value = ""
+        this._indexof = undefined
 
         this.construct = function (name, value) {
-            this.__name = name;
-            this.__value = value;
-        };
+            this._name = name
+            this._value = value
+        }
         
         this.name = function () {
-            return this.__name;
-        };
+            return this._name
+        }
 
         this.value = function () {
-            return this.__value;
-        };
+            return this._value
+        }
     })
 
     var debugshow = false

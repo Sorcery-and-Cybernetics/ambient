@@ -14,7 +14,7 @@ _.ambient.module("debug", function (_) {
         }
 
         if (eqnull && funcname && _.system && _.system.warn) {
-            _.system.warn("eqnull", funcname, null, "object is missing")
+            _.system.warn("eqnull", funcname, undefined, "object is missing")
         }
         return eqnull
     }
@@ -24,7 +24,7 @@ _.ambient.module("debug", function (_) {
     }
 
     _.ensure = function (obj, funcname) {
-        return _.eqnull(obj, funcname) ? null : obj
+        return _.eqnull(obj, funcname) ? undefined : obj
     }
 
 })

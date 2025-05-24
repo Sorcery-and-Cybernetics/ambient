@@ -4,14 +4,14 @@
 _.ambient.module("list", function(_) {    
     _.define.listnode("list", function (supermodel) {
         return {
-            __nodefirst: null
-            , __nodelast: null
+            _nodefirst: undefined
+            , _nodelast: undefined
             , _count: 0
             , _maxsegmentlevel: 0
 
-            , __segmentup: null
-            , __segmentdown: null
-            , __isrootnode: true
+            , _segmentup: undefined
+            , _segmentdown: undefined
+            , _isrootnode: true
 
             , _isorderlist: false
             , _issortlist: false
@@ -63,32 +63,32 @@ _.ambient.module("list", function(_) {
 
             , linkedlistbehavior: _.behavior({
                 count: function () { return this._count }
-                , nodefirst: function () { return this.__nodefirst == this? null: this.__nodefirst }
-                , nodelast: function () { return this.__nodelast == this? null: this.__nodelast }
+                , nodefirst: function () { return this._nodefirst == this? undefined: this._nodefirst }
+                , nodelast: function () { return this._nodelast == this? undefined: this._nodelast }
 
-                , __unlinknode: function (node) {
-                    if (node.__list != this) { throw "Node not in list" }
+                , _unlinknode: function (node) {
+                    if (node._list != this) { throw "Node not in list" }
                     this._count -= 1
 
-                    if (node.__nodeprev == this) {
-                        this.__nodefirst = node.__nodenext
+                    if (node._nodeprev == this) {
+                        this._nodefirst = node._nodenext
                     } else {
-                        node.__nodeprev.__nodenext = node.__nodenext
+                        node._nodeprev._nodenext = node._nodenext
                     }
 
-                    if (node.__nodenext == this) {
-                        this.__nodelast = node.__nodeprev
+                    if (node._nodenext == this) {
+                        this._nodelast = node._nodeprev
                     } else {
-                        node.__nodenext.__nodeprev = node.__nodeprev
+                        node._nodenext._nodeprev = node._nodeprev
                     }
 
-                    node.__nodenext = null
-                    node.__nodeprev = null
-                    node.__list = null
+                    node._nodenext = undefined
+                    node._nodeprev = undefined
+                    node._list = undefined
 
                     //unlink segments
-                    // if (node.__segmentup) { node.__segmentup.unlink() }
-                    // var cursor = node.__segmentup
+                    // if (node._segmentup) { node._segmentup.unlink() }
+                    // var cursor = node._segmentup
                     // while (cursor && cursor != node) { 
                     //     cursor.unlink()
                     // }
@@ -100,7 +100,7 @@ _.ambient.module("list", function(_) {
                     
                     while (cursor && (cursor != this)) {
                         nodes.push(cursor)
-                        cursor = cursor.__nodenext
+                        cursor = cursor._nodenext
                     }
     
                     _.foreach(nodes, fn)
@@ -112,34 +112,34 @@ _.ambient.module("list", function(_) {
             , debugbehavior: _.behavior({
                 debugvalidate: function() {
                     var errors = []
-                    var cursor = this.__nodefirst
+                    var cursor = this._nodefirst
                     var count = 0
 
                     while (cursor && cursor != this) {
                         count += 1
 
-                        if (cursor.__list != this) { errors.push("Node not in list") }
+                        if (cursor._list != this) { errors.push("Node not in list") }
 
-                        if (!cursor.__nodeprev) { 
+                        if (!cursor._nodeprev) { 
                             errors.push("Missing nodeprev") 
                         } else {
-                            if (cursor.__nodeprev == this) {
-                                if (this.__nodefirst != cursor) { errors.push("nodefirst not pointing to this node") } 
+                            if (cursor._nodeprev == this) {
+                                if (this._nodefirst != cursor) { errors.push("nodefirst not pointing to this node") } 
                             } else {
-                                if (cursor.__nodeprev.__nodenext != cursor) { errors.push("nodeprev not pointing to this node") }
+                                if (cursor._nodeprev._nodenext != cursor) { errors.push("nodeprev not pointing to this node") }
                             }
                         }
 
-                        if (!cursor.__nodenext) { 
+                        if (!cursor._nodenext) { 
                             errors.push("Missing nodenext") 
                         } else {
-                            if (cursor.__nodenext == this) {
-                                if (this.__nodelast != cursor) { errors.push("nodelast not pointing to this node") }
+                            if (cursor._nodenext == this) {
+                                if (this._nodelast != cursor) { errors.push("nodelast not pointing to this node") }
                             } else {
-                                if (cursor.__nodenext.__nodeprev != cursor) { errors.push("nodenext not pointing to this node") }
+                                if (cursor._nodenext._nodeprev != cursor) { errors.push("nodenext not pointing to this node") }
                             }
                         }
-                        cursor = cursor.__nodenext
+                        cursor = cursor._nodenext
                     }
 
                     if (count != this._count) { errors.push("Count mismatch") }
@@ -161,17 +161,17 @@ _.ambient.module("list", function(_) {
             })
             
             , destroy: function () {
-                var cursor = this.__nodefirst
+                var cursor = this._nodefirst
 
                 while (cursor) {
-                    var nodenext = cursor.__nodenext
-                    this.__unlinknode(cursor)
+                    var nodenext = cursor._nodenext
+                    this._unlinknode(cursor)
                     cursor.destroy()
                     cursor = nodenext
                 }
 
-                if (this.__list) { this.__list.__unlinknode(this) }
-                return null
+                if (this._list) { this._list._unlinknode(this) }
+                return undefined
             }             
         }
     })

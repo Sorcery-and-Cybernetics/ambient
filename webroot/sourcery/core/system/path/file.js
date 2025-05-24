@@ -3,10 +3,10 @@
 //*************************************************************************************************
 _.ambient.module("file", function (_) {
     _.define.object("file", function (supermodel) {
-        this._drive = null
-        this._path = null
-        this._name = null
-        this._extension = null
+        this._drive = undefined
+        this._path = undefined
+        this._name = undefined
+        this._extension = undefined
 
         this.construct = function (path) {
             var path = _.path.splitpath(path)

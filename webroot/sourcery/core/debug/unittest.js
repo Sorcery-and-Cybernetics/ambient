@@ -109,17 +109,17 @@ _.ambient.module("unittest", function (_) {
     })
 
     _.define.object("unittest", function() {
-        this._unittester = null
-        this._modulename = null
-        this._testname = null
-        this._lines = null
+        this._unittester = undefined
+        this._modulename = undefined
+        this._testname = undefined
+        this._lines = undefined
         this._showall = false
 
         this._failcount = 0
         this._promisecount = 0
 
         this._currentgroup = ""
-        this._source = null
+        this._source = undefined
         
         this.construct = function(unittester, modulename, testname, source) {
             this._unittester = unittester
@@ -199,7 +199,7 @@ _.ambient.module("unittest", function (_) {
     })
 
     _.define.object("unittester", function() {
-        this._tests = null
+        this._tests = undefined
         this._failcount = 0
 
         this.create = function() {

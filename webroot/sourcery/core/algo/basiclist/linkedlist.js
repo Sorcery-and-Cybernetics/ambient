@@ -1,46 +1,46 @@
 //*************************************************************************************************
 // linkedlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
-_.ambient.module("linkedlist", function(_) {    
+_.ambient.module("linkedlist", function(_) {
     _.define.object("linkedlist", function (supermodel) {
-        this.__nodenext = null
-        this.__nodeprev = null
-        this.__count = 0
+        this._nodenext = undefined
+        this._nodeprev = undefined
+        this._count = 0
 
         this.objectbehavior = _.behavior(function() {
             this.construct = function() {
-                this.__nodenext = this
-                this.__nodeprev = this
+                this._nodenext = this
+                this._nodeprev = this
             }
 
             this.destroy = function () {
-                var cursor = this.__nodefirst
+                var cursor = this._nodefirst
 
                 while (cursor) {
                     var nodenext = cursor.nodenext()
                     cursor.destroy()
                     cursor = nodenext
                 }
-                return null
-            }                
+                return undefined
+            }
         })
 
         this.linkedlistbehavior = _.behavior(function () {
-            this.count = function () { return this.__count }
+            this.count = function () { return this._count }
             this.isroot = function () { return true }
-            this.nodefirst = function () { return this.__nodenext.isroot()? null: this.__nodenext }
-            this.nodelast = function () { return this.__nodeprev.isroot()? null: this.__nodeprev }
+            this.nodefirst = function () { return this._nodenext.isroot()? undefined: this._nodenext }
+            this.nodelast = function () { return this._nodeprev.isroot()? undefined: this._nodeprev }
 
-            this.__makenode = function(item) {
-                if (item instanceof _.model.linkedlistnode) { return item } 
+            this._makenode = function(item) {
+                if (item instanceof _.model.linkedlistnode) { return item }
                 return _.model.linkedlistnode(item)
             }
-            
+
             this.foreach = function(fn) {
                 var nodes = []
                 var cursor = this.nodefirst()
-                var context = null
-                
+                var context = undefined
+
                 while (cursor) {
                     nodes.push(cursor)
                     cursor = cursor.nodenext()
@@ -50,7 +50,7 @@ _.ambient.module("linkedlist", function(_) {
                     cursor = nodes[index]
 
                     //todo: check if cursor is destroyed.
-                    
+
                     if (fn.call(context, cursor, index + 1) == _.done) { break }
                 }
                 return this
@@ -104,6 +104,5 @@ _.ambient.module("linkedlist", function(_) {
                 return result
             }
         })
-            
     })
 })

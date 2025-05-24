@@ -36,7 +36,7 @@ _.ambient.module("property", function (_) {
     }
 
     _.define.defextender("property", function(supermodel) {
-        this._initial = null
+        this._initial = undefined
 
         this.construct = function(initial) {
             this._initial = initial

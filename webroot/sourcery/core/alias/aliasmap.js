@@ -6,9 +6,9 @@ _.ambient.module("map", function(_) {
         this.del = function (key) {
             if (key == null) { throw "alias.map.del: key is null"; }
 
-            var value = this.__value[key]
+            var value = this._value[key]
             if (_.isalias(value)) { value.destroy() }
-            delete this.__value[key];
+            delete this._value[key];
         };        
     })
 })

@@ -63,7 +63,7 @@ _.ambient.module("webserver").source(function (_) {
 
         this.handleresponse = function(response) {
             var path = response.path
-            var routedef = null  //_.findroute(path)
+            var routedef = undefined  //_.findroute(path)
 
             if (routedef) {
                 if (!_.isfunction(routedef)) { return this.handleerror(response, "Route not found") }

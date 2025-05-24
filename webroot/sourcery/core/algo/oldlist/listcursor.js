@@ -5,8 +5,8 @@ _.ambient.module("listcursor", function (_) {
     
     _.define.object("listcursor", function (supermodel) {
         return {
-            _list: null
-            , _currentnode: null
+            _list: undefined
+            , _currentnode: undefined
 
             , construct: function(list) {
                 this._list = list
@@ -23,12 +23,12 @@ _.ambient.module("listcursor", function (_) {
              }
 
             , movenext: function() { 
-                this._currentnode = this._currentnode? this._currentnode.__nodenext: null
+                this._currentnode = this._currentnode? this._currentnode._nodenext: undefined
                 return !this.eof() 
             }
 
             , moveprev: function() { 
-                this._currentnode = this._currentnode? this._currentnode.__nodeprev: null
+                this._currentnode = this._currentnode? this._currentnode._nodeprev: undefined
                 return !this.eof()
             }
 

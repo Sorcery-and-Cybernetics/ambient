@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("basicsignal", function (_) {
     _.define.defextender("basicsignal", function(supermodel) {
-        // this.fndefault = null;
+        // this.fndefault = undefined;
 
         this.construct = function(fndefault) {
             // if (fndefault) { this.fndefault = fndefault }
@@ -12,10 +12,10 @@ _.ambient.module("basicsignal", function (_) {
         this.definetrait = function (modeldef, traitname) {
             return function (event) {
                 if (_.isfunction(event)) {
-                    var signaldata = this.__signaldata || (this.__signaldata = _.model.signaldata(this, this.fndefault));
+                    var signaldata = this._signaldata || (this._signaldata = _.model.signaldata(this, this.fndefault));
                     signaldata.addbasicsignal(traitname, event);
                 } else {
-                    if (this.__signaldata) { this.__signaldata.firebasicsignal(traitname, event); }
+                    if (this._signaldata) { this._signaldata.firebasicsignal(traitname, event); }
                 }
                 return this;
             };

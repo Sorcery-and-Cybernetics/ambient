@@ -88,7 +88,7 @@ _.ambient.module("error").source(function (_) {
         this.stack = ""
         this.filename = ""
         this.linenumber = ""
-        this.arguments = null
+        this.arguments = undefined
         this.level = 0
         this.type = ""
         this.message = ""
