@@ -51,9 +51,21 @@ _.ambient.module("base", function (_) {
         return obj instanceof Promise
     }
 
-    _.ismodel = function (value) {
-        return !!(value && value._modelname)
+    _.isobject = function (value) {
+        return (value instanceof _.model.object)
     }
+
+    _.ismodel = function (value) {
+        return (value instanceof _.model.model)
+    }
+
+    _.ismodelvalue = function (value) {
+        return (value instanceof _.model.modelvalue)
+    }
+
+    _.iswave = function (value) {
+        return (value instanceof _.model.wave)
+    }    
 
     _.isarraybuffer = function (value) {
         return !!(value && value.constructor == ArrayBuffer)

@@ -12,7 +12,9 @@ _.ambient.module("object").source(function (_) {
         , _supermodel: undefined
         , _phase: 0
         , _definition: undefined
-        
+
+        , parent: function() { return this._parent }
+        , name: function() { return this._name }        
         , modelname: function () { return this._modelname }
         , supermodel: function() { return this._supermodel }
         , ismodel: function(modelname) { return this._modelname === modelname }

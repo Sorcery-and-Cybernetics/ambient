@@ -25,8 +25,6 @@ _.ambient.module("testobject", function(_) {
     })
 
     _.define.object("testobject", function(supermodel) {
-        this.name = _.model.property("testobject")
-
         this.test = _.model.method(function() {
             return("Test is working")
         })

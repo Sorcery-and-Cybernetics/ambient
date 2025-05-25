@@ -20,7 +20,7 @@ _.ambient.module("skiplist.test")
                     nodevalue = "Root" 
                 } else { 
                     nodevalue = node.value() 
-                    if (_.ismodel(nodevalue)) { nodevalue = nodevalue.debugout()}
+                    if (_.isobject(nodevalue)) { nodevalue = nodevalue.debugout()}
                 }
                 
                 var line = index + "\t" + nodevalue + "\t==>"

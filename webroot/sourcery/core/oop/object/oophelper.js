@@ -216,7 +216,7 @@ _.ambient.module("oophelper", function (_) {
                             var modeltrait = modeldef[traitname]
 
                                 
-                            if (_.ismodel(traitdef)) { //def extender object
+                            if (_.isobject(traitdef)) { //def extender object
                                 if (_.isfunction(traitdef.definetrait)) {
                                     this.adddefextendertrait(modeldef, traitname, traitdef)
 

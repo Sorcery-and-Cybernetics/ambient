@@ -4,5 +4,6 @@ _.ambient.rootmodule("oop/")
     .include("object/")
     .include("defextension/")
     .include("signal/")
+    .include("model/")
 
     .include("tests/", "debugmode")

@@ -19,7 +19,7 @@ _.ambient.module("error").source(function (_) {
                     arg = "{array:" + arg.length + "}"
                 } else if (_.isfunction(arg)) {
                     arg = "{function}"
-                } else if (_.ismodel(arg)) {
+                } else if (_.isobject(arg)) {
                     arg = "{" + arg.modelname() + (arg.uid? _.paste$("@", _.normalize(arg.uid, arg)): "") + "}"
                 } else {
                     arg = _.cstr(arg)
