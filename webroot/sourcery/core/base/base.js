@@ -149,7 +149,7 @@ _.ambient.module("base", function (_) {
         }
     }
 
-    _.cbool = function (value) {
+    _.cboolean = function (value) {
         var _truevalues = {
             y: true
             , yes: true
@@ -295,7 +295,7 @@ _.ambient.module("base", function (_) {
         "null"
         , "string"
         , "number"
-        , "bool"
+        , "boolean"
         , "date"
         , "regex"
         , "function"

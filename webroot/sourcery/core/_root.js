@@ -4,4 +4,7 @@ _.ambient.rootmodule("core/")
     .include("async/")
     .include("oop/")
     .include("algo/")
+    .include("model/")
+
     .include("system/")
+

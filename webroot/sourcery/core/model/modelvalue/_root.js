@@ -1,0 +1,6 @@
+_.ambient.rootmodule("modelvalue/")
+    .include("string")
+    .include("number")
+    .include("boolean")
+    .include("date")
+    .include("color")

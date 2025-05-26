@@ -11,9 +11,11 @@ _.ambient.module("modelvalue", function(_) {
         }
 
         this.self = function () {
-            if (_.isobject(this._value)) { return this._value._self }
+            if (this.hasself()) { return this._value._self }
             return undefined
         }
+
+        this.hasself = function() { return _.isobject(this._value)? true: false }
 
         this.value = function (value) {
             if (value === undefined) { return this.get() }            
@@ -38,13 +40,8 @@ _.ambient.module("modelvalue", function(_) {
                 //todo: If self is of same type of model and the parent == this, just set value of the self
                 throw "Error" 
             }
-            
-            var self = this.self()
-            if (value == self) { return this }
 
-            if (self) { self.destroy() }
-            _.model.selfnode(this, value)
-
+            _.modelagent.assignself(this, value)
             return this
         }
 
