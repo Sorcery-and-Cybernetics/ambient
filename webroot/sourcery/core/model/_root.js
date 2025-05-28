@@ -1,4 +1,5 @@
 _.ambient.rootmodule("model/")
+    .require("sourcery/core/oop/")
     .include("selfnode")
     .include("modelagent")
     .include("modelvalue")
@@ -6,4 +7,4 @@ _.ambient.rootmodule("model/")
 
     .include("modelvalue/")
 
-    .include("tests", "debugmode")
+    .include("tests/", "debugmode")
