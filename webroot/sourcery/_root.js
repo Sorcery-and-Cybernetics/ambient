@@ -3,6 +3,7 @@ _.ambient.rootmodule("sourcery/")
 //    .include(_.config.path.productscript + "icon", "client")
 
     .include("core/")
+    .include("ai/")
 //    .include("route/")
 //    .include("widget/", "client")
 //    .include("model/")

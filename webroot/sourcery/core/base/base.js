@@ -106,7 +106,7 @@ _.ambient.module("base", function (_) {
     }
 
     _.iserror = function (value) {
-        return !!(value && (value.constructor == Error || value instanceof _.kind.error))
+        return !!(value && (value.constructor == Error || value instanceof _.model.error))
     }
 
     _.isnumeric = function (value) {

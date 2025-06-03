@@ -64,9 +64,10 @@ _.ambient.module("httpresponse", function (_) {
 
             this.path = this.url.split("/")
 
-            if ((this.path[0] == "product") && (this.path[1] == _.config.productcode)) {
-                this.path = this.path.slice(2)
-            }
+            //todo:
+            // if ((this.path[0] == "product") && (this.path[1] == _.config.productcode)) {
+            //     this.path = this.path.slice(2)
+            // }
 
             this.req.on("error", function (error) {
                 if (me.state >= me.states.created) {
@@ -260,11 +261,13 @@ _.ambient.module("httpresponse", function (_) {
                 }
 
                 if (_.iserror(errormessage)) {
-                    errormessage = errormessage.message
+                    if (errormessage instanceof _.model.error) {   
+                        errormessage = errormessage.message                    
+                    } else {
+                        errormessage = errormessage.message
+                    }
                 } else if (_.isobject(errormessage)) {
                     errormessage = JSON.stringify(errormessage)
-                } else if (errormessage instanceof _.kind.error) {
-                    errormessage = errormessage.message
                 }
 
                 this.res.end(errormessage)

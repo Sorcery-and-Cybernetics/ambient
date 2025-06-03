@@ -24,7 +24,8 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/webroot/product/testtide/server.js",
-            "cwd":     "${workspaceFolder}/webroot/product/testtide/"
+            "cwd":     "${workspaceFolder}/webroot/product/testtide/",
+            "console": "integratedTerminal"
         },
         {
             "name": "Ambient Extension",
