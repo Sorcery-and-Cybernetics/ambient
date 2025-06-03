@@ -1,3 +1,3 @@
 _.ambient.rootmodule("ai/")
-    .include("aihistory")
+    .include("aichat")
     .include("aimodel")

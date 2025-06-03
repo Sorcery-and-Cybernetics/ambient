@@ -8,7 +8,6 @@ _.ambient.module("aimodel", function(_) {
         this._currentrequest = undefined
         this._abortcontroller = undefined
         this._streammode = true
-        this._history = undefined
 
         this.construct = function(apiurl, model, history) {
             if (apiurl) { this._apiurl = apiurl } 
@@ -18,17 +17,16 @@ _.ambient.module("aimodel", function(_) {
             this._abortcontroller = null
         }
 
-        this.query = async function(prompt) {
+        this.query = async function(prompt, aichat) {
             if (this._currentrequest) { throw new Error('Another request is in progress. Cancel it first or wait.') }
 
             this._abortcontroller = new AbortController()
-            this._history.addmessage("user", prompt)
            
             try {
                 const requestbody = {
                     model: this._model
                     , stream: this._streammode
-                    , messages: this._history.messages()
+                    , messages: aichat? aichat.messages(): undefined
                 }
 
                 const response = await fetch(this._apiurl, {
@@ -64,7 +62,7 @@ _.ambient.module("aimodel", function(_) {
                                 if (data.message && data.message.content) {
                                     var content = data.message.content
                                     results.push(content)
-                                    this.onchunk(content)
+                                    this.ondata(content)
                                 } else if (data.error) {
                                     throw new Error(`stream error: ${data.error}`)
                                 }
@@ -74,7 +72,6 @@ _.ambient.module("aimodel", function(_) {
                         }
                     }
 
-                    this._history.addmessage("assistant", results.join(''))
                     this._currentrequest = null
                     this.ondone(results.join(''))
                     return results.join('')
@@ -83,7 +80,6 @@ _.ambient.module("aimodel", function(_) {
                     const data = await response.json()
                     if (!data.response) { throw new Error('no response field in api output') }
                     
-                    this._history.addmessage("assistant", data.response)
                     this._currentrequest = null
                     this.ondone(data.response)
                     return data.response
@@ -121,26 +117,9 @@ _.ambient.module("aimodel", function(_) {
             supermodel.destroy.call(this)
         }
 
-        this.onchunk = _.model.signal()
+        this.ondata = _.model.signal()
         this.ondone = _.model.signal()
         this.oncancel = _.model.signal()
+        this.onerror = _.model.signal()
     })
-})
-.onload (async function(_) {
-    const client = _.model.aimodel(null, 'goekdenizguelmez/JOSIEFIED-Qwen3:8b-q6_k')
-    
-    client.onchunk(function(chunk) {
-        process.stdout.write(chunk)
-    })
-    
-    client.ondone(function(response) {
-        _.debug('Query completed. Full response:', response)
-    })
-    
-    try {
-        await client.query('Who are you?')
-        await client.query('write a detailed history of the universe.')
-    } catch (error) {
-        _.debug('failed to set up queries:', error.message)
-    }
 })
