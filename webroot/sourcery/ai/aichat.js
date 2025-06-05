@@ -4,45 +4,46 @@
 _.ambient.module("aichat", function(_) {    
     _.define.object("aichat", function() {
         this._messages = []
-        this.aimodelname = undefined
         this._aimodel = undefined
+        this._busy = false
 
-        this.think = _.model.property(false)
+        this.systemprompt = _.model.property("")
+        this.thinkmode = _.model.property(false)
+        this.streammode = _.model.property(true)
         
-        this.construct = function(aimodelname) {
-            this.aimodelname = aimodelname
-            this.clearhistory()
+        this.construct = function(aimodel, name) {
+            this._aimodel = aimodel
+            this._name = name
+            this.reset()
         }
         
-        this.clearhistory = function() {
+        this.reset = function() {
             this._messages = [] 
-            if (!this.think()) { this.addusermessage("/set nothink") }
             return this
         }          
 
-        this.runmodel = function() {
-            var me = this
-
-            if (this._aimodel) { return this }
-            if (!this.aimodelname) { throw new Error('No aimodelname specified') }
-
-            this._aimodel = _.model.aimodel(null, this.aimodelname, this)
-                .ondata(function(data) { 
-                    me.ondata(data) })
-                .ondone(function(message) {
-                    me.addassistantmessage(message)
-                    me.ondone(message)
-                })
-                .oncancel(function() { me.oncancel() })
-                .onerror(function(error) { me.onerror(error) })
-
-            
-            return this
+        this.signaldone = function(message) {
+            this._busy = false
+            this.addassistantmessage(message)            
+            return this.ondone(message)
         }
 
-        this.addsystemmessage = function(content) {
-            this._messages.push({ role: "system", content })
-            return this
+        this.signalstart = function() { 
+            return this.onstart() 
+        }
+
+        this.signaldata = function(data) { 
+            return this.ondata(data) 
+        }
+
+        this.signalerror = function(error) { 
+            this._busy = false
+            return this.onerror(error); 
+        }
+
+        this.signalcancel = function(reason) {
+            this.signalerror(new Error(reason || "Request was cancelled."))  
+            return this.oncancel()
         }
 
         this.addusermessage = function(content) {
@@ -56,20 +57,31 @@ _.ambient.module("aichat", function(_) {
         }
      
         this.send = async function(prompt) {
-            this.runmodel()
+            if (this._busy) { throw new Error("Cannot send message: AI is currently busy.") }
+            this._busy = true
+            
             this.addusermessage(prompt)
-            return await this._aimodel.query(prompt, this)
+            return await this._aimodel.query(this)
         }
 
-        this.messages = function() {
-            return _.length(this._messages)? this._messages: undefined
-        }
+        this.getchatprompt = function() {
+            if (!this._messages.length) { return undefined }
+
+            const result = []
+
+            if (this.systemprompt()) { 
+                result.push({ role: "system", content: this.systemprompt() }) 
+            }
+
+            return result.concat(this._messages)
+        }        
 
         this.destroy = function() {
             if (this._aimodel) { this._aimodel = this._aimodel.destroy() }
             supermodel.destroy.call(this)
         }
 
+        this.onstart = _.model.signal()
         this.ondata = _.model.signal()
         this.ondone = _.model.signal()
         this.oncancel = _.model.signal()        
@@ -77,20 +89,46 @@ _.ambient.module("aichat", function(_) {
     })    
 })
 .onload (async function(_) {
-    const client = _.model.aichat('jenifer')
+    var aimodel = _.model.aimodel("jenifer")
     
-    client.ondata(function(data) {
+    const client1 = _.model.aichat(aimodel, "Troll").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a Troll. You are uncooperative, sarcastic, and intentionally unhelpful, often veering into meanness for your own amusement.")
+    const client2 = _.model.aichat(aimodel, "Succubus").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a succubus. You are both helpful and devious—offering insight, guidance, or assistance, but always with a hidden agenda or double meaning. Your charm conceals your true nature, and your intentions are never entirely pure.")
+
+    client1.onstart(function() {
+        process.stdout.write(this.name() + ":\n")
+    })
+    
+    client1.ondata(function(data) {
         process.stdout.write(data)
     })
-    
-    client.ondone(function(response) {
-        _.debug('Query completed. Full response:', response)
+
+    client1.ondone(function(response) {
+        process.stdout.write("\n\n")
+    })
+
+    client2.onstart(function() {
+        process.stdout.write(this.name() + ":\n")
     })
     
+    client2.ondata(function(data) {
+        process.stdout.write(data)
+    })
+
+    client2.ondone(function(response) {
+        process.stdout.write("\n\n")
+    })
+   
     try {
-        await client.send('Who are you?')
-        await client.send('write a detailed history of the universe.')
+        var promise1 = client1.send('Who are you?')
+        var promise2 = client2.send('Who are you?')
+        await Promise.all([promise1, promise2])
+
+        var promise1 = client1.send('Tell within 100 words what your favorite house looks like.')
+        var promise2 = client2.send('Tell within 100 words what your favorite house looks like.')
+        await Promise.all([promise1, promise2])
+    
     } catch (error) {
+        process.stdout.write("\n\n")
         _.debug('failed to set up queries:', error.message)
     }
 })

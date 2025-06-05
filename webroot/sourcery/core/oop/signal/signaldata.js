@@ -92,9 +92,11 @@ _.ambient.module("signaldata", function(_) {
         }
 
         this.firebasicsignal = function(name, event) {
+            var me = this
+
             var fnevent = this.signals[name]
             if (fnevent) {
-                fnevent.call(this.object, event)
+                fnevent.call(me.object, event)
             }
         }
 
@@ -108,10 +110,12 @@ _.ambient.module("signaldata", function(_) {
         }
 
         this.firesignal = function(name, event) {
+            var me = this
+
             var list = this.signals[name]
             if (list) {
                 list.foreach(function(node) {
-                    node.fnevent.call(this.object, event)
+                    node.fnevent.call(me.object, event)
                 })
             }
         }

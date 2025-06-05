@@ -5,45 +5,72 @@ _.ambient.module("aimodel", function(_) {
     _.define.object("aimodel", function (supermodel) {
         this._apiurl = "http://localhost:11434/api/chat"
         this._model = "llama3"
-        this._currentrequest = undefined
+        this._currentchat = undefined
         this._abortcontroller = undefined
-        this._streammode = true
 
-        this.construct = function(apiurl, model, history) {
-            if (apiurl) { this._apiurl = apiurl } 
+        // New: queue and processing state
+        this._queue = []
+        this._processing = false        
+
+        this.construct = function(model, apiurl) {
             if (model) { this._model = model }
-            this._history = (history? history: _.model.aihistory())
-            this._currentrequest = null
-            this._abortcontroller = null
+            if (apiurl) { this._apiurl = apiurl } 
         }
 
-        this.query = async function(prompt, aichat) {
-            if (this._currentrequest) { throw new Error('Another request is in progress. Cancel it first or wait.') }
+        this.query = async function(aichat) {
+            if (!aichat || !(aichat instanceof _.model.aichat)) { throw new Error('No valid aichat object specified') }
 
+            return new Promise((resolve, reject) => {
+                this._queue.push({ aichat, resolve, reject })
+                this._processQueue()
+            })
+        }
+        
+        this._processQueue = async function() {
+            if (this._processing || this._queue.length === 0) return
+
+            this._processing = true
+            const { aichat, resolve, reject } = this._queue.shift()
+
+            try {
+                const result = await this._query(aichat)
+                resolve(result)
+            } catch (err) {
+                reject(err)
+            } finally {
+                this._processing = false
+                this._processQueue() // process next in queue
+            }
+        }        
+
+        this._query = async function(aichat) {
+            var me = this
+
+            this._currentchat = aichat
             this._abortcontroller = new AbortController()
-           
+
+            aichat.signalstart()
+
             try {
                 const requestbody = {
                     model: this._model
-                    , stream: this._streammode
-                    , messages: aichat? aichat.messages(): undefined
+                    , stream: aichat.streammode()
+                    , messages: aichat.getchatprompt()
                 }
+                if (!aichat.thinkmode()) { 
+                    requestbody.think = false
+                 }
 
                 const response = await fetch(this._apiurl, {
                     method: 'POST'
                     , headers: { 'Content-Type': 'application/json' }
                     , body: JSON.stringify(requestbody)
                     , signal: this._abortcontroller.signal
-                    , think: false
                 })
 
-                this._currentrequest = response
+                if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`) }
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`)
-                }
-
-                if (this._streammode) {
+                if (aichat.streammode()) {
                     const results = []
                     const reader = response.body.getReader()
                     const decoder = new TextDecoder()
@@ -62,7 +89,7 @@ _.ambient.module("aimodel", function(_) {
                                 if (data.message && data.message.content) {
                                     var content = data.message.content
                                     results.push(content)
-                                    this.ondata(content)
+                                    aichat.signaldata(content)
                                 } else if (data.error) {
                                     throw new Error(`stream error: ${data.error}`)
                                 }
@@ -72,36 +99,49 @@ _.ambient.module("aimodel", function(_) {
                         }
                     }
 
-                    this._currentrequest = null
-                    this.ondone(results.join(''))
+                    this._currentchat = null
+                    aichat.signaldone(results.join(''))
                     return results.join('')
 
                 } else {
                     const data = await response.json()
                     if (!data.response) { throw new Error('no response field in api output') }
                     
-                    this._currentrequest = null
-                    this.ondone(data.response)
+                    this._currentchat = null
+                    aichat.signaldone(data.response)
                     return data.response
                 }
                 
             } catch (error) {
-                this._currentrequest = null
+                this._currentchat = null
                 if (error.name === 'aborterror') {
-                    this.oncancel(prompt)
+                    aichat.signalerror(error)
                     return null
                 }
                 throw error
             }
         }
         
-        this.cancel = function() {
-            if (this._currentrequest && this._abortcontroller) {
-                this._abortcontroller.abort()
-                this._currentrequest = null
+        this.cancel = function(aichat) {
+            // Cancel the active request
+            if (this._currentchat === aichat) {
+                if (this._abortcontroller) this._abortcontroller.abort()
+                this._currentchat = null
                 this._abortcontroller = null
-                this.oncancel('User cancelled request')
+                return true
             }
+
+            // Cancel a queued request
+            const index = this._queue.findIndex(item => item.aichat === aichat)
+            if (index !== -1) {
+                const [removed] = this._queue.splice(index, 1)
+                if (removed.reject) {
+                    removed.reject(new Error("Request was cancelled before it started."))
+                }
+                return true
+            }
+
+            return false // not found
         }
 
         this.model = function() {
@@ -109,17 +149,18 @@ _.ambient.module("aimodel", function(_) {
         }
 
         this.isbusy = function() {
-            return !!this._currentrequest
+            return !!this._currentchat
         }
 
         this.destroy = function() {
-            this.cancel()
+            if (this._currentchat) { this._currentchat.cancel() }
+
+            this._currentchat = null
+            this._abortcontroller = null
+            this._queue = []
+            this._processing = false                        
+            
             supermodel.destroy.call(this)
         }
-
-        this.ondata = _.model.signal()
-        this.ondone = _.model.signal()
-        this.oncancel = _.model.signal()
-        this.onerror = _.model.signal()
     })
 })
