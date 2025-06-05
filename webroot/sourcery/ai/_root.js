@@ -1,3 +1,4 @@
 _.ambient.rootmodule("ai/")
-    .include("aichat")
+    .include("aichatagent")
+    .include("aitoolagent")
     .include("aimodel")

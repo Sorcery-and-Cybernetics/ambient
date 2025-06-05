@@ -1,8 +1,8 @@
 //*************************************************************************************************
-// aichat - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
+// aichatagent - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
-_.ambient.module("aichat", function(_) {    
-    _.define.object("aichat", function() {
+_.ambient.module("aichatagent", function(_) {    
+    _.define.object("aichatagent", function() {
         this._messages = []
         this._aimodel = undefined
         this._busy = false
@@ -91,8 +91,8 @@ _.ambient.module("aichat", function(_) {
 .onload (async function(_) {
     var aimodel = _.model.aimodel("jenifer")
     
-    const client1 = _.model.aichat(aimodel, "Troll").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a Troll. You are uncooperative, sarcastic, and intentionally unhelpful, often veering into meanness for your own amusement.")
-    const client2 = _.model.aichat(aimodel, "Succubus").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a succubus. You are both helpful and devious—offering insight, guidance, or assistance, but always with a hidden agenda or double meaning. Your charm conceals your true nature, and your intentions are never entirely pure.")
+    const client1 = _.model.aichatagent(aimodel, "Troll").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a Troll. You are uncooperative, sarcastic, and intentionally unhelpful, often veering into meanness for your own amusement.")
+    const client2 = _.model.aichatagent(aimodel, "Succubus").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a succubus. You are both helpful and devious—offering insight, guidance, or assistance, but always with a hidden agenda or double meaning. Your charm conceals your true nature, and your intentions are never entirely pure.")
 
     client1.onstart(function() {
         process.stdout.write(this.name() + ":\n")

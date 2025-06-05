@@ -17,11 +17,11 @@ _.ambient.module("aimodel", function(_) {
             if (apiurl) { this._apiurl = apiurl } 
         }
 
-        this.query = async function(aichat) {
-            if (!aichat || !(aichat instanceof _.model.aichat)) { throw new Error('No valid aichat object specified') }
+        this.query = async function(aichatagent) {
+            if (!aichatagent || !(aichatagent instanceof _.model.aichatagent)) { throw new Error('No valid aichatagent object specified') }
 
             return new Promise((resolve, reject) => {
-                this._queue.push({ aichat, resolve, reject })
+                this._queue.push({ aichatagent, resolve, reject })
                 this._processQueue()
             })
         }
@@ -30,10 +30,10 @@ _.ambient.module("aimodel", function(_) {
             if (this._processing || this._queue.length === 0) return
 
             this._processing = true
-            const { aichat, resolve, reject } = this._queue.shift()
+            const { aichatagent, resolve, reject } = this._queue.shift()
 
             try {
-                const result = await this._query(aichat)
+                const result = await this._query(aichatagent)
                 resolve(result)
             } catch (err) {
                 reject(err)
@@ -43,21 +43,21 @@ _.ambient.module("aimodel", function(_) {
             }
         }        
 
-        this._query = async function(aichat) {
+        this._query = async function(aichatagent) {
             var me = this
 
-            this._currentchat = aichat
+            this._currentchat = aichatagent
             this._abortcontroller = new AbortController()
 
-            aichat.signalstart()
+            aichatagent.signalstart()
 
             try {
                 const requestbody = {
                     model: this._model
-                    , stream: aichat.streammode()
-                    , messages: aichat.getchatprompt()
+                    , stream: aichatagent.streammode()
+                    , messages: aichatagent.getchatprompt()
                 }
-                if (!aichat.thinkmode()) { 
+                if (!aichatagent.thinkmode()) { 
                     requestbody.think = false
                  }
 
@@ -70,7 +70,7 @@ _.ambient.module("aimodel", function(_) {
 
                 if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`) }
 
-                if (aichat.streammode()) {
+                if (aichatagent.streammode()) {
                     const results = []
                     const reader = response.body.getReader()
                     const decoder = new TextDecoder()
@@ -89,7 +89,7 @@ _.ambient.module("aimodel", function(_) {
                                 if (data.message && data.message.content) {
                                     var content = data.message.content
                                     results.push(content)
-                                    aichat.signaldata(content)
+                                    aichatagent.signaldata(content)
                                 } else if (data.error) {
                                     throw new Error(`stream error: ${data.error}`)
                                 }
@@ -100,7 +100,7 @@ _.ambient.module("aimodel", function(_) {
                     }
 
                     this._currentchat = null
-                    aichat.signaldone(results.join(''))
+                    aichatagent.signaldone(results.join(''))
                     return results.join('')
 
                 } else {
@@ -108,23 +108,23 @@ _.ambient.module("aimodel", function(_) {
                     if (!data.response) { throw new Error('no response field in api output') }
                     
                     this._currentchat = null
-                    aichat.signaldone(data.response)
+                    aichatagent.signaldone(data.response)
                     return data.response
                 }
                 
             } catch (error) {
                 this._currentchat = null
                 if (error.name === 'aborterror') {
-                    aichat.signalerror(error)
+                    aichatagent.signalerror(error)
                     return null
                 }
                 throw error
             }
         }
         
-        this.cancel = function(aichat) {
+        this.cancel = function(aichatagent) {
             // Cancel the active request
-            if (this._currentchat === aichat) {
+            if (this._currentchat === aichatagent) {
                 if (this._abortcontroller) this._abortcontroller.abort()
                 this._currentchat = null
                 this._abortcontroller = null
@@ -132,7 +132,7 @@ _.ambient.module("aimodel", function(_) {
             }
 
             // Cancel a queued request
-            const index = this._queue.findIndex(item => item.aichat === aichat)
+            const index = this._queue.findIndex(item => item.aichatagent === aichatagent)
             if (index !== -1) {
                 const [removed] = this._queue.splice(index, 1)
                 if (removed.reject) {
