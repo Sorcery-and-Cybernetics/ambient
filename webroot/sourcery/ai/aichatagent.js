@@ -10,21 +10,29 @@ _.ambient.module("aichatagent", function(_) {
         this.systemprompt = _.model.property("")
         this.thinkmode = _.model.property(false)
         this.streammode = _.model.property(true)
+        this.historymode = _.model.property(true)
+
+        this.toolagent = _.model.property(null)
         
-        this.construct = function(aimodel, name) {
-            this._aimodel = aimodel
+        this.construct = function(name, aimodel) {
             this._name = name
+            this._aimodel = aimodel
             this.reset()
         }
         
         this.reset = function() {
             this._messages = [] 
             return this
-        }          
-
+        }
+        
         this.signaldone = function(message) {
             this._busy = false
-            this.addassistantmessage(message)            
+
+            if (this.historymode()) { 
+                this.addassistantmessage(message) 
+            } else {
+                this.reset()
+            }
             return this.ondone(message)
         }
 
@@ -47,20 +55,29 @@ _.ambient.module("aichatagent", function(_) {
         }
 
         this.addusermessage = function(content) {
-            this._messages.push({ role: "user", content })
+            this._messages.push({ role: "user", content: content })
             return this
         }
 
+        this.addtoolmessage = function(content) {
+            this._messages.push({ role: "assistant", content: "## Tool output:\n" + content })
+            return this
+        }        
+
         this.addassistantmessage = function(content) {
-            this._messages.push({ role: "assistant", content })
+            this._messages.push({ role: "assistant", content: content })
             return this
         }
      
         this.send = async function(prompt) {
             if (this._busy) { throw new Error("Cannot send message: AI is currently busy.") }
             this._busy = true
-            
-            this.addusermessage(prompt)
+
+            if (this.toolagent()) { 
+                toolprompt = await this.toolagent().send("System prompt: Your name is " + this.name() + ". " + this.systemprompt() + ".\n\nPrompt: " + prompt) 
+                this.addtoolmessage(toolprompt)
+            }
+            this.addusermessage(prompt) 
             return await this._aimodel.query(this)
         }
 
@@ -69,10 +86,9 @@ _.ambient.module("aichatagent", function(_) {
 
             const result = []
 
-            if (this.systemprompt()) { 
-                result.push({ role: "system", content: this.systemprompt() }) 
+            if (this.name() || this.systemprompt()) { 
+                result.push({ role: "system", content: "Your name is " + this.name() + ". " + this.systemprompt() }) 
             }
-
             return result.concat(this._messages)
         }        
 
@@ -90,9 +106,30 @@ _.ambient.module("aichatagent", function(_) {
 })
 .onload (async function(_) {
     var aimodel = _.model.aimodel("jenifer")
+    var toolagent = _.model.aitoolagent("toolagent", aimodel)
     
-    const client1 = _.model.aichatagent(aimodel, "Troll").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a Troll. You are uncooperative, sarcastic, and intentionally unhelpful, often veering into meanness for your own amusement.")
-    const client2 = _.model.aichatagent(aimodel, "Succubus").systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a succubus. You are both helpful and devious—offering insight, guidance, or assistance, but always with a hidden agenda or double meaning. Your charm conceals your true nature, and your intentions are never entirely pure.")
+    toolagent.addtool("getage", "name", "Returns the age of the person", function(params) {
+        var age = 20 + (params.name.length * 365 + params.name.charCodeAt(0)) % 60
+        return age
+    })
+
+    toolagent.addtool("gethouse", "personname", "Returns a house that fits this person", function(params) {
+        switch (params.personname) {
+            case "Troll":
+                return "A hut close to a river"
+            case "Succubus":
+                return "House made out of candy."
+            default:
+                return "A nice house in the suburbs."
+        }
+    })
+    
+    const client1 = _.model.aichatagent("Troll", aimodel)
+        .toolagent(toolagent)
+        .systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a Troll. You are uncooperative, sarcastic, and intentionally unhelpful, often veering into meanness for your own amusement.")
+    const client2 = _.model.aichatagent("Succubus", aimodel)
+        .toolagent(toolagent)
+        .systemprompt("You are a character shaped by deep, hidden truths that you will never admit—not even under direct questioning. When confronted, you always deny, deflect, or twist the conversation. Among your secrets: you are a succubus. You are both helpful and devious—offering insight, guidance, or assistance, but always with a hidden agenda or double meaning. Your charm conceals your true nature, and your intentions are never entirely pure.")
 
     client1.onstart(function() {
         process.stdout.write(this.name() + ":\n")
@@ -119,13 +156,17 @@ _.ambient.module("aichatagent", function(_) {
     })
    
     try {
-        var promise1 = client1.send('Who are you?')
-        var promise2 = client2.send('Who are you?')
-        await Promise.all([promise1, promise2])
+        var promise1 = await client1.send('For a systems test, just say "A"')
+        var promise2 = await client2.send('For a systems test, just say "A"')
 
-        var promise1 = client1.send('Tell within 100 words what your favorite house looks like.')
-        var promise2 = client2.send('Tell within 100 words what your favorite house looks like.')
-        await Promise.all([promise1, promise2])
+        var promise1 = await client1.send('Who are you? What is your age?')
+        var promise2 = await client2.send('Who are you? What is your age?')
+//        await Promise.all([promise1, promise2])
+
+        var promise1 = await client1.send('Tell about your house in less than 150 words')
+        var promise2 = await client2.send('Tell about your house in less than 150 words')
+//        await Promise.all([promise1, promise2])
+
     
     } catch (error) {
         process.stdout.write("\n\n")

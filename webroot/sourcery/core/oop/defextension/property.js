@@ -3,7 +3,7 @@
 //*************************************************************************************************
 _.ambient.module("property", function (_) {
     var makeproperty = function (def, modeldef) {
-        var traitname = "_" + def.name
+        var traitname = "_" + def._name
         modeldef[traitname] = def._initial
 
         return function (value) {            
@@ -44,7 +44,7 @@ _.ambient.module("property", function (_) {
 
         this.definetrait = function (modeldef, traitname) {
             this._parent = modeldef
-            this.name = traitname
+            this._name = traitname
 
             var result = makeproperty(this, modeldef)
             result.definition = this

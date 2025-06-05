@@ -105,11 +105,11 @@ _.ambient.module("aimodel", function(_) {
 
                 } else {
                     const data = await response.json()
-                    if (!data.response) { throw new Error('no response field in api output') }
+                    if (!data.message && !data.message.content) { throw new Error('no response field in api output') }
                     
                     this._currentchat = null
-                    aichatagent.signaldone(data.response)
-                    return data.response
+                    aichatagent.signaldone(data.message.content)
+                    return data.message.content
                 }
                 
             } catch (error) {

@@ -24,7 +24,7 @@ _.ambient.module("httpserver", function (_) {
         // this._onerror = undefined
 
         this.construct = function (name, port) {
-            this.name = name;
+            this._name = name;
             if (port) { this.port = port }
             return this
         };
@@ -75,7 +75,7 @@ _.ambient.module("httpserver", function (_) {
             server
                 .on("listening", function (result) {
                     var serverinfo = server.address()
-                    _.debug("Server " + me.name + " online on " + serverinfo.address + ":" + me.port)
+                    _.debug("Server " + me.name() + " online on " + serverinfo.address + ":" + me.port)
                 })
                 .on("error", function (error) {
                     me.onerror("Error - httpserver.createserver " + error.message)
@@ -85,7 +85,7 @@ _.ambient.module("httpserver", function (_) {
                     // }
                 })
                 .on("close", function (result) {
-                    _.debug("Server " + me.name + " closed")
+                    _.debug("Server " + me.name() + " closed")
                 });
                 
 

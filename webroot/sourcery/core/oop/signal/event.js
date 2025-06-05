@@ -8,8 +8,8 @@ _.ambient.module("event", function (_) {
         this._cancelled = false;
 
         this.construct = function (source, name) {
-            this.source = source;
-            this.name = name;
+            this._source = source;
+            this._name = name;
         };
 
         this.name = function () {

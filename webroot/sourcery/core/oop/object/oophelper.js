@@ -188,8 +188,10 @@ _.ambient.module("oophelper", function (_) {
 
         this.adddefextendertrait = function (modeldef, traitname, traitdef) {
             //Defextender traits are not allowed to override existing traits
-            if (modeldef[traitname]) {
-                throw "error: duplicate trait in model: " + modeldef._modelname + ", trait: " + traitname
+            var currenttrait = modeldef[traitname]
+            if (currenttrait) {
+                if (!currenttrait.definition || !currenttrait.definition.iscompatible(traitdef)) { throw "error: duplicate trait in model: " + modeldef._modelname + ", trait: " + traitname }
+                traitdef.inherit(currenttrait.definition)
             }
 
             var method = traitdef.definetrait(modeldef, traitname)
