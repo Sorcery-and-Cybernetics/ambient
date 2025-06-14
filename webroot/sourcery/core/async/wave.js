@@ -1,130 +1,119 @@
 //*****************************************************************************************************************
-// promise - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-// Be basic! No capitals, no lambdas, no ; Library functions are preceded by _.
+// wave - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
+//
+// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
+// Single line ifs use brackets; Privates start with _; 
 //*****************************************************************************************************************
-_.ambient.module("promise", function(_) {
+_.ambient.module("wave", function(_) {
+    _.define.object("wave", function(supermodel) {
+        this._source = undefined   
+        this._parent = undefined
+        this._prev = undefined
+        this._next = undefined
 
-    _.define.object("promise", function(supermodel) {
-
-        this.state = "pending"
-        this.value = undefined
-        this._queue = []
-        this._autostart = true
-        this._executor = undefined
-        this._timeoutid = undefined
-
-        this.oncancel = _.model.signal()
-        this.ondone = _.model.signal()
-        this.onfinish = _.model.signal()
-        this.onerror = _.model.signal()
-        this.onprogress = _.model.signal()
-
-        this.construct = function(executor) {
-          if (this._autostart) this.run(executor)
+        this.construct = function(source, parent) {
+            this._source = source
+            this._parent = parent
+            this._prev = null
+            this._next = null
+        }
+ 
+        this.getnext = function(current) {
+            return this._next
         }
 
-        this.run = function(executor) {
-          var me = this
-          
-          this._executor = executor
+        this.next = function(source) {
+            this._next = new _.model.wave(source).assign(this._parent)
+            this._next._prev = this
+            return this._next
+        }
 
-            setTimeout(function() {
-                try {
-                    me._executor(me.resolve, me.reject, me.onprogress)
-                } catch (error) {
-                    me.reject(error)
+        this.run = function(current) {        
+            try {
+                const result = this._source.call(current, current.value)
+
+                if (result !== undefined) {
+                    if (result instanceof _.model.wave) {
+                        current.spawn(result)
+
+                    } else if (_.ispromise(result)) {
+                        result.then(function(value) { current.next(value, 'resolved') }, function(error) { current.next(error, 'rejected') })                        
+
+                    } else {
+                        current.next(result, 'resolved')
+                    }
                 }
-            }, 0)
-        }
 
-        this.resolve = function(value) {
-            if (this.state !== "pending") return
-            this.state = "fulfilled"
-            this.value = value
-            this.ondone(value)
-            this._processnext(value, "fulfilled")
-        }
-
-        this.reject = function(reason) {
-            if (this.state !== "pending") return
-            this.state = "rejected"
-            this.value = reason
-            this.onerror(reason)
-            this._processnext(reason, "rejected")
-        }
-
-        this.cancel = function() {
-            if (this.state !== "pending") return
-            this.state = "canceled"
-            this._queue = []
-            if (this._timeoutid !== undefined) clearTimeout(this._timeoutid)
-            this.oncancel()
-            this.onfinish()
-        }
-
-        this.then = function(onfulfilled, onrejected) {
-            if (this.state !== "pending") throw new Error("Cannot add then() after promise is settled")
-            this._queue.push(_.model.thenable(this, onfulfilled, onrejected))
-            return this
-        }
-
-        this.timeout = function(ms) {
-            var me = this
-            if (this.state !== "pending") return this
-            this._timeoutid = setTimeout(function() {
-                me.reject(new Error("Timeout after " + ms + "ms"))
-            }, ms)
-            return this
-        }
-
-        this._processnext = function(value, state) {
-            var next = this._queue.shift()
-            if (!next) {
-                this.onfinish(this.value)
-                return
-            }
-            try {
-                next.run(value, state)
-            } catch (error) {
-                this.reject(error)
+            } catch (err) {
+                current.next(err, 'rejected')
             }
         }
 
+        this.oncancel = _.model.basicsignal()
+        this.cancel = function() { this.oncancel() }    
     })
 
-    _.define.object("thenable", function(supermodel) {
-        this.parent = undefined
-        this.onfulfilled = undefined
-        this.onrejected = undefined
+    // _.define.wave("wave.catch", function(supermodel) {
+    //     this.getnext = function(current) {
+    //         if (current.state === 'rejected') { return this._next }
+    //         return null
+    //     }
+    // })
 
-        this.construct = function(parent, onfulfilled, onrejected) {
-            if (!(parent instanceof _.model.promise)) throw "invalid parent"
+    // _.define.wave("wave.finalize", function(supermodel) {
+    //     this.getnext = function(current) {
+    //         return this._next
+    //     }
+    // })
 
-            this.parent = parent
-            this.onfulfilled = _.isfunction(onfulfilled) ? onfulfilled : function(value) { return value }
-            this.onrejected = _.isfunction(onrejected) ? onrejected : function(error) { throw error }
-        }
+    // _.define.wave("wave.when", function(supermodel) {
+    //     this._condition = undefined
 
-        this.run = function(value, state) {
-            var me = this
-            var result
-            try {
-                result = (state === "fulfilled") ? me.onfulfilled(value) : me.onrejected(value)
-            } catch (error) {
-                me.parent._processnext(error, "rejected")
-                return
-            }
+    //     this.construct = function(condition) {
+    //         this._condition = condition
+    //     }
 
-            if (_.ispromise(result)) {
-                result.then(
-                    function(nextvalue) { me.parent._processnext(nextvalue, "fulfilled") },
-                    function(nexterror) { me.parent._processnext(nexterror, "rejected") }
-                )
-            } else if (result instanceof Error) {
-                me.parent._processnext(result, "rejected")
-            } else {
-                me.parent._processnext(result, "fulfilled")
-            }
-        }
-    })
-})
+    //     this.do = function(source) {
+    //         //todo: go deeper level
+    //         this._do = _.model.wave.do(source).assign(this._parent)
+    //         return this._do
+    //     }
+
+    //     this.else = function(source) {
+    //         this._else = _.model.wave(source).assign(this._parent)
+    //         return this._else
+    //     }        
+
+    //     this.elseif = function(condition) {
+    //         this._else = _.model.wave.elseif(condition).assign(this._parent)
+    //         return this._else
+    //     }
+        
+    //     this.endif = function() {
+    //         return this
+    //     }
+
+    //     this.getnext = function(current) {
+    //         return this._condition(current.value) ? this._do : this._else
+    //     }
+    // })
+
+    // _.define.wave("wave.do", function(supermodel) {
+    //     this.next = function(source) { 
+    //         this._parent.next(source) }
+
+    //     this.else = function(source) { 
+    //         return this._parent.else(source) }
+        
+    //     this.elseif = function(condition) { 
+    //         return this._parent.elseif(source) }
+    // })
+
+    // _.define.object("wave.else", function(supermodel) {
+    //     this.endif = function() {
+    //         return this._parent.endif()
+    //     }      
+    // })
+})    
+
+

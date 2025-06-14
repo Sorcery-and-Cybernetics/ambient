@@ -422,7 +422,6 @@ _.define.module("oophelper", function (_) {
         }
 
         , make: function () {
-//            return 10
             throw "error"
         }
     }

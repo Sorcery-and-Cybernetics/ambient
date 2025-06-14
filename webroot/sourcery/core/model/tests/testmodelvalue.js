@@ -11,5 +11,5 @@ _.ambient.module("testmodelvalue")
     var value = str1.get()
 
     this.assert(str1.get(), "String 2", "String 2")
-})  
+})
 

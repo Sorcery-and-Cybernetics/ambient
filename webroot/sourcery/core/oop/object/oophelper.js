@@ -17,7 +17,7 @@ _.ambient.module("oophelper", function (_) {
         } 
         
         this.addmodeldefiner = function(modelname, definer) {
-            this.addvalue(this.definers, modelname, definer)
+            this.definers[modelname] = definer
 
             if (this.defined) {
                 definer = new definer()
@@ -27,7 +27,7 @@ _.ambient.module("oophelper", function (_) {
         }
 
         this.getmodeldefiner = function(modelname) {
-            return this.getvalue(this.definers, modelname)
+            return this.definers[modelname]
         }
 
         this.rundefiners = function() {
