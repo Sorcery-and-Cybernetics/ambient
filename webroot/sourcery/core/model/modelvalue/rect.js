@@ -51,15 +51,6 @@ _.ambient.module("rect", function(_) {
         , middlecenter: 48
     }
 
-    _.getxalign = function (area) {
-        return (area & 3) || _.area.center
-    }
-
-    _.getyalign = function (area) {
-        return (area & 12) || _.area.middle
-    }
-
-
 //_.areavalue = (function () {
 //    var result = {}
 
@@ -70,92 +61,100 @@ _.ambient.module("rect", function(_) {
 //    return result
 //}())
 
-    _.define.object("rect", function () {
-        this._x = _.property(0)
-        this._y = _.property(0)
-        this._width = _.property(0)
-        this._height = _.property(0)
+    _.define.modelvalue("rect", function () {
+        var getxalign = function (area) {
+            return (area & 3) || _.area.center
+        }
+
+        var getyalign = function (area) {
+            return (area & 12) || _.area.middle
+        }
+
+        this.x = _.model.property(0)
+        this.y = _.model.property(0)
+        this.width = _.model.property(0)
+        this.height = _.model.property(0)
 
         this.construct = function (x, y, width, height) {
-            this._x = x || 0
-            this._y = y || 0
-            this._width = width || 0
-            this._height = height || 0
+            this.x(x || 0)
+            this.y(y || 0)
+            this.width(width || 0)
+            this.height(height || 0)
         }
 
         this.right = function (value) {
             if (value !== undefined) {
-                this._x = value - (this._width - 1)
+                this.x(value - (this.width() - 1))
                 return this
             }
-            return this._x + this._width - 1
+            return this.x() + this.width() - 1
         }
 
         this.bottom = function (value) {
             if (value !== undefined) {
-                this._y = value - (this._height - 1)
+                this.y(value - (this.height() - 1))
                 return this
             }
-            return this._y + this._height - 1
+            return this.y() + this.height() - 1
         }
 
         this.center = function () {
-            return this._x + ((this._width - 1) >> 1)
+            return this.x() + ((this.width() - 1) >> 1)
         }
 
         this.middle = function () {
-            return this._y + ((this._height - 1) >> 1)
+            return this.y() + ((this.height() - 1) >> 1)
         }
 
         this.clone = function () {
-            return _.make.rect(this._x, this._y, this._width, this._height)
+            return _.model.rect(this.x(), this.y(), this.width(), this.height())
         }
 
         this.setrect = function (rect) {
-            this.create(rect.x, rect.y, rect.width, rect.height)
+            this.construct(rect.x, rect.y, rect.width, rect.height)
             return this
         }
 
         this.posadd = function (x, y) {
-            if (x instanceof _.kind.rect) {
-                this._x += x.x
-                this._y += x.y
+            if (x instanceof _.model.rect) {
+                this.x(this.x() + x.x())
+                this.y(this.y() + x.y())
             } else {
-                this._x += x
-                this._y += y
+                this.x(this.x() + x)
+                this.y(this.y() + y)
             }
             return this
         }
 
         this.possub = function (x, y) {
-            if (x instanceof _.kind.rect) {
-                this._x -= x.x
-                this._y -= x.y
+            if (x instanceof _.model.rect) {
+                this.x(this.x() - x.x())
+                this.y(this.y() - x.y())
             } else {
-                this._x -= x
-                this._y -= y
+                this.x(this.x() - x)
+                this.y(this.y() - y)
             }
             return this
         }
 
         this.sizeadd = function (x, y) {
-            if (x instanceof _.kind.rect) {
-                this._width += x.width
-                this._height += x.height
+            if (x instanceof _.model.rect) {
+                this.width(this.width() + x.width())
+                this.height(this.height() + x.height())
             } else {
-                this._width += (x || 0)
-                this._height += (y || 0)
+                this.width(this.width() + (x || 0))
+                this.height(this.height() + (y || 0))
             }
             return this
         }
 
         this.sizesub = function (x, y) {
-            if (x instanceof _.kind.rect) {
-                this._width -= x.width
-                this._height -= x.height
+            if (x instanceof _.model.rect) {
+                this.width(this.width() - x.width())
+                this.height(this.height() - x.height())
             } else {
-                this._width -= (x || 0)
-                this._height -= (y || 0)
+                this.width(this.width() - (x || 0))
+                this.height(this.height() - (y || 0))
             }
             return this
         }
@@ -172,7 +171,7 @@ _.ambient.module("rect", function(_) {
 
         this.hit = function (x, y, margin) {
             margin = margin || 0
-            var result = !((x < (this._x - margin)) || (y < (this._y - margin)) || (x >= (this._x + this._width + margin)) || (y >= (this._y + this._height + margin)))
+            var result = !((x < (this.x() - margin)) || (y < (this.y() - margin)) || (x >= (this.x() + this.width() + margin)) || (y >= (this.y() + this.height() + margin)))
             
             return result
         }
@@ -180,8 +179,8 @@ _.ambient.module("rect", function(_) {
         this.borderhit = function (x, y, margin) {
             margin = margin || 0
 
-            var result = (Math.abs(this._x - x) < margin ? _.area.left : 0)
-            result += (Math.abs(this._y - y) < margin ? _.area.top : 0)
+            var result = (Math.abs(this.x() - x) < margin ? _.area.left : 0)
+            result += (Math.abs(this.y() - y) < margin ? _.area.top : 0)
             result += (Math.abs(this.right() - x) < margin ? _.area.right : 0)
             result += (Math.abs(this.bottom() - y) < margin ? _.area.bottom : 0)
             return result
@@ -193,26 +192,26 @@ _.ambient.module("rect", function(_) {
             centerwidth = centerwidth || 0
             centerheight = centerheight || 0
 
-            x -= this._x
-            y -= this._y
+            x -= this.x()
+            y -= this.y()
 
-            marginhor = (this._width - centerwidth) / 2
-            marginvert = (this._height - centerheight) / 2
+            marginhor = (this.width() - centerwidth) / 2
+            marginvert = (this.height() - centerheight) / 2
 
-            if ((x >= 0) && (x <= this._width)) {
+            if ((x >= 0) && (x <= this.width())) {
                 if (x < marginhor) {
                     result += _.area.left
-                } else if (x <= (this._width - marginhor)) {
+                } else if (x <= (this.width() - marginhor)) {
                     result += _.area.center
                 } else {
                     result += _.area.right
                 }
             }
 
-            if ((y >= 0) && (y <= this._height)) {
+            if ((y >= 0) && (y <= this.height())) {
                 if (y < marginvert) {
                     result += _.area.top
-                } else if (y <= (this._height - marginvert)) {
+                } else if (y <= (this.height() - marginvert)) {
                     result += _.area.middle
                 } else {
                     result += _.area.bottom
@@ -226,39 +225,39 @@ _.ambient.module("rect", function(_) {
             var right = this.right()
             var bottom = this.bottom()
 
-            if (_.inbetween(rect.x, this._x, right)) { result += 1 }
-            if (_.inbetween(rect.y, this._y, bottom)) { result += 1 }
-            if (_.inbetween(rect.right(), this._x, right)) { result += 1 }
-            if (_.inbetween(rect.bottom(), this._y, bottom)) { result += 1 }
+            if (_.inbetween(rect.x(), this.x(), right)) { result += 1 }
+            if (_.inbetween(rect.y(), this.y(), bottom)) { result += 1 }
+            if (_.inbetween(rect.right(), this.x(), right)) { result += 1 }
+            if (_.inbetween(rect.bottom(), this.y(), bottom)) { result += 1 }
             return result
         }
 
         this._xarea = function (area) {
-            switch (_.getxalign(area)) {
-                case _.area.left: return this._x
+            switch (getxalign(area)) {
+                case _.area.left: return this.x()
                 case _.area.center: return this.center()
                 case _.area.right: return this.right()
             }
         }
 
         this._yarea = function (area) {
-            switch (_.getyalign(area)) {
-                case _.area.top: return this._y
+            switch (getyalign(area)) {
+                case _.area.top: return this.y()
                 case _.area.middle: return this.middle()
                 case _.area.bottom: return this.bottom()
             }
         }
 
         this.getpoint = function (area) {
-            return _.make.point(this._xarea(), this._yarea())
+            return _.model.point(this._xarea(), this._yarea())
         }
 
         this.calculaterelativefit = function (relativerect, relativealign, selfalign, containerrect) {
-            var result = _.make.rect(
-                relativerect.xarea(relativealign) + (this._x - this._xarea(selfalign))
-                , relativerect.yarea(relativealign) + (this._y - this._yarea(selfalign))
-                , this._width
-                , this._height
+            var result = _.model.rect(
+                relativerect.xarea(relativealign) + (this.x() - this._xarea(selfalign))
+                , relativerect.yarea(relativealign) + (this.y() - this._yarea(selfalign))
+                , this.width()
+                , this.height()
             )
 
             if (containerrect && (containerrect.inviewscore(result) != 4)) {
@@ -269,26 +268,26 @@ _.ambient.module("rect", function(_) {
         }
 
         this.calculaterelative = function (relativerect, relativealign, selfalign, containerrect) {
-            var result = _.make.rect(
+            var result = _.model.rect(
                 relativerect.xarea(relativealign)  - this._xarea(selfalign)
                 , relativerect.yarea(relativealign) - this._yarea(selfalign)
-                , this._width
-                , this._height
+                , this.width()
+                , this.height()
             )
 
             if (containerrect) {
-                if (!_.inbetween(result.x, containerrect.x, containerrect.right())) {
-                    result.x = containerrect.x
-                } else if (!_.inbetween(result.right(), containerrect.x, containerrect.right())) {
+                if (!_.inbetween(result.x(), containerrect.x(), containerrect.right())) {
+                    result.x(containerrect.x())
+                } else if (!_.inbetween(result.right(), containerrect.x(), containerrect.right())) {
                     result.right(containerrect.right())
-                    if (result.x < containerrect.x) { result.x = containerrect.x }
+                    if (result.x() < containerrect.x()) { result.x(containerrect.x()) }
                 }
 
-                if (!_.inbetween(result.y, containerrect.y, containerrect.bottom())) {
-                    result.y = containerrect.y
-                } else if (!_.inbetween(result.bottom(), containerrect.y, containerrect.bottom())) {
+                if (!_.inbetween(result.y(), containerrect.y(), containerrect.bottom())) {
+                    result.y(containerrect.y())
+                } else if (!_.inbetween(result.bottom(), containerrect.y(), containerrect.bottom())) {
                     result.bottom(containerrect.bottom())
-                    if (result.y < containerrect.y) { result.y = containerrect.y }
+                    if (result.y() < containerrect.y()) { result.y(containerrect.y()) }
                 }
             }
 
