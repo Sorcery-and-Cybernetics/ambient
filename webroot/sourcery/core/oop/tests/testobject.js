@@ -4,8 +4,8 @@ _.ambient.module("testobject", function(_) {
         this._value = undefined
         this._temp = undefined
 
-        this.construct = function(initial) {
-            if (initial) { this._initial = initial }
+        this.construct = function(value) {
+            if (value) { this._value = value }
         }
 
         this.let = function (value) {
@@ -17,9 +17,9 @@ _.ambient.module("testobject", function(_) {
             return this._value || this._initial
         }
 
-        this.temp = function(value) {
-            if (value === undefined) { return this._temp }
-            this._temp = value
+        this.initial = function(value) {
+            if (value === undefined) { return this._initial }
+            this._initial = value
             return this
         }
     })
@@ -29,12 +29,13 @@ _.ambient.module("testobject", function(_) {
             return("Test is working")
         })
 
-        this.testtrait = _.model.testtrait("Initial Value").temp("Temporary Value")
+        this.teststring = _.model.string("Test String")
+        this.testtrait = _.model.testtrait("Value").initial("Initial Value")
     })
 
     //Inherit and override testtrait
     _.define.testobject("testobject2", function(supermodel) {
-        this.testtrait = _.model.testtrait().temp("Temporary Value 2")
+        this.testtrait = _.model.testtrait().initial("Temporary Value 2")
     })
 })
 
@@ -46,13 +47,18 @@ _.ambient.module("testobject", function(_) {
     this.test(test.name(), "Test Object")
     this.test(test.test(), "Test is working")
 
-    this.test(test.testtrait().get(), "Initial Value")
+    this.test(test.testtrait().get(), "Value")
 
     test.testtrait().let("New Value")
     this.test(test.testtrait().get(), "New Value")
+    this.test(test.testtrait().teststring(), "Test String")
 
     //testing 2nd testobject
-    this.test(test2.testtrait().get(), "Initial Value")
-    this.test(test2.testtrait().temp(), "Temporary Value 2")
+    this.test(test2.testtrait().get(), "Temporary Value 2")
+    this.test(test2.testtrait().initial(), "Temporary Value 2")
+
+    this.test(test2.testtrait().teststring(), "Test String")
+    test2.teststring().let("New String")
+    this.test(test2.testtrait().teststring(), "New String")
 })  
 
