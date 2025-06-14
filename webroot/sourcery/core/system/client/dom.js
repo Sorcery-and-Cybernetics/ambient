@@ -10,6 +10,11 @@ _.ambient.module("dom", function(_) {
 
         this.lasttouchtime = 0
         this.lastmousetime = 0
+        this.eventhistory = undefined
+
+        this.construct = function() {
+            this.eventhistory = {}
+        }
 
         this.orientation = function () { return (this.pagewidth() >= (this.pageheight())) ? "landscape" : "portrait" }
 
