@@ -1,6 +1,10 @@
-//*************************************************************************************************
+//*****************************************************************************************************************
 // skiplistsegmentlevel - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//
+// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
+// Single line ifs use brackets; Privates start with _; 
+//*****************************************************************************************************************
+
 _.ambient.module("skiplistsegment", function (_) {
     var segmentvaluecompare = function(searchvalue, matchvaluefloor, matchvalueceil, option) {
         if (!matchvalueceil) { matchvalueceil = matchvaluefloor }
@@ -167,9 +171,11 @@ _.ambient.module("skiplistsegment", function (_) {
                 do {
                     if (cursor instanceof _.model.skiplistsegment) { 
                         childcount += cursor._childcount
+
                     } else if (cursor instanceof _.model.skiplistnode) {
                         childcount++
                     }
+                    
                     cursor = cursor.segmentnext()
                 } while (cursor != segmentend)
 

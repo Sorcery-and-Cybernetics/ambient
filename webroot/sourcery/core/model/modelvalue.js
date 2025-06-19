@@ -1,6 +1,10 @@
-//*************************************************************************************************
+//*****************************************************************************************************************
 // modelvalue - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//
+// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
+// Single line ifs use brackets; Privates start with _; 
+//*****************************************************************************************************************
+
 _.ambient.module("modelvalue", function(_) {
     _.define.object("modelvalue", function (supermodel) {
         this._initial = undefined

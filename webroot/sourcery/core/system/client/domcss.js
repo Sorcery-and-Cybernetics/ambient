@@ -110,7 +110,7 @@ _.ambient.module("domcss", function(_) {
         this.move = function (left, top, width, height, right, bottom) {
             var css = this
 
-            if (left instanceof _.kind.rect) {
+            if (left instanceof _.model.rect) {
                 css.left(left.x)
                 css.top(left.y)
                 css.width(left.width)
@@ -343,7 +343,7 @@ _.ambient.module("domcss", function(_) {
         }
     })
     .onload(function () {
-        var controlstyleclass = _.kind.controlstyleclass.prototype
+        var controlstyleclass = _.model.controlstyleclass.prototype
 
         // _.dom.__testarea = _.dom.createelement("DIV")
         // _.dom.appendelement(_.dom.__testarea)

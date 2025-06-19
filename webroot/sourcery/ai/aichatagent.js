@@ -1,6 +1,10 @@
-//*************************************************************************************************
+//*****************************************************************************************************************
 // aichatagent - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//
+// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
+// Single line ifs use brackets; Privates start with _; 
+//*****************************************************************************************************************
+
 _.ambient.module("aichatagent", function(_) {    
     _.define.object("aichatagent", function() {
         this._messages = []
@@ -105,6 +109,7 @@ _.ambient.module("aichatagent", function(_) {
     })    
 })
 .onload (async function(_) {
+    return
     var aimodel = _.model.aimodel("jenifer")
     var toolagent = _.model.aitoolagent("toolagent", aimodel)
     

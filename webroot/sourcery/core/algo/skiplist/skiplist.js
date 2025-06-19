@@ -172,6 +172,7 @@ _.ambient.module("skiplist", function(_) {
         })
 
         this.searchbehavior = _.behavior(function() {
+
             this.nodebyindex = function(index) {
                 var cursor = this.segmenttop();
 
