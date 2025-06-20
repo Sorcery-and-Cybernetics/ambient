@@ -2,7 +2,7 @@
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
 // 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
 // Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
@@ -12,21 +12,26 @@ _.ambient.module("skiplist", function(_) {
         this._topsegment = undefined
 
         this._level = 1
-        this._segmentsize = 8
+        this._segmentsize = 7
         this._segmentlevel = 8
 
         this._issortlist = false
         this._sortvaluename = undefined
 
+        this._list
+
         this.constructbehavior = _.behavior(function() {
             this.construct = function(sortvaluename) {
+                this._list = this
+
                 this._nodenext = this
                 this._nodeprev = this
 
                 this._sortvaluename = sortvaluename
                 if (sortvaluename) { this._issortlist = true }
 
-                this._upsegment = _.model.skiplistsegment(this, this._segmentlevel)
+                this._upsegment = _.model.skiplistsegment(this)
+//                this._upsegment = _.model.skiplistsegment(this, this._segmentlevel)
             }
 
             this.sortvaluename = function(value) {
@@ -61,7 +66,7 @@ _.ambient.module("skiplist", function(_) {
             this.segmentsize = function(value) { 
                 if (value === undefined) { return this._segmentsize }
                 
-                if (value >= 2) { 
+                if (value > 2) { 
                     this._segmentsize = value
                 }
                 return this
@@ -179,23 +184,26 @@ _.ambient.module("skiplist", function(_) {
         this.searchbehavior = _.behavior(function() {
 
             this.nodebyindex = function(index) {
+                if (index <= 0) { index = this.count() + index }
+                if (index > this.count()) { return undefined }
+
                 var cursor = this.segmenttop();
 
                 while (index) {
-                    if (cursor._childcount >= index) {
+                    if (cursor.level() == 1) {
+                        if (cursor.isroot()) { cursor = cursor.segmentnext()}
+
+                        while (!cursor.isroot() && (index > 1)) {
+                            index -= 1;
+                            cursor = cursor.segmentnext();
+                        }
+                        return cursor.isroot()? undefined : cursor;
+
+                    } else if (cursor._nodecount >= index) {
                         cursor = cursor.segmentdown();
 
-                        if (cursor.level() == 1) {
-                            if (cursor.isroot()) { cursor = cursor.segmentnext()}
-
-                            while (!cursor.isroot() && (index > 1)) {
-                                index -= 1;
-                                cursor = cursor.segmentnext();
-                            }
-                            return cursor.isroot()? undefined : cursor;
-                        }
                     } else {
-                        index -= cursor._childcount;
+                        index -= cursor._nodecount;
                         cursor = cursor.segmentnext();
                         if (cursor.isroot()) { return undefined; }
                     }
@@ -223,6 +231,8 @@ _.ambient.module("skiplist", function(_) {
                 Note: If no search value is provided, the function returns undefined.
              */
             this.findnode = function(search, relativeindex) {
+                if (!this.issortlist()) { throw "skiplistcursor.findfirst: List is not a sortlist"; }
+
                 if (search) {
                     if (relativeindex === undefined) { 
                         return this.findlastnode(search);
@@ -355,18 +365,15 @@ _.ambient.module("skiplist", function(_) {
 
                 var cursor = segmentnode;
 
-                if (relativeindex === 0) { 
-                    return undefined; 
-
-                } else if (relativeindex > 0) {
+                if (relativeindex > 0) {
                     while (relativeindex > 0) {
                         var segmentup = cursor.segmentup();
 
-                        if (segmentup && (segmentup._childcount < relativeindex)) {
+                        if (segmentup && (segmentup._nodecount < relativeindex)) {
                             cursor = segmentup;
 
-                        } else if ((cursor.level() == 1) || (cursor._childcount <= relativeindex)) {
-                            relativeindex -= (cursor.level() == 1? 1: cursor._childcount);
+                        } else if ((cursor.level() == 1) || (cursor._nodecount <= relativeindex)) {
+                            relativeindex -= (cursor.level() == 1? 1: cursor._nodecount);
                             cursor = cursor.segmentnext();
                             if (cursor.isroot()) { return undefined; }
 
@@ -378,7 +385,7 @@ _.ambient.module("skiplist", function(_) {
 
                 } else {
                     relativeindex = cursor.orderindex() + relativeindex
-                    if (relativeindex < 0) { return undefined; }
+                    if (relativeindex <= 0) { return undefined; }
                     return this.nodebyindex(relativeindex);
                 }
             };
@@ -390,7 +397,7 @@ _.ambient.module("skiplist", function(_) {
                 var cursor = this.segmentup()
 
                 while (cursor) {
-                    result += cursor._childcount
+                    result += cursor._nodecount
                     cursor = cursor.segmentup()
                     if (cursor) { result += ", " }
                 }
@@ -417,7 +424,7 @@ _.ambient.module("skiplist", function(_) {
                 while (cursor && cursor != this) {
                     var result = cursor.debugvalidate()
 
-                    if (result) { errors.concat(result) }
+                    if (result) { errors = errors.concat(result) }
                     cursor = cursor.nodenext()
                 }
 
@@ -429,11 +436,11 @@ _.ambient.module("skiplist", function(_) {
                     var count = 0
 
                     do {
-                        count += cursor._childcount
+                        count += cursor._nodecount
                         cursor = cursor.segmentnext()
                     } while (!cursor.isroot())
 
-                    if (count != this.count()) { errors.push("Segment level " + segmentlevel + " childcount mismatch: " + count + ", expected: " + this.count()) }
+                    if (count != this.count()) { errors.push("Segment level " + segmentlevel + " nodecount mismatch: " + count + ", expected: " + this.count()) }
                     segmentlevel += 1
                     segment = segment.segmentup()
                 }

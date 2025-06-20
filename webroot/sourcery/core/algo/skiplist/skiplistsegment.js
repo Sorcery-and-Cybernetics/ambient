@@ -2,7 +2,7 @@
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
 // 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
 // Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
@@ -24,7 +24,6 @@ _.ambient.module("skiplistsegment", function (_) {
         }
     }
 
-
     _.define.object("skiplistsegment", function () {
         this._base = undefined
         this._level = 0
@@ -34,6 +33,7 @@ _.ambient.module("skiplistsegment", function (_) {
         this._nextsegment = undefined
         this._prevsegment = undefined
 
+        this._nodecount = 0
         this._childcount = 0
 
         this.constructbehavior = _.behavior(function() {
@@ -72,11 +72,24 @@ _.ambient.module("skiplistsegment", function (_) {
             }
 
             this.unlink = function() {
-                if (this._upsegment) { this._upsegment.unlink() }
+                if (this._upsegment) { 
+                    this._upsegment.unlink() 
+                }
+                this._base._topsegment = this._downsegment
+                
+                if (!this.isroot()) {
+                    var prevsegment = this._prevsegment
+                }
+
                 this._prevsegment._nextsegment = this._nextsegment
                 this._nextsegment._prevsegment = this._prevsegment
+                this._downsegment._upsegment = undefined
                 this._prevsegment = undefined
                 this._nextsegment = undefined
+                this._downsegment = undefined
+                this._base = undefined
+
+                if (prevsegment) { prevsegment.calcsegment(false, true) }
             }
         })
 
@@ -150,7 +163,7 @@ _.ambient.module("skiplistsegment", function (_) {
                 while (cursor) {
                     if (cursor._segmentup) { cursor = cursor.segmenttop() }
                     cursor = cursor._prevsegment
-                    index += cursor._childcount
+                    index += cursor._nodecount
 
                     if (cursor.isroot()) { break }
                 }
@@ -158,6 +171,7 @@ _.ambient.module("skiplistsegment", function (_) {
             }  
             
             this.calcsegment = function(calcprevsegment, recursive) {
+                var nodecount = 0
                 var childcount = 0
 
                 var cursor = this.segmentdown()
@@ -171,32 +185,76 @@ _.ambient.module("skiplistsegment", function (_) {
 
                 do {
                     if (cursor instanceof _.model.skiplistsegment) { 
-                        childcount += cursor._childcount
+                        nodecount += cursor._nodecount
+                        if (!cursor.isroot()) { childcount++ }
 
-                    } else if (cursor instanceof _.model.skiplistnode) {
+                    } else if (!cursor.isroot()) {
+                        nodecount++
                         childcount++
                     }
 
                     cursor = cursor.segmentnext()
                 } while (cursor != segmentend)
 
+                this._nodecount = nodecount
                 this._childcount = childcount
-
 
                 if (recursive) {
                     var segmentleftup = this.segmentleftup()
 
-                    if (calcprevsegment) {
+                    if (segmentleftup) {
                         if (segmentleftup.isroot() || this.segmentprev().segmentleftup() == segmentleftup) {
                             calcprevsegment = false
                         }
-                    }
 
-                    if (segmentleftup) {
                         segmentleftup.calcsegment(calcprevsegment, recursive)
                     }
-                } 
+                }
+
+                var maxsize = this._base._list._segmentsize
+
+                if (this._childcount > maxsize) { 
+                    var middlechild = this.findmiddlechild()
+                    if (middlechild._upsegment) { throw "Error" }
+
+                    newsegment = _.model.skiplistsegment(middlechild)
+                    middlechild._upsegment = newsegment
+                    newsegment.link()
+                    newsegment.calcsegment(true, false)
+
+                    this.calcsegment(false, false)
+
+                    if (this.isroot()) { 
+                        if (!this._upsegment) {
+                            var newrootsegment = _.model.skiplistsegment(this)
+                            this._upsegment = newrootsegment
+                            this._upsegment.calcsegment()
+                        }
+                    }                    
+                }  else if (!this._upsegment) {
+                     if (this.isroot()) {
+                         if ((this._level > 2) && (this._nodecount == 0)) { this.unlink() }
+
+                      } else if ((this._childcount * 2) < maxsize) {
+                          this.unlink()
+                     }
+                }
+
                 return this
+            }   
+           
+            this.findmiddlechild = function() {
+                if (this._childcount < 3) { return undefined } 
+
+                var index = this._childcount 
+                var cursor = this.segmentdown()
+
+                while (index > 1) { 
+                    cursor = cursor.segmentnext()
+                    index -= 2 
+                }
+
+                return cursor
             }            
         })
 
@@ -229,6 +287,19 @@ _.ambient.module("skiplistsegment", function (_) {
             this.debugvalidate = function() {
                 var errors = (this._segmentup ? this._segmentup.debugvalidate() : [])
 
+                //var test childcount of this segment
+                var cursor = this.segmentdown()
+                var childcount = 0
+
+                while (!cursor.isroot()) {
+                    childcount++
+                    cursor = cursor.segmentnext()
+                    if (cursor._upsegment) { break }
+                }
+
+                if (childcount != this._childcount) { 
+                    errors.push("Child count mismatch") 
+                }
                 if (!this._nextsegment || this._nextsegment._prevsegment !== this) { errors.push("Next segment mismatch") }
                 if (!this._prevsegment || this._prevsegment._nextsegment !== this) { errors.push("Prev segment mismatch") }
                 if (this._downsegment._upsegment !== this) { errors.push("Down segment mismatch") }

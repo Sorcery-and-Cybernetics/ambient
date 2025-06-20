@@ -3,14 +3,7 @@ _.ambient.module("skiplist.test")
         var me = this
         var showdebug = false
 
-        var itemcount = 10
-
-        var list = _.model.skiplist().segmentsize(2)
-
-        // Populate the skiplist with 300 nodes with values 1-300
-        for (var index = 1; index <= itemcount; index++) {
-            _.model.skiplistnode(index).assign(list, -1)
-        }
+        var itemcount = 300
 
         // Helper function to output list structure
         var segmentdump = function(list) {
@@ -27,7 +20,7 @@ _.ambient.module("skiplist.test")
 
                 var cursor = node.segmentup()
                 while (cursor) {
-                    line += "\t" + cursor._childcount
+                    line += "\t" + cursor._childcount + "(" + cursor._nodecount + ")"
                     cursor = cursor.segmentup()
                 }
                 return line
@@ -59,6 +52,17 @@ _.ambient.module("skiplist.test")
                 }
             })
         }
+
+        //**************************************
+        // Test start
+        //**************************************
+
+        var list = _.model.skiplist().segmentsize(2)
+
+        // Populate the skiplist with 300 nodes with values 1-300
+        for (var index = 1; index <= itemcount; index++) {
+            _.model.skiplistnode(index).assign(list, -1)
+        }        
 
         if (showdebug) { segmentdump(list) }
 
@@ -99,6 +103,8 @@ _.ambient.module("skiplist.test")
 
         me.group("Testing findrelativenode boundary conditions")
         var firstnode = list.nodefirst()
+        var x = list.findrelativenode(firstnode, itemcount)
+
         _.debug.assert(firstnode.value(), 1, "firstnode.value()")
         _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "list.findrelativenode(firstnode, -1)")
         _.debug.assert(list.findrelativenode(firstnode, 1).value(), 2, "list.findrelativenode(firstnode, 1)")
@@ -123,7 +129,6 @@ _.ambient.module("skiplist.test")
         _.debug.assert(list.findrelativenode(middlenode, middlepos).value(), itemcount, "list.findrelativenode(middlenode, middlepos)")
         _.debug.assert(list.findrelativenode(middlenode, -(middlepos - 1)).value(), 1, "list.findrelativenode(middlenode, -(middlepos - 1))")
 
-
         // Test delete-insert
         for (var position = 1; position <= itemcount; position++) {
             var node = list.nodebyindex(position)
@@ -132,14 +137,31 @@ _.ambient.module("skiplist.test")
             node = node.destroy()
 
             _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
-            testorderindex(list)
+            if (itemcount <=  1000) { testorderindex(list) }
 
              _.model.skiplistnode(value).assign(list, -1)
-            
+
              _.debug.assert(list.debugvalidate(), undefined, "List validation after reinserting value " + value)
-             testorderindex(list)
+
+            if (itemcount <=  1000) { testorderindex(list) }
         } 
 
+        testorderindex(list)
+
+
+        for (var position = 1; position <= itemcount; position++) {
+            var node = list.nodebyindex(1)
+
+            node = node.destroy()
+
+            _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
+            testorderindex(list)
+        }
+
+        
+
+        _.model.skiplistnode(1).assign(list, -1)
+        _.debug.assert(list.debugvalidate(), undefined, "After deleting all nodes, and inserting 1")
 
         var list = _.model.skiplist();
         list.issortlist(true)
@@ -189,9 +211,7 @@ _.ambient.module("skiplist.test")
             if (!tag) { tag = order; }
             var item = _.model.testskiplistitem(value, tag)
             list.add(item, order)
-//            segmentdump(list)
         }
-
 
         var list = _.model.skiplist("value")
 
@@ -218,7 +238,7 @@ _.ambient.module("skiplist.test")
         additem(list, "A", 7, 4)
         if (showdebug) { segmentdump(list) }
 
-    _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+        _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
 
         // var result = []
 

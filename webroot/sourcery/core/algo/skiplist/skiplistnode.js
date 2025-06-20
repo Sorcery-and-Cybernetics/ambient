@@ -2,7 +2,7 @@
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
 // 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
 // Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
@@ -33,19 +33,21 @@ _.ambient.module("skiplistnode", function(_) {
                 supermodel.assign.call(this, cursor, index)
 
                 //todo: For now we do a simple random level 
-                if (!this._topsegment) {
-                    var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel())
+                // if (!this._topsegment) {
+                //     var level = _.math.logarithmicchance(this.list().segmentsize(), this.list().segmentlevel())
 
-                    if (level > 1) {
-                        this._upsegment = _.model.skiplistsegment(this, level - 1)
-                    } else {
-                        this._topsegment = this
-                    }
-                }
+                //     if (level > 1) {
+                //         this._upsegment = _.model.skiplistsegment(this, level - 1)
+                //     } else {
+                //         this._topsegment = this
+                //     }
+                // }
 
-                if (this._upsegment) {  
-                    this._upsegment.link()
-                }
+                // if (this._upsegment) {  
+                //     this._upsegment.link()
+                // }
+
+                this._topsegment = this
 
                 this.segmentleftup().calcsegment(true, true)
 
@@ -127,7 +129,7 @@ _.ambient.module("skiplistnode", function(_) {
                 var cursor = this.segmentup()
 
                 while (cursor) {
-                    result += cursor._childcount
+                    result += cursor._nodecount
                     cursor = cursor.segmentup()
                     if (cursor) { result += ", " }
                 }

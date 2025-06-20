@@ -4,10 +4,11 @@ _.ambient.module("linkedlist.test")
         
         var node3 = _.model.linkedlistnode("3").assign(list, -1)
         var node1 = _.model.linkedlistnode("1").assign(list, 1) 
+
         var node5 = _.model.linkedlistnode("5").assign(list) 
 
         var node2 = _.model.linkedlistnode("2").assign(node3)
-        var node4 = _.model.linkedlistnode("4").assign(node3, 1)   
+        var node4 = _.model.linkedlistnode("4").assign(list, -2)   
 
         this.assert(list.debugout(), ["1","2","3","4","5"], "Linked list: Adding items")
         this.assert(list.debugvalidate(), undefined, "After adding items")

@@ -22,20 +22,33 @@ _.ambient.module("linkedlistnode", function (_) {
 
                 var list = (cursor instanceof _.model.linkedlist ? cursor : cursor._list)
 
-//                if (index > 0) { index -= 1; }
-
-                while (index) {
+                if (Math.abs(index) <= list.count()) { 
                     if (index < 0) {
-                        if (cursor == list) { break }
-                        cursor = cursor._nodeprev
-                        index += 1
+                        while (index < -1) {
+                            cursor = cursor._nodeprev
+                            index += 1
+                        }
 
                     } else {
-                        cursor = cursor._nodenext
-                        if (cursor._nodenext == list) { break }
-                        index -= 1
+                        while (index > 0) {
+                            cursor = cursor._nodenext
+                            index -= 1
+                        }
                     }
-                }
+                } 
+
+                // while (index) {
+                //     if (index < -1) {
+                //         cursor = cursor._nodeprev
+                //         if (cursor == list) { break }
+                //         index += 1
+
+                //     } else {
+                //         cursor = cursor._nodenext
+                //         if (cursor._nodenext == list) { break }
+                //         index -= 1
+                //     }
+                // }
 
                 this._list = list
                 list._count += 1
