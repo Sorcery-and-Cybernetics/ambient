@@ -7,10 +7,10 @@
 //****************************************************************************************************************************
 
 _.ambient.module("skiplistsegment", function (_) {
-    var segmentvaluecompare = function(searchvalue, matchvaluefloor, matchvalueceil, option) {
+    var segmentvaluecompare = function(searchvalue, matchvaluefloor, matchvalueceil, compareoption) {
         if (!matchvalueceil) { matchvalueceil = matchvaluefloor }
 
-        switch(option) {
+        switch(compareoption) {
             case "<=":
                 return searchvalue <= matchvalueceil
             case ">=":
@@ -153,6 +153,20 @@ _.ambient.module("skiplistsegment", function (_) {
             this.segmentroot = function() {
                 return this._base._topsegment
             }
+
+            this.firstchild = function() {
+                var cursor = this.segmentdown()
+
+                if (cursor.isroot()) { cursor = cursor.segmentnext() }
+                return (cursor.isroot()? undefined: cursor)
+            }
+
+            this.lastchild = function() {
+                var cursor = this.segmentnext().segmentdown()
+
+                if (cursor.isroot()) { cursor = cursor.segmentprev() }
+                return (cursor.isroot()? undefined: cursor)
+            }
         })
 
         this.modelbehavior = _.behavior(function() {
@@ -277,8 +291,8 @@ _.ambient.module("skiplistsegment", function (_) {
                 return segmentnode.sortvalue()
             }
 
-            this.valueinsegment = function(search, option) {
-                return segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), option)
+            this.valueinsegment = function(search, compareoption) {
+                return segmentvaluecompare(search, this.segmentfloor(), this.segmentceil(), compareoption)
             }
         })
 

@@ -166,9 +166,9 @@ _.ambient.module("skiplist.test")
         var list = _.model.skiplist();
         list.issortlist(true)
     
-        // Create a shuffled list of items
-        var itemcount = 5
-        var valuecount = 7
+        me.group("Testing a shuffled list of nodes")
+        var itemcount = 20
+        var valuecount = 50
         var items = []
         
         for (var i = 0; i < itemcount; i++) {
@@ -185,83 +185,39 @@ _.ambient.module("skiplist.test")
         });
 
         if (showdebug) { segmentdump(list) }
-        _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+        me.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+        
 
+        me.group("Testing findfirstnode, findnextnode, findlastnode, findprevnode")
 
-        _.define.object("testskiplistitem", function(supermodel) {
-            this._value = undefined
-            this._order = 0
+        var list = _.model.skiplist()
+        list.issortlist(true)
 
-            this.construct = function(value, order) {
-                this._value = value
-                this._order = order
-            }
-
-            this.get = function(name) {
-                if (name == "value") { return this._value }
-                if (name == "order") { return this._order }
-            }
-
-            this.debugout = function() {
-                return this._value + "\t" + this._order
-            }            
-        })
-
-        var additem = function(list, value, order, tag) {
-            if (!tag) { tag = order; }
-            var item = _.model.testskiplistitem(value, tag)
-            list.add(item, order)
-        }
-
-        var list = _.model.skiplist("value")
-
-        // Create a shuffled list of items
         var itemcount = 3
-        var valuecount = 3
+        var valuecount = 30
         var items = []
         
         for (var i = 0; i < itemcount; i++) {
             for (var j = 1; j <= valuecount; j++) {
-                additem(list, String.fromCharCode(65 + i), j)
+                list.add(String.fromCharCode(65 + i), j)
             }
         }
 
-        if (showdebug) { segmentdump(list) }
+         _.debug.assert(list.findfirstnode("XX"), undefined, "list.findfirstnode(XX)")
+         _.debug.assert(list.findfirstnode("A").orderindex(), 1, "list.findfirstnode(A)")
+         _.debug.assert(list.findfirstnode("B").orderindex(), 1 + valuecount, "list.findfirstnode(B)")
+         _.debug.assert(list.findfirstnode("C").orderindex(), 1 + valuecount * 2, "list.findfirstnode(C)")
 
-        additem(list, "B", 4)
-        if (showdebug) { segmentdump(list) }
-        
+         _.debug.assert(list.findlastnode("A").orderindex(), valuecount, "list.findlastnode(A)")
+         _.debug.assert(list.findlastnode("B").orderindex(), valuecount * 2, "list.findlastnode(B)")
+         _.debug.assert(list.findlastnode("C").orderindex(), valuecount * 3, "list.findlastnode(C)")
 
-        additem(list, "C", -5, 4)
-        if (showdebug) { segmentdump(list) }
+         var node = list.findfirstnode("B")
+         _.debug.assert(list.findnextnode(node, "B").orderindex(), 2 + valuecount, "list.findnextnode(B)")
+         _.debug.assert(list.findnextnode(node, "C").orderindex(), 1 + valuecount * 2, "list.findnextnode(C)")
 
-        additem(list, "A", 7, 4)
-        if (showdebug) { segmentdump(list) }
-
-        _.debug.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
-
-        // var result = []
-
-        // list.foreach(function(node) {
-        //     var level = node._topsegment._level
-        //     result[level] = (result[level] || 0) + 1
-        // })
-
-        // console.log("Level\tCount")
-        // var total = 0
-
-        // for (var index = 0; index <= result.length; index++) {
-        //     if (result[index]) {
-        //         total += result[index]
-        //     }
-        // }
-
-        // for (var index = 0; index <= result.length; index++) {
-        //     var levelvalue = result[index]
-
-        //     if (levelvalue) {
-        //         console.log(index + "\t" + levelvalue  + "\t" + _.math.perc(levelvalue, total))
-        //     }
-        // }        
-
+         var node = list.findlastnode("B")
+         var node2 = list.findprevnode(node, "A")
+         _.debug.assert(list.findprevnode(node, "B").orderindex(), -1 + valuecount * 2, "list.findprevnode(B)")
+         _.debug.assert(list.findprevnode(node, "A").orderindex(), valuecount, "list.findprevnode(A)")
     })

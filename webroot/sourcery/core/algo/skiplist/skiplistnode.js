@@ -8,8 +8,8 @@
 
 _.ambient.module("skiplistnode", function(_) {    
 
-    var valuecompare = function(searchvalue, matchvalue, option) {
-        switch(option) {
+    var valuecompare = function(searchvalue, matchvalue, compareoption) {
+        switch(compareoption) {
             case "<=":
                 return searchvalue <= matchvalue
             case ">=":
@@ -118,8 +118,8 @@ _.ambient.module("skiplistnode", function(_) {
         })
         
         this.searchbehavior = _.behavior(function() {
-            this.valueinsegment = function(searchvalue, option) {
-                return valuecompare(searchvalue, this.sortvalue(), option)
+            this.valueinsegment = function(searchvalue, compareoption) {
+                return valuecompare(searchvalue, this.sortvalue(), compareoption)
             }
         })
                

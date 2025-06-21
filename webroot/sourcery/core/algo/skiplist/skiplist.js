@@ -13,7 +13,6 @@ _.ambient.module("skiplist", function(_) {
 
         this._level = 1
         this._segmentsize = 7
-        this._segmentlevel = 8
 
         this._issortlist = false
         this._sortvaluename = undefined
@@ -31,7 +30,6 @@ _.ambient.module("skiplist", function(_) {
                 if (sortvaluename) { this._issortlist = true }
 
                 this._upsegment = _.model.skiplistsegment(this)
-//                this._upsegment = _.model.skiplistsegment(this, this._segmentlevel)
             }
 
             this.sortvaluename = function(value) {
@@ -71,16 +69,6 @@ _.ambient.module("skiplist", function(_) {
                 }
                 return this
             }
-
-            this.segmentlevel = function(value) { 
-                if (value === undefined) { return this._segmentlevel }
-
-                if (value > this._segmentlevel) { 
-                    this._segmentlevel = value
-                    _.model.skiplistsegment(this, value - 1)
-                }
-                return this
-            }
         })
 
         this.navigationbehavior = _.behavior(function() {
@@ -115,53 +103,40 @@ _.ambient.module("skiplist", function(_) {
             this.add = function(value, orderindex) {
                 var node = this._makenode(value)
                 var value = node.sortvalue(this)
-                var cursor;
+                var cursor
 
                 if (!this.count()) {
                     return node.assign(this)
                 }
 
-                // For sorted lists
                 if (this.issortlist()) {
-                    // Find first and last nodes with matching value
                     var firstMatch = this.findfirstnode(value)
                     var lastMatch = this.findlastnode(value)
                     
                     if (!firstMatch) {
-                        // No matching values - find correct position based on sort order
                         cursor = this.findfirstnode(value, "<")
-                        // If no smaller value found, insert at start
-                        if (!cursor) {
-                            cursor = this
-                        }
+                        if (!cursor) { cursor = this }
+
                     } else {
-                        // We have matching values - handle orderindex
                         if (!orderindex || orderindex === 0) {
-                            // Append after last matching value
                             cursor = lastMatch.segmentnext()
                         } else {
                             var matchCount = lastMatch.orderindex() - firstMatch.orderindex() + 1
                             
-                            if (orderindex < 0) {
-                                // Convert negative index to positive (counting from end)
-                                orderindex = matchCount + orderindex + 1
-                            }
+                            if (orderindex < 0) { orderindex = matchCount + orderindex + 1 }
                             
-                            // Validate orderindex is within bounds of matching values
                             if (orderindex < 1) { 
                                 orderindex = 1
                             } else if (orderindex > matchCount + 1) {
                                 orderindex = matchCount + 1
                             }
                             
-                            // Find the node at relative position within matching values
                             cursor = this.findrelativenode(firstMatch, orderindex - 1)
                         }
                     }
-                } else {  // For ordered lists
+                } else { 
                     if (orderindex) {
                         if (orderindex < 0) {
-                            // Handle negative indices from end
                             var lastNode = this.nodelast()
                             cursor = this.findrelativenode(lastNode, orderindex)
                         } else {
@@ -171,98 +146,72 @@ _.ambient.module("skiplist", function(_) {
                 }
 
                 return node.assign(cursor || this)
-
-                // If no position specified or found, append to end
-                // if (!cursor || cursor.isroot()) {
-                //     return node.assign(cursor);
-                // } else {
-                //     return node.assign(cursor, 1);    
-                // }
             }
         })
 
         this.searchbehavior = _.behavior(function() {
+                // The first element in the list has orderindex 1
+                // When searching for an element the index or the relative index can have a positive or negative value.
+                //     negative value: Search from the back. -1 points at the last element
+                //     positive value: Search from the front. 1 points at the first element
 
             this.nodebyindex = function(index) {
                 if (index <= 0) { index = this.count() + index }
                 if (index > this.count()) { return undefined }
 
-                var cursor = this.segmenttop();
+                var cursor = this.segmenttop()
 
                 while (index) {
                     if (cursor.level() == 1) {
                         if (cursor.isroot()) { cursor = cursor.segmentnext()}
 
                         while (!cursor.isroot() && (index > 1)) {
-                            index -= 1;
-                            cursor = cursor.segmentnext();
+                            index -= 1
+                            cursor = cursor.segmentnext()
                         }
-                        return cursor.isroot()? undefined : cursor;
+                        return cursor.isroot()? undefined : cursor
 
                     } else if (cursor._nodecount >= index) {
-                        cursor = cursor.segmentdown();
+                        cursor = cursor.segmentdown()
 
                     } else {
-                        index -= cursor._nodecount;
-                        cursor = cursor.segmentnext();
-                        if (cursor.isroot()) { return undefined; }
+                        index -= cursor._nodecount
+                        cursor = cursor.segmentnext()
+                        if (cursor.isroot()) { return undefined }
                     }
                 }
 
                 return undefined                
-            };
+            }
 
+            // this.findnode = function(search, relativeindex) {
+            //     if (!this.issortlist()) { throw "skiplist.findnode: List is not a sortlist" }
 
-            /*
-                Finds an element in a skiplist based on a search value and optional relative index.
-                
-                This function searches for a node in the skiplist that matches the given search value.
-                If a relative index is provided, it returns the node at that relative position from the first match.
-                
-                The search is optimized using the skiplist structure, allowing for efficient lookups.
-                
-                Parameters:
-                - search: The value to search for (optional)
-                - relativeindex: The relative position from the first matching node (optional)
-                                 Positive values move forward, negative values move backward
-                
-                Returns: The found node or undefined if not found
-                
-                Note: If no search value is provided, the function returns undefined.
-             */
-            this.findnode = function(search, relativeindex) {
-                if (!this.issortlist()) { throw "skiplistcursor.findfirst: List is not a sortlist"; }
+            //     if (search) {
+            //         if (relativeindex === undefined) { 
+            //             return this.findlastnode(search)
+            //         } else if (relativeindex < 0) {
+            //             var found = this.findlastnode(search)
+            //             return this.findrelativenode(found, relativeindex)
+            //         } else {
+            //             var found = this.findfirstnode(search)
+            //             return this.findrelativenode(found, relativeindex - 1)
+            //         }
+            //     }
+            // }
 
-                if (search) {
-                    if (relativeindex === undefined) { 
-                        return this.findlastnode(search);
-                    } else if (relativeindex < 0) {
-                        var found = this.findlastnode(search);
-                        return this.findrelativenode(found, relativeindex);
-                    } else {
-                        var found = this.findfirstnode(search);
-                        return this.findrelativenode(found, relativeindex - 1);
-                    }
-                }
-            };
-
-            /*
-                Finds elements in the skiplist based on search criteria.
-                
-                Parameters:
-                - search: The value to search for
-                - option: Comparison operator ('==', '<=', '>=', '>', '<'). Defaults to '=='
-                
-                Returns: The found node or undefined if not found
-            */
             this._segmenttraversenext = function(cursor, ismatch) {
                 if (ismatch && (cursor.level() > 1)) {
-                    cursor = cursor.segmentdown();
-                    if ((cursor.level() == 1) && cursor.isroot()) { cursor = cursor.segmentnext(); return (cursor.isroot()? undefined: cursor) }
+                    cursor = cursor.segmentdown()
+                    if ((cursor.level() == 1) && cursor.isroot()) { 
+                        cursor = cursor.segmentnext()
+                        return (cursor.isroot()? undefined: cursor)
+                    }
                     return cursor
+
                 } else {
-                    cursor = cursor.segmentnext();
-                    if (cursor.isroot()) { return undefined; }
+                    cursor = cursor.segmentnext()
+                    if (cursor.isroot()) { return undefined }
                     if (!ismatch) { cursor = cursor.segmenttop() }
                     return cursor
                 }
@@ -270,34 +219,53 @@ _.ambient.module("skiplist", function(_) {
                 return undefined
             }
             
-            this.findfirstnode = function(search, option) {
-                if (!this.issortlist()) { throw "skiplistcursor.findfirst: List is not a sortlist"; }
-                if (!this.count()) { return undefined; }
+            this.findfirstnode = function(search, compareoption) {
+                return this.findnextnode(null, search, compareoption)
+                // if (!this.issortlist()) { throw "skiplist.findfirstnode: List is not a sortlist" }
+                // if (!this.count()) { return undefined }
 
-                var cursor = this.segmenttop();
+                // var cursor = this.segmenttop()
 
-                if (search === undefined) { return undefined; }
-                option = option || "==";
+                // if (search === undefined) { return undefined }
+                // compareoption = compareoption || "=="
+
+                // while (cursor) {
+                //     if (cursor.valueinsegment(search, compareoption)) {
+                //         if (cursor.level() == 1) { return cursor }
+                //         cursor = this._segmenttraversenext(cursor, true)
+                //     } else {
+                //         cursor = this._segmenttraversenext(cursor, false)
+                //     }
+                // }
+            }
+            
+            this.findnextnode = function(segmentnode, search, compareoption) {
+                var cursor = segmentnode
+
+                if (!this.issortlist()) { throw "skiplist.findnextnode: List is not a sortlist" }
+                if (!this.count()) { return undefined }
+                if (search === undefined) { return undefined }
+                compareoption = compareoption || "=="
+
+                if (!cursor || cursor.isroot()) { //Support for findfirstnode
+                    cursor = this.segmenttop()
+                } else {
+                    cursor = cursor.segmentnext()
+                    if (cursor.isroot()) { return undefined }
+                }
 
                 while (cursor) {
-                    if (cursor.valueinsegment(search, option)) {
-                        if (cursor.level() == 1) { return cursor; }
-                        cursor = this._segmenttraversenext(cursor, true);
+                    if (cursor.valueinsegment(search, compareoption)) {
+                        if (cursor.level() == 1) { return cursor }
+                        cursor = this._segmenttraversenext(cursor, true)
                     } else {
-                        cursor = this._segmenttraversenext(cursor, false);
+                        cursor = this._segmenttraversenext(cursor, false)
                     }
                 }
-            }            
 
-            /*
-                Finds elements in the skiplist based on search criteria.
-                
-                Parameters:
-                - search: The value to search for
-                - option: Comparison operator ('==', '<=', '>=', '>', '<'). Defaults to '=='
-                
-                Returns: The found node or undefined if not found
-            */
+                return undefined
+            }
+
             this._segmenttraverseprev = function(cursor, ismatch) {
                 if (ismatch && (cursor.level() > 1)) {
                     cursor = cursor.segmentdown()
@@ -316,23 +284,52 @@ _.ambient.module("skiplist", function(_) {
                 return undefined
             }  
 
-            this.findlastnode = function(search, option) {
-                if (!this.issortlist()) { throw "skiplistcursor.findlast: List is not a sortlist" }
-                if (!this.count()) { return undefined }
+            this.findlastnode = function(search, compareoption) {
+                if (!this.issortlist()) { throw "skiplist.findlastnode: List is not a sortlist" }
+                return this.findprevnode(null, search, compareoption)                // var cursor = this.segmenttop()
 
-                var cursor = this.segmenttop()
-
-                if (search === undefined) { return undefined }                
-                option = option || "=="
+                // if (search === undefined) { return undefined }                
+                // compareoption = compareoption || "=="
                 
+                // while (cursor && cursor.level() > 1) {
+                //     var peek = cursor.segmentprev()
+
+                //     if (peek.valueinsegment(search, compareoption)) {
+                //         cursor = this._segmenttraverseprev(cursor, true)
+                //     } else {
+                //         cursor = this._segmenttraverseprev(cursor, false)
+                //     }
+                // }
+
+                // while (cursor) {
+                //     if (cursor.valueinsegment(search, compareoption)) { return cursor }
+                //     cursor = cursor.nodeprev()
+                // }
+
+                // return cursor
+            }
+            
+            this.findprevnode = function(segmentnode, search, compareoption) {
+                var cursor = segmentnode
+
+                if (!this.issortlist()) { throw "skiplist.findprevnode: List is not a sortlist" }
+                if (!this.count()) { return undefined }
+                
+                if (search === undefined) { return undefined }
+                compareoption = compareoption || "=="
+
+                if (!cursor || cursor.isroot()) { //Support for findfirstnode
+                    cursor = this.segmenttop()
+                } else {
+                    if (!(cursor instanceof _.model.skiplistnode)) { throw "skiplist.findprevnode: segmentnode should be a skiplistnode" }
+                    cursor = cursor.segmentprev()
+                    if (cursor.isroot()) { return undefined }
+                }                
+
                 while (cursor && cursor.level() > 1) {
                     var peek = cursor.segmentprev()
 
-                    // if (cursor.level() == 2) {
-                    //     var x = 10
-                    // }
-
-                    if (peek.valueinsegment(search, option)) {
+                    if (peek.valueinsegment(search, compareoption)) {
                         cursor = this._segmenttraverseprev(cursor, true)
                     } else {
                         cursor = this._segmenttraverseprev(cursor, false)
@@ -340,56 +337,44 @@ _.ambient.module("skiplist", function(_) {
                 }
 
                 while (cursor) {
-                    if (cursor.valueinsegment(search, option)) { return cursor }
+                    if (cursor.valueinsegment(search, compareoption)) { return cursor }
                     cursor = cursor.nodeprev()
                 }
 
                 return cursor
-            }           
+            }            
 
-
-            /*
-                Finds a node at a relative position from a given segment node.
-                Uses segment information for optimization when possible.
-                Positive indices move right, negative indices move left.
-                
-                Parameters:
-                - segmentnode: The starting segment node
-                - relativeindex: The relative position from the segment node
-                
-                Returns: The found node or undefined if not found
-            */
             this.findrelativenode = function(segmentnode, relativeindex) {
-                if (!segmentnode) { return undefined; }
-                if (relativeindex === 0) { return segmentnode; }
+                if (!segmentnode) { return undefined }
+                if (relativeindex === 0) { return segmentnode }
 
-                var cursor = segmentnode;
+                var cursor = segmentnode
 
                 if (relativeindex > 0) {
                     while (relativeindex > 0) {
-                        var segmentup = cursor.segmentup();
+                        var segmentup = cursor.segmentup()
 
                         if (segmentup && (segmentup._nodecount < relativeindex)) {
-                            cursor = segmentup;
+                            cursor = segmentup
 
                         } else if ((cursor.level() == 1) || (cursor._nodecount <= relativeindex)) {
-                            relativeindex -= (cursor.level() == 1? 1: cursor._nodecount);
-                            cursor = cursor.segmentnext();
-                            if (cursor.isroot()) { return undefined; }
+                            relativeindex -= (cursor.level() == 1? 1: cursor._nodecount)
+                            cursor = cursor.segmentnext()
+                            if (cursor.isroot()) { return undefined }
 
                         } else {
-                            cursor = cursor.segmentdown();
+                            cursor = cursor.segmentdown()
                         }
                     }
                     return cursor.base()
 
                 } else {
                     relativeindex = cursor.orderindex() + relativeindex
-                    if (relativeindex <= 0) { return undefined; }
-                    return this.nodebyindex(relativeindex);
+                    if (relativeindex <= 0) { return undefined }
+                    return this.nodebyindex(relativeindex)
                 }
-            };
-        });           
+            }
+        })           
       
         this.debugbehavior = _.behavior(function() {
             this.debugout = function () {
@@ -409,10 +394,10 @@ _.ambient.module("skiplist", function(_) {
                 this.foreach(function(node) {
                     result += node.value()
                     if (node != lastnode) { result += ", " }
-                });
+                })
                 
                 return result
-            };
+            }
 
             this.debugvalidate = function() {
                 var errors = []
