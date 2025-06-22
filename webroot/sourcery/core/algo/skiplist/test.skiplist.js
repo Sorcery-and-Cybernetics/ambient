@@ -1,4 +1,4 @@
-_.ambient.module("skiplist.test")
+_.ambient.module("test.skiplist")
     .ontest("skiplist", function(_, next) {
         var me = this
         var showdebug = false

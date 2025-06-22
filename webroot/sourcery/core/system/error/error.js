@@ -1,6 +1,10 @@
-//*************************************************************************************************
-// error - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
 
 //todo: Lazy implement error object, depending on debug mode settings, not all is necessary to parse. Turn all properties into traits.
 _.ambient.module("error").source(function (_) {

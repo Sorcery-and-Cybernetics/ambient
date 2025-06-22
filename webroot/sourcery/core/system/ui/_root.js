@@ -1,1 +1,0 @@
-_.ambient.rootmodule("client/")
