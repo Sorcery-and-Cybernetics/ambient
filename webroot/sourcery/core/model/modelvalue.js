@@ -16,6 +16,12 @@ _.ambient.module("modelvalue", function(_) {
             if (value) { this.let(value) }
         }
 
+        this.assign = function(parent, name, orderindex) {
+            if (name) { this._name = name }
+            _.modelagent.registermodel(parent, this, orderindex)
+            return this
+        }
+
         this.initial = function(value) {
             if (value === undefined) { return this._initial }
 
@@ -28,6 +34,11 @@ _.ambient.module("modelvalue", function(_) {
             if (this.hasself()) { return this._self._self }
             return undefined
         }
+
+        this.selfnode = function() {
+            if (this.hasself()) { return this._self }
+            return undefined
+        }        
 
         this.hasself = function() { return this._self? true: false }
 

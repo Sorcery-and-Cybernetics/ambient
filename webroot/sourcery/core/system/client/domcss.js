@@ -20,7 +20,7 @@ _.ambient.module("domcss", function(_) {
         }
     })
 
-    _.define.object("controlstyleclass", function () {
+    _.define.model("controlstyleclass", function () {
         this.construct = function (control, classname, css) {
             var styleclasses = control.currentstyle.styleclasses
             var styleclass = styleclasses[classname] || (styleclasses[classname] = _.shallowclone(control.__styleclasses[classname] || {}))

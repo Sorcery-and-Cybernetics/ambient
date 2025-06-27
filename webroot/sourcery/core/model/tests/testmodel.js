@@ -8,10 +8,14 @@ _.ambient.module("testmodel", function(_) {
 .ontest("testmodel", function(_) {    
     var object1 = _.model.test.model() 
 
+    var x = object1.teststring()
+
     this.test(object1.teststring().get(), "Test String")
     this.test(object1.teststring().value(), "Test String")
 
     object1.teststring().let("New String")
     this.test(object1.teststring(), "New String")
+
+    //_.console.log("mooo!!!")
 })  
 

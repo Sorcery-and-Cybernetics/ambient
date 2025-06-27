@@ -19,7 +19,7 @@ _.ambient.module("modelagent", function(_) {
             this._models = {}
         }
 
-        this.registermodel = function(model) {
+        this.registermodel = function(parent, model, orderindex) {
             var uid = model._uid
 
             if (uid) { 
@@ -47,7 +47,7 @@ _.ambient.module("modelagent", function(_) {
             return this
         } 
         
-        this.getmodel = function(uid) {
+        this.getmodel = function(modelid) {
             return this._models[uid]
         }
 

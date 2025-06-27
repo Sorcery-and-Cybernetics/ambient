@@ -11,12 +11,18 @@ _.ambient.module("model", function(_) {
         this._self = undefined
         this.uid = _.model.property()
 
-        this.construct = function() {
-            _.modelagent.registermodel(this)
+        this.assign = function(parent, name, orderindex) {
+            if (name) { this._name = name }
+            _.modelagent.registermodel(parent, this, orderindex)
         }        
 
         this.self = function () {
             if (this.hasself()) { return this._self._self }
+            return undefined
+        }
+
+        this.selfnode = function() {
+            if (this.hasself()) { return this._self }
             return undefined
         }
         

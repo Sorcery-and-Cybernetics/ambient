@@ -1,6 +1,11 @@
-//*************************************************************************************************
-// basicdebug - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
+// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("basicdebug", function (_) {
     _.debug = function (text) {
         return _.debug.write("debug", arguments)
@@ -24,13 +29,8 @@ _.ambient.module("basicdebug", function (_) {
         }
 
         if (mode != "silent") {
-            if ((typeof console !== "undefined") && console.log) {
-                if (mode && _.isserver) {
-                    console.log(_.debug.consolecolors[mode.toLowerCase()] + line + _.debug.consolecolors["eol"])
-                } else {
-                    console.log(line)
-                }
-            }
+            //_.console.log(line, mode)
+            console.log(line)
         }
         return line
     }
