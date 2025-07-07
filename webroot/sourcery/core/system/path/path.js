@@ -7,6 +7,13 @@ _.ambient.module("path", function (_) {
     _.path = _.path || {}
     var copybuffersize = 64 * 1024
 
+    var nodejspath = function (path) {
+        path = path || ""
+        if (path.indexOf(":/") >= 0) { return path }
+
+        return (path.substr(0, 1) == "/" ? "." + path : "./" + path)
+    }    
+
     _.path.fileexists = function (src) {
         try {
             return fs.statSync(src).isFile()

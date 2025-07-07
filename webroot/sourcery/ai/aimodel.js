@@ -18,8 +18,8 @@ _.ambient.module("aimodel", function(_) {
         }
 
         this.query = async function(aichatagent) {
-            if (!aichatagent || !(aichatagent instanceof _.model.aichatagent)) { throw new Error('No valid aichatagent object specified') }
-
+            if (!aichatagent || !(aichatagent instanceof _.model.aichatagent)) { throw "Error: No aichatagent provided" }
+            
             return new Promise((resolve, reject) => {
                 this._queue.push({ aichatagent, resolve, reject })
                 this._processQueue()

@@ -11,8 +11,10 @@ _.ambient.module("console", function (_) {
         this.construct = function() {
             var me = this
 
+            process.stdin.setEncoding('utf8')
+
             process.stdin.on('data', function(data) {
-                me.onlinein(data.trim())
+                me.oninput(data.trim())
             })        
         }
 
@@ -26,11 +28,21 @@ _.ambient.module("console", function (_) {
             }
         }
 
+        this.write = function (text, mode) {
+            if (!process || !process.stdout || !process.stdout.write) { return }
+
+            if (mode && _.isserver) {
+                process.stdout.write(_.debug.consolecolors[mode.toLowerCase()] + text + _.debug.consolecolors["eol"])
+            } else {
+                process.stdout.write(text)
+            }
+        }
+
         this.clear = function() {
             if ((console == null) || !console.log) { return }
             console.clear()
         }
 
-        this.onlinein = _.model.signal()
+        this.oninput = _.model.signal()
     })
 })

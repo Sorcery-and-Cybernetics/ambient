@@ -78,7 +78,7 @@ _.ambient.module("aichatagent", function(_) {
             this._busy = true
 
             if (this.toolagent()) { 
-                toolprompt = await this.toolagent().send("System prompt: Your name is " + this.name() + ". " + this.systemprompt() + ".\n\nPrompt: " + prompt) 
+                toolprompt = await this.toolagent().send(prompt) 
                 this.addtoolmessage(toolprompt)
             }
             this.addusermessage(prompt) 
@@ -110,15 +110,15 @@ _.ambient.module("aichatagent", function(_) {
 })
 .onload (async function(_) {
     return
-    var aimodel = _.model.aimodel("jenifer")
+    var aimodel = _.model.aimodel("ai")
     var toolagent = _.model.aitoolagent("toolagent", aimodel)
     
-    toolagent.addtool("getage", "name", "Returns the age of the person", function(params) {
+    toolagent.addtool("getage", "name", "Returns the age of the person", function(prompt, params) {
         var age = 20 + (params.name.length * 365 + params.name.charCodeAt(0)) % 60
         return age
     })
 
-    toolagent.addtool("gethouse", "personname", "Returns a house that fits this person", function(params) {
+    toolagent.addtool("gethouse", "personname", "Returns a house that fits this person", function(prompt, params) {
         switch (params.personname) {
             case "Troll":
                 return "A hut close to a river"

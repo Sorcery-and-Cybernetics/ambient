@@ -63,7 +63,7 @@ _.ambient.module("file", function (_) {
             if (!path || !_.isstring(path)) { throw "Error: path should be a string" }
             if (!_.isdir$(path)) { throw "Error: Path is not a path" }
             
-            var filename = this.fullname()
+            var filename = this.fullpath()
             var newfilename = path + this.name() + "." + this.extension()
             
             try {
@@ -78,30 +78,30 @@ _.ambient.module("file", function (_) {
 
         //read file as text
         this.readastext = function () {
-            var filename = this.fullname()
+            var filename = this.fullpath()
 
-            var result = _.path.readastext(filename)
+            var result = _.path.loadfile(filename, "utf-8")
             return result
         }
         //read file as binary
         this.readasbinary = function () {
-            var filename = this.fullname()
+            var filename = this.fullpath()
 
-            var result = _.path.readasbinary(filename)
+            var result = _.path.loadfile(filename, "binary")
             return result
         }
 
         this.writeastext = function () {
-            var filename = this.fullname()
+            var filename = this.fullpath()
 
-            var result = _.path.writeastext(filename)
+            var result = _.path.savefile(filename, "utf-8")
             return result
         }
 
         this.writeasbinary = function () {
-            var filename = this.fullname()
+            var filename = this.fullpath()
 
-            var result = _.path.readastext(filename)
+            var result = _.path.savefile(filename, "binary")
             return result
         }        
     })
