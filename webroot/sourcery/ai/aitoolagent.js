@@ -1,6 +1,11 @@
-//*************************************************************************************************
-// aitoolagent - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 2025 Sorcery and Cybernetics (SAC). All rights reserved.
+//
+// Style: Be Basic!
+// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
+// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("aitoolagent", function(_) {    
     _.define.aichatagent("aitoolagent", function() {
         this.streammode = _.model.property(false)
