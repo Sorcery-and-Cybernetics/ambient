@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 //todo: seperate resize and dragevent 
@@ -227,7 +227,7 @@ _.ambient.module("domeventhandler", function(_) {
                             if (!mousedownevent) {
                                 break
                             }
-                            if (mousedownevent.scrolltop !== undefined) {
+                            if (mousedownevent.scrolltop != null) {
                                 var scrollbox = ctrl.findparentscrollbox()
                                 //help with monkey clicks on add action, scrollbox is null     
                                 if (scrollbox && Math.abs(scrollbox.element.scrollTop - mousedownevent.scrolltop) > 8) {

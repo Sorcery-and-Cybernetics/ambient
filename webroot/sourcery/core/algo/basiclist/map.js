@@ -1,9 +1,14 @@
-//*************************************************************************************************
-// map - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("map", function(_) {
     _.define.object("map", function (supermodel) {
-        this._value = undefined
+        this._value = null
 
         this.construct = function () {
             this._value = {}
@@ -23,7 +28,7 @@ _.ambient.module("map", function(_) {
 
         this.has = function (key) {
             if (key == null) { throw "Map.has: key is null" }
-            return (this._value[key] !== undefined)
+            return (this._value[key] != null)
         }
 
         this.del = function (key) {
@@ -132,7 +137,7 @@ _.ambient.module("map", function(_) {
     map.del("d")
 
     this.assert(map.length(), 4, "map.length()")
-    this.assert(map.get("d"), undefined, "map.get()")
+    this.assert(map.get("d"), null, "map.get()")
     this.assert(map.has("d"), false, "map.has()")
     this.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "e": 5 }, "map.tojson()")
 

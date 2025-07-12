@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 //todo: We need to track text selection better. This also means that controls should a selectable state.
@@ -164,7 +164,7 @@ _.ambient.module("domevent", function(_) {
             this._name = eventdef.name || event.type
             this.domevent = event.type
             this.behaviortype = eventdef.behaviortype || _.efb.none
-            this.cancelbubble = eventdef.cancelbubble !== undefined ? eventdef.cancelbubble : false
+            this.cancelbubble = eventdef.cancelbubble != null ? eventdef.cancelbubble : false
 
             //todo: Understand what is happening here. The && is weird
             if (_.domhelper.eventhistory["mousedown"] && _.domhelper.eventhistory["mousedown"].istouch && (this.name == "mouseup")) {
@@ -178,7 +178,7 @@ _.ambient.module("domevent", function(_) {
             }
 
             //Todo: Cross browser scrollposition of the page
-            //typeof window.pageYOffset != 'undefined' ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
+            //window.pageYOffset != null ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
             this.keycode = event.keyCode
             this.key = _.dom.keycodes[event.keyCode]
             this.ctrlkey = event.ctrlKey

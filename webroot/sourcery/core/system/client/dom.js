@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("dom", function(_) {
@@ -15,7 +15,7 @@ _.ambient.module("dom", function(_) {
 
         this.lasttouchtime = 0
         this.lastmousetime = 0
-        this.eventhistory = undefined
+        this.eventhistory = null
 
         this.construct = function() {
             this.eventhistory = {}
@@ -110,7 +110,7 @@ _.ambient.module("dom", function(_) {
             } else {
                 element.parentNode.removeChild(element)
             }
-            return undefined
+            return null
         } 
     })    
 })

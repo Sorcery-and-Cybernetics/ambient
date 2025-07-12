@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("httpresponse", function (_) {
@@ -25,21 +25,21 @@ _.ambient.module("httpresponse", function (_) {
         this.compress = false
         this.timestart = 0
 
-        this.sendbuffer = undefined
+        this.sendbuffer = null
         this.httpcode = 200
         this._mimetype = ""
 
-        this.routedef = undefined
-        this.params = undefined
-        this._cookie = undefined
+        this.routedef = null
+        this.params = null
+        this._cookie = null
 
         this.url = ""
         this.query = ""
-        this.path = undefined
+        this.path = null
 
-        this.sendstream = undefined
+        this.sendstream = null
         this.timeoutwarningduration = 500
-        this.session = undefined
+        this.session = null
 
         this.construct = function (server, request, response) {
             var me = this
@@ -163,7 +163,7 @@ _.ambient.module("httpresponse", function (_) {
         }
 
         this.clear = function () {
-            this.sendbuffer = undefined
+            this.sendbuffer = null
             return this
         }
 
@@ -190,7 +190,7 @@ _.ambient.module("httpresponse", function (_) {
         
         this.writebuffer = function () {
             var data = this.sendbuffer
-            this.sendbuffer = undefined
+            this.sendbuffer = null
 
             switch (_.vartype(data)) {
                 case _.vtarray:
@@ -338,7 +338,7 @@ _.ambient.module("httpresponse", function (_) {
                 }
             })
 
-            return next? undefined: buffer
+            return next? null: buffer
         }
 
         this.sendfile = function (filename) {
@@ -441,7 +441,7 @@ _.ambient.module("httpresponse", function (_) {
                             transferred += data.length
                         })
                         .on("finish", function () {
-                            me.sendstream = undefined
+                            me.sendstream = null
                         })
 
                 })
@@ -460,7 +460,7 @@ _.ambient.module("httpresponse", function (_) {
                 , port: path.port
                 , path: path.path
                 , method: this.req.method
-                , agent: undefined
+                , agent: null
                 , headers: this.req.headers
             }
 
@@ -503,12 +503,12 @@ _.ambient.module("httpresponse", function (_) {
 
             if (this.sendstream) {
                 this.sendstream.destroy()
-                this.sendstream = undefined
+                this.sendstream = null
             }
 
-            this.server = undefined
-            this.res = undefined
-            this.req = undefined
+            this.server = null
+            this.res = null
+            this.req = null
 
             this.state = this.states.destroyed
         }

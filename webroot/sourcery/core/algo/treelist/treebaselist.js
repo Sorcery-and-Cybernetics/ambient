@@ -3,12 +3,12 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("treebaselist", function (_) {
     _.define.object("treebaselist", function () {
-        this._rootnode = undefined
+        this._rootnode = null
 
         this.count = function() {
             return this._rootnode ? this._rootnode._count : 0
@@ -133,19 +133,19 @@ _.ambient.module("treebaselist", function (_) {
                         return current
                 }
             }
-            return undefined
+            return null
         }
 
         this.firstitem = function(){
             var cursor = this.nodefirst()
 
-            return cursor? cursor.item(): undefined
+            return cursor? cursor.item(): null
         }
 
         this.lastitem = function () {
             var cursor = this.nodelast()
 
-            return cursor ? cursor.item() : undefined
+            return cursor ? cursor.item() : null
         }
 
         this.nodefirst = function () {

@@ -1,11 +1,15 @@
-//*************************************************************************************************
-// aliasnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
 
 _.ambient.module("aliasnode", function(_) {    
     _.define.object("alias.node", function (supermodel) {
-        this._object = undefined
-        this._links = undefined
+        this._object = null
+        this._links = null
 
         this.construct = function(object) {
             this._object = object
@@ -17,7 +21,7 @@ _.ambient.module("aliasnode", function(_) {
         }
 
         this.getvalue = function(name) {
-            return this._object? this._object.get(name) : undefined
+            return this._object? this._object.get(name) : null
         }
 
         this.clear = function() {
@@ -25,7 +29,7 @@ _.ambient.module("aliasnode", function(_) {
                 _.foreach(this._links, function(link) {
                     link.destroy()
                 })
-                this._links = undefined
+                this._links = null
             }
         } 
         

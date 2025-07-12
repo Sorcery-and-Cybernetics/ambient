@@ -23,7 +23,8 @@ _.ambient.module("property", function (_) {
                     var result = def._onset.call(me, value, oldvalue)
 
                     if (result !== undefined) { value = result }
-                } 
+                }
+                
                 me[traitname] = value
 
                 if (def._onchange) {
@@ -36,7 +37,7 @@ _.ambient.module("property", function (_) {
     }
 
     _.define.defextender("property", function(supermodel) {
-        this._initial = undefined
+        this._initial = null
 
         this.construct = function(initial) {
             this._initial = initial

@@ -1,23 +1,23 @@
 //****************************************************************************************************************************
-// Ambient - Copyright (c) 2025 Sorcery and Cybernetics (SAC). All rights reserved.
-//
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("god", function(_) {
     _.define.object("god", function() {
-        this.config = undefined
+        this.config = null
         this.name = ""
-        this.world = undefined
-        this.requires = undefined
-        this.loaded = undefined
+        this.world = null
+        this.requires = null
+        this.loaded = null
         this.isstarted = false
 
         this.construct = function(system, name, config) {
             this.name = name
-            this.config = config || undefined
+            this.config = config || null
             this.requires = {}
             this.roleengine = _.model.roleengine()
         }

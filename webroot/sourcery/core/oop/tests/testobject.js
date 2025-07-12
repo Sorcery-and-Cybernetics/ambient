@@ -2,16 +2,16 @@ _.ambient.module("testobject", function(_) {
 
     //Define a new trait
     _.define.object("test.trait", function(supermodel) {
-        this._initial = undefined
-        this._value = undefined
+        this._initial = null
+        this._value = null
 
         this.construct = function(value) { //the constructor
             if (value) { this._value = value }
         }
 
         this.destroy = function() { //the destructor
-            this._value = undefined
-            this._initial = undefined
+            this._value = null
+            this._initial = null
         }
 
         this.let = function (value) {

@@ -1,15 +1,20 @@
-//*************************************************************************************************
-// testtest - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("unittest", function (_) {
 })
 .onload(function(_) {
     
     _.define.object("unittestline", function() {
-        this._unittest = undefined
+        this._unittest = null
         this._grouptitle = ""
-        this._assert = undefined
-        this._expected = undefined
+        this._assert = null
+        this._expected = null
         this._message = ""
         this._method = ""
         this._failed = false 
@@ -58,13 +63,13 @@ _.ambient.module("unittest", function (_) {
         this.evaluate = function() {
             switch (this._method) {
                 case "is":
-                    if (((this._expected === undefined) && (this._assert != null)) || (!_.var.deepcompare(this._assert, this._expected))) {
+                    if (((this._expected == null) && (this._assert != null)) || (!_.var.deepcompare(this._assert, this._expected))) {
                         this._failed = true
                     }
                     break
 
                 case "isnot":
-                    if (((this._expected === undefined) && (this._assert == null)) || (_.var.deepcompare(this._assert, this._expected))) {
+                    if (((this._expected == null) && (this._assert == null)) || (_.var.deepcompare(this._assert, this._expected))) {
                         this._failed = true
                     }
                     break
@@ -109,17 +114,17 @@ _.ambient.module("unittest", function (_) {
     })
 
     _.define.object("unittest", function() {
-        this._unittester = undefined
-        this._modulename = undefined
-        this._testname = undefined
-        this._lines = undefined
+        this._unittester = null
+        this._modulename = null
+        this._testname = null
+        this._lines = null
         this._showall = false
 
         this._failcount = 0
         this._promisecount = 0
 
         this._currentgroup = ""
-        this._source = undefined
+        this._source = null
         
         this.construct = function(unittester, modulename, testname, source) {
             this._unittester = unittester
@@ -194,12 +199,12 @@ _.ambient.module("unittest", function (_) {
                 result.push(line.debugout())
             }
 
-            return result.length? result: undefined
+            return result.length? result: null
         }
     })
 
     _.define.object("unittester", function() {
-        this._tests = undefined
+        this._tests = null
         this._failcount = 0
 
         this.create = function() {

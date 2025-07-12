@@ -1,6 +1,11 @@
-//*************************************************************************************************
-// date - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("date", function(_) {
     _.define.modelvalue("date", function (supermodel) {    
     //_.months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
@@ -9,7 +14,7 @@ _.ambient.module("date", function(_) {
     //_.daysshort = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
 
     var safedate = function (value) {
-        if (value == null) { return undefined }
+        if (value == null) { return null }
         if (_.isdate(value)) { return value }
 
         if (value instanceof _.model.date) { return value.get() }

@@ -1,8 +1,8 @@
 _.ambient.rootmodule("core/")
     .include("debug/")
     .include("base/")
-    .include("async/")
     .include("oop/")
+    .include("async/")
     .include("algo/")
     .include("model/")
 

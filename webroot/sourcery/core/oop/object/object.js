@@ -1,17 +1,22 @@
-//*************************************************************************************************
-// object - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("object").source(function (_) {
     _.model = function() {}
     _.model.object = function () { }
 
     _.model.object.prototype = {
-        _parent: undefined
-        , _name: undefined
+        _parent: null
+        , _name: null
         , _modelname: "object"
-        , _supermodel: undefined
+        , _supermodel: null
         , _phase: 0
-        , _definition: undefined
+        , _definition: null
 
         , parent: function() { return this._parent }
         , name: function() { return this._name }        

@@ -1,4 +1,5 @@
 _.ambient.rootmodule("ai/")
+    .require("sourcery/core/async/")
     .include("aichatagent")
     .include("aitoolagent")
     .include("aimodel")

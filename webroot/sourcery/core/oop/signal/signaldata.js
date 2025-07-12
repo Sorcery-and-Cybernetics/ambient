@@ -1,11 +1,16 @@
-//*************************************************************************************************
-// signaldata - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("signaldata", function(_) {    
     _.define.object("signaldatanode", function (supermodel) {
-        this.fnevent = undefined
-        this._nodenext = undefined
-        this._nodeprev = undefined
+        this.fnevent = null
+        this._nodenext = null
+        this._nodeprev = null
         this._isroot = false
 
         this.construct = function(fnevent) {
@@ -13,27 +18,27 @@ _.ambient.module("signaldata", function(_) {
         }
 
         this.next = function() {
-            return this._nodenext && this._nodenext._isroot ? undefined : this._nodenext
+            return this._nodenext && this._nodenext._isroot ? null : this._nodenext
         }
 
         this.prev = function() {
-            return this._nodeprev && this._nodeprev._isroot ? undefined : this._nodeprev
+            return this._nodeprev && this._nodeprev._isroot ? null : this._nodeprev
         }
 
         this.destroy = function() {
             this._nodenext._nodeprev = this._nodeprev
             this._nodeprev._nodenext = this._nodenext
 
-            this._nodenext = undefined
-            this._nodeprev = undefined
+            this._nodenext = null
+            this._nodeprev = null
         }
     })
 
     _.define.object("signaldatalist", function (supermodel) {
-        this._parent = undefined
-        this._name = undefined
-        this._nodenext = undefined
-        this._nodeprev = undefined
+        this._parent = null
+        this._name = null
+        this._nodenext = null
+        this._nodeprev = null
         this._isroot = false
 
         this.construct = function(parent, name) {
@@ -57,7 +62,7 @@ _.ambient.module("signaldata", function(_) {
 
         this.foreach = function(fn) {
             var cursor = this._nodenext
-            var nextcursor = undefined
+            var nextcursor = null
 
             while (cursor && cursor != this) {
                 nextcursor = cursor._nodenext
@@ -71,16 +76,16 @@ _.ambient.module("signaldata", function(_) {
             while (this._nodenext && this._nodenext != this) {
                 this._nodenext.destroy()
             }
-            this._nodenext = undefined
-            this._nodeprev = undefined
-            this._parent = undefined
-            this._name = undefined
+            this._nodenext = null
+            this._nodeprev = null
+            this._parent = null
+            this._name = null
         }
     })
 
     _.define.object("signaldata", function (supermodel) {
-        this.object = undefined
-        this.signals = undefined
+        this.object = null
+        this.signals = null
 
         this.construct = function(object) {
             this.object = object

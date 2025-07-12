@@ -3,12 +3,12 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("timer", function(_) {  
     _.define.globalobject("timer", function (supermodel) {
-        var performancetimer = undefined
+        var performancetimer = null
     
         if (false) {//(typeof window != 'undefined') && window.requestAnimationFrame) {
             performancetimer = window["requestAnimationFrame"]
@@ -30,7 +30,7 @@ _.ambient.module("timer", function(_) {
         this.msminute = 60000
         this.mssecond = 1000
 
-        this.timers = undefined
+        this.timers = null
 
         this.datestring = ""
         this.timestring = ""

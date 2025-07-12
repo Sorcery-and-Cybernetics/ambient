@@ -4,11 +4,11 @@
 _.ambient.module("linkedlistnode", function (_) {
 
     _.define.object("linkedlistnode", function (supermodel) {
-        this._nodenext = undefined
-        this._nodeprev = undefined
+        this._nodenext = null
+        this._nodeprev = null
 
-        this._list = undefined
-        this._value = undefined
+        this._list = null
+        this._value = null
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function(value) {
@@ -70,14 +70,14 @@ _.ambient.module("linkedlistnode", function (_) {
                 if (this._nodenext) { this._nodenext._nodeprev = this._nodeprev }
                 if (this._nodeprev) { this._nodeprev._nodenext = this._nodenext }
 
-                this._list = undefined
-                this._nodenext = undefined
-                this._nodeprev = undefined
+                this._list = null
+                this._nodenext = null
+                this._nodeprev = null
             }
 
             this.destroy = function () {
                 if (this._list) { this.unlink() }
-                return undefined
+                return null
             }
         });
 
@@ -104,11 +104,11 @@ _.ambient.module("linkedlistnode", function (_) {
 
         this.navigationbehavior = _.behavior(function() {
             this.nodenext = function () {
-                return !this._nodenext || (this._nodenext == this._list ? undefined : this._nodenext)
+                return !this._nodenext || (this._nodenext == this._list ? null : this._nodenext)
             }
 
             this.nodeprev = function () {
-                return !this._nodeprev || (this._nodeprev == this._list ? undefined : this._nodeprev)
+                return !this._nodeprev || (this._nodeprev == this._list ? null : this._nodeprev)
             }
         })
     })

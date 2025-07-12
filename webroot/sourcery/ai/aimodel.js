@@ -1,17 +1,17 @@
 //****************************************************************************************************************************
-// Ambient - Copyright (c) 2025 Sorcery and Cybernetics (SAC). All rights reserved.
-//
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("aimodel", function(_) {    
     _.define.object("aimodel", function (supermodel) {
-        this._apiurl = "http://localhost:11434/api/chat"
+        this._apiurl = "http://localhost:11434/api/chat/"
         this._model = "llama3"
-        this._currentchat = undefined
-        this._abortcontroller = undefined
+        this._currentchat = null
+        this._abortcontroller = null
 
         // New: queue and processing state
         this._queue = []

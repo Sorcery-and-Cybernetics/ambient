@@ -1,14 +1,19 @@
-//*************************************************************************************************
-// method - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("method", function (_) {
     var makemethod = function (def, proto) {      
         return def._source
     }
 
     _.define.defextender("method", function(supermodel) {
-        this.params = undefined
-        this.paramnames = undefined
+        this.params = null
+        this.paramnames = null
 
         this.construct = function(source, args) {
             this.params = {}

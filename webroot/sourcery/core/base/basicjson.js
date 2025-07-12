@@ -10,14 +10,14 @@ _.ambient.module("basicjson").source(function (_) {
                     , value: obj[index]
                 }
             }
-            return undefined
+            return null
         }
 
         _.json.parse = function (data) {
             try {
                 return JSON.parse(data)
             } catch (e) {
-                return undefined
+                return null
             }
         }
 
@@ -37,7 +37,7 @@ _.ambient.module("basicjson").source(function (_) {
         _.json.stringify = JSON.stringify
 
         _.json.keys = function (json) {
-            return json ? Object.keys(json) : undefined
+            return json ? Object.keys(json) : null
         }
         //, trim: function (json) {
         //    var keys = _.json.keys(json)
@@ -53,7 +53,7 @@ _.ambient.module("basicjson").source(function (_) {
 
 
         _.json.get = function (json, name, delim) {
-            if (!json) { return undefined }
+            if (!json) { return null }
 
             delim = delim || "."
 
@@ -85,7 +85,7 @@ _.ambient.module("basicjson").source(function (_) {
                 //if (parts.name == "data") { editonly = false }
                 changed = _.json.set(json[parts.key], parts.value, value, delim, editonly)
             } else {
-                if (!editonly || json[name] != undefined) {
+                if (!editonly || json[name] !== undefined) {
                     if (_.isfunction(json[name])) {
                         json[name](value)
                     } else {
@@ -492,7 +492,7 @@ _.ambient.module("basicjson").source(function (_) {
 
         _.filter = function (items, filter, context) {
             var result = []
-            var fnfilter = undefined
+            var fnfilter = null
 
             if (_.isfunction(filter)) {
                 fnfilter = filter.bind(context)
@@ -525,7 +525,7 @@ _.ambient.module("basicjson").source(function (_) {
                 for (var keyindex = 0; keyindex < keys.length; keyindex++) {
                     var key = keys[keyindex]
                     var initial = initialvalues[key]
-                    var value = valueindex < values.length ? values[valueindex] : undefined
+                    var value = valueindex < values.length ? values[valueindex] : null
 
                     if (initial != Function) {
                         if (_.isfunction(value)) {
@@ -540,7 +540,7 @@ _.ambient.module("basicjson").source(function (_) {
                             valueindex++
                         } else {
                             //Error???
-                            result[key] = (initial == Function ? undefined : initial)
+                            result[key] = (initial == Function ? null : initial)
                         }
                     }
                 }

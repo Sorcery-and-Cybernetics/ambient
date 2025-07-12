@@ -1,5 +1,6 @@
 _.ambient.rootmodule("model/")
-    .require("sourcery/core/oop/")
+    .require("sourcery/core/async/")
+    .require("sourcery/core/algo/")
     .include("selfnode")
     .include("modelagent")
     .include("modelvalue")

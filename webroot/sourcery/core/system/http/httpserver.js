@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("httpserver", function (_) {
@@ -13,20 +13,20 @@ _.ambient.module("httpserver", function (_) {
 
     _.define.object("httpserver", function (supermodel) {
         this.certpath = "./config/";
-        this.httpserver = undefined
-        this.httpsserver = undefined
+        this.httpserver = null
+        this.httpsserver = null
 
-        this.ip = undefined
+        this.ip = null
         this.port = 443;
-        this.certname = undefined
-        this.certpassword = undefined
-        this.certpfx = undefined
+        this.certname = null
+        this.certpassword = null
+        this.certpfx = null
         this.compress = false
 
         this.blockrequests = false
 
-        // this._onrequest = undefined
-        // this._onerror = undefined
+        // this._onrequest = null
+        // this._onerror = null
 
         this.construct = function (name, port) {
             this._name = name;
@@ -95,7 +95,7 @@ _.ambient.module("httpserver", function (_) {
                 
 
             this.httpserver = server
-            server.listen(this.port, this.ip || undefined)
+            server.listen(this.port, this.ip || null)
                 
             return this
         }

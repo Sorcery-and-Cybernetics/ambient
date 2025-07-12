@@ -1,22 +1,22 @@
 //****************************************************************************************************************************
-// Ambient - Copyright (c) 2025 Sorcery and Cybernetics (SAC). All rights reserved.
-//
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("requiremodule", function(_) {
     _.define.object("requiremodule", function(supermodel) {
-        this._parent = undefined
-        this._loader = undefined
+        this._parent = null
+        this._loader = null
         this._name = ""
         this._rule = ""
         this._isloaded = false
         this._source = ""
 
         this.construct = function(parent, name, rule) {
-            this._parent = parent._loader? parent: undefined
+            this._parent = parent._loader? parent: null
             this._loader = parent._loader? parent._loader: parent
             this._name = name
             this._rule = rule

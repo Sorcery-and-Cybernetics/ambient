@@ -1,12 +1,17 @@
-//*************************************************************************************************
-// file - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("file", function (_) {
     _.define.object("file", function (supermodel) {
-        this._drive = undefined
-        this._path = undefined
-        this._name = undefined
-        this._extension = undefined
+        this._drive = null
+        this._path = null
+        this._name = null
+        this._extension = null
 
         this.construct = function (path) {
             var path = _.path.splitpath(path)

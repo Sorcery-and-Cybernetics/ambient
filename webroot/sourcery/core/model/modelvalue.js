@@ -2,15 +2,15 @@
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
 // 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("modelvalue", function(_) {
     _.define.object("modelvalue", function (supermodel) {
-        this._initial = undefined
-        this._self = undefined
-        this._value = undefined
+        this._initial = null
+        this._self = null
+        this._value = null
 
         this.construct = function (value) {
             if (value) { this.let(value) }
@@ -32,12 +32,12 @@ _.ambient.module("modelvalue", function(_) {
 
         this.self = function () {
             if (this.hasself()) { return this._self._self }
-            return undefined
+            return null
         }
 
         this.selfnode = function() {
             if (this.hasself()) { return this._self }
-            return undefined
+            return null
         }        
 
         this.hasself = function() { return this._self? true: false }
@@ -69,7 +69,7 @@ _.ambient.module("modelvalue", function(_) {
             }
 
             //todo: add check to see if value type matches, self can only be set if it is part of the inheritance chain.
-            this._value = undefined
+            this._value = null
             _.modelagent.assignself(this, value)
             return this
         }

@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("skiplistsegment", function (_) {
@@ -19,19 +19,19 @@ _.ambient.module("skiplistsegment", function (_) {
                 return searchvalue > matchvaluefloor
             case "<":
                 return searchvalue < matchvalueceil
-            default: // "==" or undefined
+            default: // "==" or null
                 return searchvalue >= matchvaluefloor && searchvalue <= matchvalueceil
         }
     }
 
     _.define.object("skiplistsegment", function () {
-        this._base = undefined
+        this._base = null
         this._level = 0
-        this._upsegment = undefined
-        this._downsegment = undefined
+        this._upsegment = null
+        this._downsegment = null
 
-        this._nextsegment = undefined
-        this._prevsegment = undefined
+        this._nextsegment = null
+        this._prevsegment = null
 
         this._nodecount = 0
         this._childcount = 0
@@ -83,11 +83,11 @@ _.ambient.module("skiplistsegment", function (_) {
 
                 this._prevsegment._nextsegment = this._nextsegment
                 this._nextsegment._prevsegment = this._prevsegment
-                this._downsegment._upsegment = undefined
-                this._prevsegment = undefined
-                this._nextsegment = undefined
-                this._downsegment = undefined
-                this._base = undefined
+                this._downsegment._upsegment = null
+                this._prevsegment = null
+                this._nextsegment = null
+                this._downsegment = null
+                this._base = null
 
                 if (prevsegment) { prevsegment.calcsegment(false, true) }
             }
@@ -133,7 +133,7 @@ _.ambient.module("skiplistsegment", function (_) {
 
             this.segmentleftup = function() {
                 if (this._upsegment) {  return this._upsegment }
-                if (this.isroot()) { return undefined }
+                if (this.isroot()) { return null }
 
                 var cursor = this
 
@@ -147,7 +147,7 @@ _.ambient.module("skiplistsegment", function (_) {
             }
 
             this.segmentup = function () { 
-                return this._upsegment || undefined
+                return this._upsegment || null
             }
 
             this.segmentroot = function() {
@@ -158,14 +158,14 @@ _.ambient.module("skiplistsegment", function (_) {
                 var cursor = this.segmentdown()
 
                 if (cursor.isroot()) { cursor = cursor.segmentnext() }
-                return (cursor.isroot()? undefined: cursor)
+                return (cursor.isroot()? null: cursor)
             }
 
             this.lastchild = function() {
                 var cursor = this.segmentnext().segmentdown()
 
                 if (cursor.isroot()) { cursor = cursor.segmentprev() }
-                return (cursor.isroot()? undefined: cursor)
+                return (cursor.isroot()? null: cursor)
             }
         })
 
@@ -258,7 +258,7 @@ _.ambient.module("skiplistsegment", function (_) {
             }   
            
             this.findmiddlechild = function() {
-                if (this._childcount < 3) { return undefined } 
+                if (this._childcount < 3) { return null } 
 
                 var index = this._childcount 
                 var cursor = this.segmentdown()
@@ -280,13 +280,13 @@ _.ambient.module("skiplistsegment", function (_) {
                     var segmentnode = this.base()
                 }
 
-                if (segmentnode.isroot()) { return undefined }
+                if (segmentnode.isroot()) { return null }
                 return segmentnode.sortvalue()
             }
 
             this.segmentceil = function() {
                 var segmentnode = this.segmentnext().base().segmentprev()
-                if (segmentnode.isroot()) { return undefined }
+                if (segmentnode.isroot()) { return null }
 
                 return segmentnode.sortvalue()
             }
@@ -318,7 +318,7 @@ _.ambient.module("skiplistsegment", function (_) {
                 if (!this._prevsegment || this._prevsegment._nextsegment !== this) { errors.push("Prev segment mismatch") }
                 if (this._downsegment._upsegment !== this) { errors.push("Down segment mismatch") }
                 if (!this._upsegment && this._base._topsegment !== this) { errors.push("Up segment mismatch") } 
-                return errors.length ? errors : undefined
+                return errors.length ? errors : null
             }
         })
     })

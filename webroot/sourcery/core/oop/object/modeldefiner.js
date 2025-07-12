@@ -1,14 +1,19 @@
-//*************************************************************************************************
-// modeldefiner - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("modeldefiner", function (_) {
     var definer = function() {}
     var helper = _.helper.oop
 
     definerprototype = {
         babyname: "object"
-        , babydef: undefined        
-        , supermodelname: undefined
+        , babydef: null        
+        , supermodelname: null
 
         , init: function (supermodelname, babyname, babydef) {
             this.babyname = babyname

@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("httprequest", function (_) {
@@ -38,10 +38,10 @@ var buffer = require('buffer');
         this.states = _.enum.httprequest
 
         this.timestart = 0
-        this.method = undefined
-        this.url = undefined
-        this.params = undefined
-        this.headers = undefined
+        this.method = null
+        this.url = null
+        this.params = null
+        this.headers = null
 
         this.construct = function(method, url, params, headers) {
             var me = this;
@@ -49,7 +49,7 @@ var buffer = require('buffer');
             this.state = this.states.created
 
             var buffer = ""
-            var postdata = undefined
+            var postdata = null
             var path = "/"
             var ishttps = _.left$(url, 5) == "https"
 
@@ -97,7 +97,7 @@ var buffer = require('buffer');
                 , path: uri.path
                 , method: method
                 , headers: headers
-                , agent: undefined
+                , agent: null
             }
 
             

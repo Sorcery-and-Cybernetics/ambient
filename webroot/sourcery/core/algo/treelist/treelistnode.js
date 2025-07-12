@@ -3,17 +3,17 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("treelistnode", function (_) {
     _.define.object("treelistnode", function () {
-        this._list = undefined
-        this._item = undefined
+        this._list = null
+        this._item = null
 
-        this._topnode = undefined
-        this._leftnode = undefined
-        this._rightnode = undefined
+        this._topnode = null
+        this._leftnode = null
+        this._rightnode = null
         this._count = 0
 
         //todo: if item is in another list, remove from other list first.
@@ -73,7 +73,7 @@ _.ambient.module("treelistnode", function (_) {
                 y._count -= z._count
 
             } else {
-                x._rightnode = undefined
+                x._rightnode = null
             }
 
             y._leftnode = x
@@ -118,7 +118,7 @@ _.ambient.module("treelistnode", function (_) {
                 y._count -= z._count
 
             } else {
-                x._leftnode = undefined
+                x._leftnode = null
             }
 
             y._rightnode = x
@@ -145,7 +145,7 @@ _.ambient.module("treelistnode", function (_) {
             }
         }
 
-        this.recalc = undefined
+        this.recalc = null
 
         this.position = function () {
             var cursor = this
@@ -198,7 +198,7 @@ _.ambient.module("treelistnode", function (_) {
                             count -= 1
 
                         } else {
-                            cursor = undefined
+                            cursor = null
                         }
 
                     } else {
@@ -221,10 +221,10 @@ _.ambient.module("treelistnode", function (_) {
                             cursor = cursor._topnode
                             count -= 1
                         } else {
-                            cursor = undefined
+                            cursor = null
                         }
                     } else {
-                        cursor = undefined
+                        cursor = null
                     }
                 }
             }
@@ -248,7 +248,7 @@ _.ambient.module("treelistnode", function (_) {
                             count -= 1
 
                         } else {
-                            cursor = undefined
+                            cursor = null
                         }
 
                     } else {
@@ -272,10 +272,10 @@ _.ambient.module("treelistnode", function (_) {
                             cursor = cursor._topnode
                             count -= 1
                         } else {
-                            cursor = undefined
+                            cursor = null
                         }
                     } else {
-                        cursor = undefined
+                        cursor = null
                     }
                 }
             }
@@ -321,10 +321,10 @@ _.ambient.module("treelistnode", function (_) {
         }
 
         this.destroy = function () {
-            // if (this._evolution == _.enum.evolution.destroy) { return undefined }
+            // if (this._evolution == _.enum.evolution.destroy) { return null }
             // this._evolution = _.enum.evolution.destroy
 
-            var nodelast = undefined
+            var nodelast = null
 
             if (this._leftnode && this._rightnode) {
                 var nodelast = this.next()
@@ -338,7 +338,7 @@ _.ambient.module("treelistnode", function (_) {
                         nodelast._topnode._leftnode = nodelast._rightnode
                         nodelast._rightnode._topnode = nodelast._topnode
                     } else {
-                        nodelast._topnode._leftnode = undefined
+                        nodelast._topnode._leftnode = null
                     }
 
                     nodelast._rightnode = this._rightnode
@@ -349,7 +349,7 @@ _.ambient.module("treelistnode", function (_) {
 
                 if (!this._topnode) {
                     this._list._rootnode = nodelast
-                    nodelast._topnode = undefined
+                    nodelast._topnode = null
                 } else {
                     nodelast._topnode = this._topnode
 
@@ -370,13 +370,13 @@ _.ambient.module("treelistnode", function (_) {
                 } else if (this._rightnode) {
                     var nodelast = this._rightnode
                 } else {
-                    nodelast = undefined
+                    nodelast = null
                 }
 
                 if (!this._topnode) {
                     this._list._rootnode = nodelast
                     if (nodelast) {
-                        nodelast._topnode = undefined
+                        nodelast._topnode = null
                     }
 
                 } else {
@@ -392,19 +392,19 @@ _.ambient.module("treelistnode", function (_) {
                 }
             }
 
-            this._topnode = undefined
-            this._leftnode = undefined
-            this._rightnode = undefined
+            this._topnode = null
+            this._leftnode = null
+            this._rightnode = null
 
 
             if (this._item) {
                 if (this._item._indexof == this) {
-                    this._item._indexof = undefined
+                    this._item._indexof = null
                 }
-                this._item = undefined
+                this._item = null
             }
 
-            return undefined
+            return null
         }
     })
 })

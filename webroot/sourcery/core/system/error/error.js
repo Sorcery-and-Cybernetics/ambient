@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 //todo: Lazy implement error object, depending on debug mode settings, not all is necessary to parse. Turn all properties into traits.
@@ -92,7 +92,7 @@ _.ambient.module("error").source(function (_) {
         this.stack = ""
         this.filename = ""
         this.linenumber = ""
-        this.arguments = undefined
+        this.arguments = null
         this.level = 0
         this.type = ""
         this.message = ""

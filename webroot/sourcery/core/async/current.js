@@ -1,19 +1,20 @@
-//*****************************************************************************************************************
-// current - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//
-// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
-// Single line ifs use brackets; Privates start with _; 
-//*****************************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
 
 _.ambient.module("current", function(_) {
     _.define.object("current", function(supermodel) {
-        this.value = _.property(undefined)
-        this.state = _.property(undefined)
+        this.value = _.property(null)
+        this.state = _.property(null)
         
-        this._currentwave = undefined
-        this._spawns = undefined
-        this._onfulfilled = undefined
-        this._onrejected = undefined
+        this._currentwave = null
+        this._spawns = null
+        this._onfulfilled = null
+        this._onrejected = null
 
         this.next = function(value, state) {
             // do not continue until all spawns are finished

@@ -1,9 +1,14 @@
-//*************************************************************************************************
-// oophelper - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("oophelper", function (_) {
     _.define.helper("oop", function() {
-        this.definers = undefined
+        this.definers = null
         this.defined = false
 
         this.construct = function () {
@@ -70,7 +75,6 @@ _.ambient.module("oophelper", function (_) {
                         if (jsonvalue) {
                             if (_.isjson(jsonvalue)) {
                                 //transfer all keys from jsonvalue to json
-                                cursor[namepart] = undefined
                                 _.json.merge(value, jsonvalue)
                             } else {
                                 throw "helper.oop.appendvalue: Value " + name + " already exists"
@@ -91,7 +95,7 @@ _.ambient.module("oophelper", function (_) {
 
                 if (index < parts.length - 1) {
                     if (!cursor[namepart]) {
-                        return undefined
+                        return null
                     }
                     cursor = cursor[namepart]
                 } else {

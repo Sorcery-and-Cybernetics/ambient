@@ -67,7 +67,7 @@ _.ambient.module("test.skiplist")
         if (showdebug) { segmentdump(list) }
 
         // Verify list structure and ordering
-        this.assert(list.debugvalidate(), undefined, "list.debugvalidate() - ordered index")
+        this.assert(list.debugvalidate(), null, "list.debugvalidate() - ordered index")
         testorderindex(list)
 
         me.group("Testing findrelativenode with random positions")
@@ -106,26 +106,26 @@ _.ambient.module("test.skiplist")
         var x = list.findrelativenode(firstnode, itemcount)
 
         _.debug.assert(firstnode.value(), 1, "firstnode.value()")
-        _.debug.assert(list.findrelativenode(firstnode, -1), undefined, "list.findrelativenode(firstnode, -1)")
+        _.debug.assert(list.findrelativenode(firstnode, -1), null, "list.findrelativenode(firstnode, -1)")
         _.debug.assert(list.findrelativenode(firstnode, 1).value(), 2, "list.findrelativenode(firstnode, 1)")
         _.debug.assert(list.findrelativenode(firstnode, itemcount - 1).value(), itemcount, "list.findrelativenode(firstnode, itemcount - 1)")
-        _.debug.assert(list.findrelativenode(firstnode, itemcount), undefined, "list.findrelativenode(firstnode, itemcount)")
+        _.debug.assert(list.findrelativenode(firstnode, itemcount), null, "list.findrelativenode(firstnode, itemcount)")
 
         // Test navigation from last node
         var lastnode = list.nodelast()
         _.debug.assert(lastnode.value(), itemcount, "Last node value")
         _.debug.assert(list.findrelativenode(lastnode, 0).value(), itemcount, "list.findrelativenode(lastnode, 0)")
-        _.debug.assert(list.findrelativenode(lastnode, 1), undefined, "list.findrelativenode(lastnode, 1)")
+        _.debug.assert(list.findrelativenode(lastnode, 1), null, "list.findrelativenode(lastnode, 1)")
         _.debug.assert(list.findrelativenode(lastnode, -1).value(), itemcount - 1, "list.findrelativenode(lastnode, -1)")
         _.debug.assert(list.findrelativenode(lastnode, -(itemcount - 1)).value(), 1, "list.findrelativenode(lastnode, -(itemcount - 1))")
-        _.debug.assert(list.findrelativenode(lastnode, -itemcount), undefined, "list.findrelativenode(lastnode, -itemcount)")
+        _.debug.assert(list.findrelativenode(lastnode, -itemcount), null, "list.findrelativenode(lastnode, -itemcount)")
 
         // Test navigation from middle node
         var middlepos = Math.floor(itemcount / 2)
         var middlenode = list.nodebyindex(middlepos)
         _.debug.assert(middlenode.value(), middlepos, "middlenode.value()")
-        _.debug.assert(list.findrelativenode(middlenode, itemcount - middlepos + 1), undefined, "list.findrelativenode(middlenode, itemcount - middlepos + 1)")
-        _.debug.assert(list.findrelativenode(middlenode, -middlepos - 1), undefined, "list.findrelativenode(middlenode, -middlepos - 1)")
+        _.debug.assert(list.findrelativenode(middlenode, itemcount - middlepos + 1), null, "list.findrelativenode(middlenode, itemcount - middlepos + 1)")
+        _.debug.assert(list.findrelativenode(middlenode, -middlepos - 1), null, "list.findrelativenode(middlenode, -middlepos - 1)")
         _.debug.assert(list.findrelativenode(middlenode, middlepos).value(), itemcount, "list.findrelativenode(middlenode, middlepos)")
         _.debug.assert(list.findrelativenode(middlenode, -(middlepos - 1)).value(), 1, "list.findrelativenode(middlenode, -(middlepos - 1))")
 
@@ -136,12 +136,12 @@ _.ambient.module("test.skiplist")
             
             node = node.destroy()
 
-            _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
+            _.debug.assert(list.debugvalidate(), null, "List validation after deleting node at position " + position)
             if (itemcount <=  1000) { testorderindex(list) }
 
              _.model.skiplistnode(value).assign(list, -1)
 
-             _.debug.assert(list.debugvalidate(), undefined, "List validation after reinserting value " + value)
+             _.debug.assert(list.debugvalidate(), null, "List validation after reinserting value " + value)
 
             if (itemcount <=  1000) { testorderindex(list) }
         } 
@@ -154,14 +154,14 @@ _.ambient.module("test.skiplist")
 
             node = node.destroy()
 
-            _.debug.assert(list.debugvalidate(), undefined, "List validation after deleting node at position " + position)
+            _.debug.assert(list.debugvalidate(), null, "List validation after deleting node at position " + position)
             testorderindex(list)
         }
 
         
 
         _.model.skiplistnode(1).assign(list, -1)
-        _.debug.assert(list.debugvalidate(), undefined, "After deleting all nodes, and inserting 1")
+        _.debug.assert(list.debugvalidate(), null, "After deleting all nodes, and inserting 1")
 
         var list = _.model.skiplist();
         list.issortlist(true)
@@ -185,7 +185,7 @@ _.ambient.module("test.skiplist")
         });
 
         if (showdebug) { segmentdump(list) }
-        me.assert(list.debugvalidate(), undefined, "List validation after creating shuffled list")
+        me.assert(list.debugvalidate(), null, "List validation after creating shuffled list")
         
 
         me.group("Testing findfirstnode, findnextnode, findlastnode, findprevnode")
@@ -203,7 +203,7 @@ _.ambient.module("test.skiplist")
             }
         }
 
-         _.debug.assert(list.findfirstnode("XX"), undefined, "list.findfirstnode(XX)")
+         _.debug.assert(list.findfirstnode("XX"), null, "list.findfirstnode(XX)")
          _.debug.assert(list.findfirstnode("A").orderindex(), 1, "list.findfirstnode(A)")
          _.debug.assert(list.findfirstnode("B").orderindex(), 1 + valuecount, "list.findfirstnode(B)")
          _.debug.assert(list.findfirstnode("C").orderindex(), 1 + valuecount * 2, "list.findfirstnode(C)")

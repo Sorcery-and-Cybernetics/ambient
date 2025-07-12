@@ -1,10 +1,15 @@
-//*************************************************************************************************
-// linkedlist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("linkedlist", function(_) {
     _.define.object("linkedlist", function (supermodel) {
-        this._nodenext = undefined
-        this._nodeprev = undefined
+        this._nodenext = null
+        this._nodeprev = null
         this._count = 0
 
         this.objectbehavior = _.behavior(function() {
@@ -21,15 +26,15 @@ _.ambient.module("linkedlist", function(_) {
                     cursor.destroy()
                     cursor = nodenext
                 }
-                return undefined
+                return null
             }
         })
 
         this.linkedlistbehavior = _.behavior(function () {
             this.count = function () { return this._count }
             this.isroot = function () { return true }
-            this.nodefirst = function () { return this._nodenext.isroot()? undefined: this._nodenext }
-            this.nodelast = function () { return this._nodeprev.isroot()? undefined: this._nodeprev }
+            this.nodefirst = function () { return this._nodenext.isroot()? null: this._nodenext }
+            this.nodelast = function () { return this._nodeprev.isroot()? null: this._nodeprev }
 
             this._makenode = function(item) {
                 if (item instanceof _.model.linkedlistnode) { return item }
@@ -39,7 +44,7 @@ _.ambient.module("linkedlist", function(_) {
             this.foreach = function(fn) {
                 var nodes = []
                 var cursor = this.nodefirst()
-                var context = undefined
+                var context = null
 
                 while (cursor) {
                     nodes.push(cursor)
@@ -91,7 +96,7 @@ _.ambient.module("linkedlist", function(_) {
 //                    if (cursor != this) { errors.push("This list is not a full circle") }
 
                 if (errors.length > 0) { return _.debug("List validation errors: ", errors) }
-                return undefined
+                return null
             }
 
             this.debugout = function () {

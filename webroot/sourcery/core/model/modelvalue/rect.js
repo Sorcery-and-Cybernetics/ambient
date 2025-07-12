@@ -1,9 +1,10 @@
-//*****************************************************************************************************************
-// rect - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//
-// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
-// Single line ifs use brackets; Privates start with _; 
-//*****************************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
 
 //todo: Update calculations to 1 base
 //todo: Update to true a modelvalue
@@ -83,19 +84,17 @@ _.ambient.module("rect", function(_) {
         }
 
         this.right = function (value) {
-            if (value !== undefined) {
-                this.x(value - (this.width() - 1))
-                return this
-            }
-            return this.x() + this.width() - 1
+            if (value === undefined) { return this.x() + this.width() - 1 }
+
+            this.x(value - (this.width() - 1))
+            return this
         }
 
         this.bottom = function (value) {
-            if (value !== undefined) {
-                this.y(value - (this.height() - 1))
-                return this
-            }
-            return this.y() + this.height() - 1
+            if (value !== undefined) { return this.y() + this.height() - 1 }
+
+            this.y(value - (this.height() - 1))
+            return this
         }
 
         this.center = function () {

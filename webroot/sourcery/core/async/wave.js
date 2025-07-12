@@ -1,15 +1,17 @@
-//*****************************************************************************************************************
-// wave - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//
-// Be basic! No capitals, no lambdas, no semicolons; Library functions are preceded by _; Empty vars are undefined;
-// Single line ifs use brackets; Privates start with _; 
-//*****************************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("wave", function(_) {
     _.define.object("wave", function(supermodel) {
-        this._source = undefined   
-        this._parent = undefined
-        this._prev = undefined
-        this._next = undefined
+        this._source = null   
+        this._parent = null
+        this._prev = null
+        this._next = null
 
         this.construct = function(source, parent) {
             this._source = source
@@ -32,7 +34,7 @@ _.ambient.module("wave", function(_) {
             try {
                 const result = this._source.call(current, current.value)
 
-                if (result !== undefined) {
+                if (result != null) {
                     if (result instanceof _.model.wave) {
                         current.spawn(result)
 
@@ -67,7 +69,7 @@ _.ambient.module("wave", function(_) {
     // })
 
     // _.define.wave("wave.when", function(supermodel) {
-    //     this._condition = undefined
+    //     this._condition = null
 
     //     this.construct = function(condition) {
     //         this._condition = condition
@@ -114,6 +116,10 @@ _.ambient.module("wave", function(_) {
     //         return this._parent.endif()
     //     }      
     // })
-})    
+}).ontest("wave", function(_) {
+    var wave = _.model.wave(function(value) { return value })
+    this.assert(wave.getnext(), null, "")
+
+})
 
 

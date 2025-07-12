@@ -324,7 +324,7 @@ _.ambient.module("base", function (_) {
                     return _.vtmodel
                 }
         }
-        return undefined
+        return null
     }
 
     _.typename = function (value) {

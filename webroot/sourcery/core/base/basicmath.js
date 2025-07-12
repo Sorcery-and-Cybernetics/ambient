@@ -2,7 +2,7 @@
 // basicmath - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("basicmath", function (_) {
-    var rnd = undefined
+    var rnd = null
 
     //Algorithm based on lcg 
     var m_w = 123456789;
@@ -26,7 +26,7 @@ _.ambient.module("basicmath", function (_) {
     // }
 
     // var random = function (lbound, ubound) {
-    //     if (ubound == undefined) {
+    //     if (ubound == null) {
     //         ubound = lbound
     //         lbound = 1
     //     }
@@ -36,7 +36,7 @@ _.ambient.module("basicmath", function (_) {
 
     _.math = { }
     _.math.random = function (lbound, ubound) {
-        if (ubound == undefined) {
+        if (ubound == null) {
             ubound = lbound
             lbound = 1
         }

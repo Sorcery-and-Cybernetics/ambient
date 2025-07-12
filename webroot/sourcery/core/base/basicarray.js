@@ -178,7 +178,7 @@ _.ambient.module("basicarray", function (_) {
 
         var item = items.splice(index - 1, 1)
 
-        //            if (item && item[0].orderindex !== undefined) {
+        //            if (item && item[0].orderindex != null) {
         if (ordered) {
             _.array.reindex(items, index)
         }

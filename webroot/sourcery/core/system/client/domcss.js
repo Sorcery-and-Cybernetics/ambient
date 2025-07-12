@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 //Todo: Speed up - merge dirty and current. Default style are globally grouped in config, and lazy prerendered during first time use.
@@ -55,7 +55,7 @@ _.ambient.module("domcss", function(_) {
 
             var updated = classes.current ? classes.current[name] : null
 
-            if (updated === null || updated === undefined) {
+            if (updated == null) {
                 var index = classes.classnames.length
 
                 while (index--) {
@@ -269,7 +269,7 @@ _.ambient.module("domcss", function(_) {
 
         this.rotate = function (angle) {
             var css = this.styleclass
-            if (angle == undefined) {
+            if (angle == null) {
                 return css.rotate ? css.rotate.z : 0 || 0
             }
             return this.rotate3d(null, null, angle)
@@ -279,7 +279,7 @@ _.ambient.module("domcss", function(_) {
 
         this.rotatex = function (angle) {
             var css = this.styleclass
-            if (angle == undefined) {
+            if (angle == null) {
                 return css.rotate ? css.rotate.x : 0 || 0
             }
             return this.rotate3d(angle)
@@ -287,7 +287,7 @@ _.ambient.module("domcss", function(_) {
 
         this.rotatey = function (angle) {
             var css = this.styleclass
-            if (angle == undefined) {
+            if (angle == null) {
                 return css.rotate ? css.rotate.y : 0 || 0
             }
             return this.rotate3d(null, angle)
@@ -295,7 +295,7 @@ _.ambient.module("domcss", function(_) {
 
         this.rotatez = function (angle) {
             var css = this.styleclass
-            if (angle == undefined) {
+            if (angle == null) {
                 return css.rotate ? css.rotate.z : 0 || 0
             }
             return this.rotate3d(null, null, angle)
@@ -367,7 +367,7 @@ _.ambient.module("domcss", function(_) {
                     if (!result) {
                         var node = this.control._parent
                         while (node) {
-                            if (node.currentstyle[stylename] !== undefined) {
+                            if (node.currentstyle[stylename] != null) {
                                 return node.currentstyle[stylename]
                             }
                             node = node._parent
@@ -377,7 +377,7 @@ _.ambient.module("domcss", function(_) {
                 }
                 //todo: check for triggers -> updateactivestyle
                 //todo: check for special syntax  --> updateactivestyle
-                if (value === null || value === undefined) { return this }
+                if (value == null) { return this }
 
                 if (this.styleclass[stylename] !== value) {
                     this.styleclass[stylename] = value

@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("dragevent", function(_) {
@@ -83,8 +83,8 @@ _.ambient.module("dragevent", function(_) {
         }
 
         this.calc = function (modx, mody) {
-            if (modx === undefined) { modx = this.mod.x }
-            if (mody === undefined) { mody = this.mod.y }
+            if (modx == null) { modx = this.mod.x }
+            if (mody == null) { mody = this.mod.y }
 
             var mousedrag = this.dragroot
 

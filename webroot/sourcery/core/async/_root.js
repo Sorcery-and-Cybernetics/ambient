@@ -1,5 +1,5 @@
 _.ambient.rootmodule("async/")
-    .require("sourcery/core/base/")
+    .require("sourcery/core/oop/")
 
 //some things from chatgpt
     

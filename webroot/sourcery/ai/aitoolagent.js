@@ -1,20 +1,21 @@
 //****************************************************************************************************************************
-// Ambient - Copyright (c) 2025 Sorcery and Cybernetics (SAC). All rights reserved.
-//
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
 // Style: Be Basic!
-// ES2017; No capitals, no lambdas, no semicolons and no underscores in names; No let and const; No 3rd party libraries;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("aitoolagent", function(_) {    
     _.define.aichatagent("aitoolagent", function() {
         this.streammode = _.model.property(false)
         this.historymode = _.model.property(false)
-        this._tools = {}
+        this._tools = null
 
         this.construct = function(name, aimodel) {
             this._name = name
             this._aimodel = aimodel
+            this._tools = {}
         }
 
         this.updateprompt = function() {

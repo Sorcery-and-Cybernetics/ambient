@@ -1,10 +1,15 @@
-//*************************************************************************************************
-// webserver - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("webserver").source(function (_) {
     _.define.object("webserver", function() {
-        this._server = undefined;
-        this._port = undefined;
+        this._server = null;
+        this._port = null;
         this._host = 80;
 
         this.construct = function(host, port) {
@@ -63,7 +68,7 @@ _.ambient.module("webserver").source(function (_) {
 
         this.handleresponse = function(response) {
             var path = response.path
-            var routedef = undefined  //_.findroute(path)
+            var routedef = null  //_.findroute(path)
 
             if (routedef) {
                 if (!_.isfunction(routedef)) { return this.handleerror(response, "Route not found") }

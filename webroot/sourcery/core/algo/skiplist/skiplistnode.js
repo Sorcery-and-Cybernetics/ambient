@@ -3,7 +3,7 @@
 // 
 // Style: Be Basic!
 // ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Empty vars are undefined; Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
 _.ambient.module("skiplistnode", function(_) {    
@@ -18,14 +18,14 @@ _.ambient.module("skiplistnode", function(_) {
                 return searchvalue > matchvalue
             case "<":
                 return searchvalue < matchvalue
-            default: // "==" or undefined
+            default: // "==" or null
                 return searchvalue == matchvalue
         }
     }
 
     _.define.linkedlistnode("skiplistnode", function (supermodel) {
-        this._upsegment = undefined
-        this._topsegment = undefined            
+        this._upsegment = null
+        this._topsegment = null            
         this._level = 1
 
         this.constructbehavior = _.behavior(function() {
@@ -56,7 +56,7 @@ _.ambient.module("skiplistnode", function(_) {
 
             this.unlink = function() {
                 if (this._upsegment) { this._upsegment.unlink() }
-                this._topsegment = undefined
+                this._topsegment = null
                 
                 var nodeprev = this._nodeprev
                 supermodel.unlink.call(this)
@@ -66,7 +66,7 @@ _.ambient.module("skiplistnode", function(_) {
 
             this.destroy = function() {
                 this.unlink()
-                return undefined
+                return null
             }
         })
 
@@ -99,11 +99,11 @@ _.ambient.module("skiplistnode", function(_) {
 
             this.segmentnext = function() { return this._nodenext }            
             this.segmentprev = function() { return this._nodeprev }
-            this.segmentdown = function() { return undefined }
+            this.segmentdown = function() { return null }
 
             this.segmentleftup = function() {
                 if (this._upsegment) {  return this._upsegment }
-                if (this.isroot()) { return undefined }
+                if (this.isroot()) { return null }
 
                 var cursor = this
 
@@ -114,7 +114,7 @@ _.ambient.module("skiplistnode", function(_) {
             }
             
             this.segmentrightup = function() { return this.segmentleftup()._nextsegment }                
-            this.segmentup = function() { return this._upsegment || undefined }
+            this.segmentup = function() { return this._upsegment || null }
         })
         
         this.searchbehavior = _.behavior(function() {
@@ -138,8 +138,8 @@ _.ambient.module("skiplistnode", function(_) {
             }
 
             this.debugvalidate = function() {
-                var errors = (this._upsegment? this._upsegment.debugvalidate(): undefined)
-                return errors? errors: undefined
+                var errors = (this._upsegment? this._upsegment.debugvalidate(): null)
+                return errors? errors: null
             }
         })            
     })
