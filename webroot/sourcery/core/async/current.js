@@ -33,6 +33,7 @@ _.ambient.module("current", function(_) {
             }
 
             const next = this._currentwave && this._currentwave.getnext(this)            
+            
             if (next) { 
                 next.run(this) 
             } else { 

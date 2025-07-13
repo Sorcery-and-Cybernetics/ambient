@@ -39,7 +39,7 @@ If no tools apply, return [].
 
 
             var toolprompt = prompt.join("\n")
-            _.console.log(toolprompt)
+            //_.console.log(toolprompt)
             this.systemprompt(toolprompt)
         }
 

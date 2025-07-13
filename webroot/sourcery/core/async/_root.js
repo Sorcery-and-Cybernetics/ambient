@@ -1,5 +1,6 @@
 _.ambient.rootmodule("async/")
     .require("sourcery/core/oop/")
+    .include("wave")
 
 //some things from chatgpt
     

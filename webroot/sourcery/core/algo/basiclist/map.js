@@ -137,7 +137,7 @@ _.ambient.module("map", function(_) {
     map.del("d")
 
     this.assert(map.length(), 4, "map.length()")
-    this.assert(map.get("d"), null, "map.get()")
+    this.assert(map.get("d"), undefined, "map.get()")
     this.assert(map.has("d"), false, "map.has()")
     this.assert(map.tojson(), { "a": 1, "b": 2, "c": 3, "e": 5 }, "map.tojson()")
 
