@@ -8,8 +8,8 @@
 
 _.ambient.module("current", function(_) {
     _.define.object("current", function(supermodel) {
-        this.value = _.property(null)
-        this.state = _.property(null)
+        this._value = null
+        this._state = null
         
         this._currentwave = null
         this._spawns = null

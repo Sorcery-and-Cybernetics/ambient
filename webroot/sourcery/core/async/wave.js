@@ -7,7 +7,7 @@
 //****************************************************************************************************************************
 
 _.ambient.module("wave", function(_) {
-    _.define.object("wave", function(supermodel) {
+    _.define.object("wavenode", function(supermodel) {
         this._name = "then"
         this._source = null   
         this._parent = null 
@@ -20,41 +20,11 @@ _.ambient.module("wave", function(_) {
 
         this.construct = function(source) {
             this._source = source
-            this._prevwave = null
-            this._nextwave = null
         }
 
-        this.assign = function(parent) {
-            nextwave._parent = parent
-            if (!parent) { return this }
+        this.then = function (nextwave) {
+            if (!nextwave) { throw "Error: No wave provided" } 
 
-            //append after last child of this parent.
-            if (parent._child) {               
-                var first = parent._child
-
-                if (!first._prevwave) {
-                    first._nextwave = nextwave
-                    first._prevwave = nextwave
-
-                } else {
-                    nextwave._prevwave = first._prevwave
-                    nextwave._orderindex = nextwave._prevwave._orderindex + 1
-
-                    first._prevwave._nextwave = nextwave
-                    first._prevwave = nextwave
-                }
-
-            } else {
-                parent._child = nextwave
-            }
-
-            nextwave._level = parent? parent._level + 1: 0            
-
-            return this
-        }
-
-        this.then = function (source) {
-            var nextwave = _.model.wave(source)
             var parent
 
             switch (this._indent) {
@@ -95,70 +65,6 @@ _.ambient.module("wave", function(_) {
 
             return nextwave
         }
-        
-        this.sleep = function (ms) {
-            var wave = this.then(function (ms) {
-                var current = this
-
-                setTimeout(function () {
-                    current.next()
-                }, ms)
-
-                current.pause()
-            })
-            wave._name = "sleep"
-
-            return wave
-        } 
-        
-        this.if = function(fn) {           
-            var wave = this.then(function (fn) {
-                var current = this 
-
-                current.spawn(fn)
-                    .ondone(function(value){
-                        if (value) {
-                            current.indent()
-                        } else {
-                            current.next()
-                        }
-
-                    })
-            })
-
-            wave._name = "if"
-            wave._indent = 1
-
-            return wave
-        }
-
-        this.elseif = function(fn) {
-            var wave = this.endif()
-
-            wave = wave.if(fn)
-            wave._name = "elseif"
-
-            return wave
-        }
-
-        this.else = function(fn) {
-            var wave = this.endif()
-
-            wave = wave.then()
-            wave._indent = 1
-            wave._name = "else"
-
-            return wave
-        }
-
-        this.endif = function() {
-            var wave = this.then()
-
-            wave._indent = -1
-            wave._name = "endif"
-
-            return wave
-        }
 
         this.debugout = function() {
             var level = this._level + (this._indent == -1? -1: 0)
@@ -174,6 +80,134 @@ _.ambient.module("wave", function(_) {
 
             return result
         }
+    })
+
+    _.define.wavenode("sleep", function(supermodel) {
+        this._indent = 0
+        this._name = "sleep"
+        this._ms = 0
+
+        this.construct = function(ms) {
+            this._ms = ms           
+        }
+
+        this.run = function(current) {
+            setTimeout(function() { current.next() }, this._ms)
+            current.pause()
+        }
+    })    
+
+    _.define.wavenode("if", function(supermodel) {
+        this._indent = 1
+        this._name = "if"
+        this._condition = null
+
+        this.construct = function(condition) {
+            this._condition = condition
+        }
+
+        this.run = function(current) {
+            current.spawn(this._condition)
+                .ondone(function(value){
+                    if (value) { current.indent() }
+                    else { current.next() }
+                })
+        }
+
+    })
+
+    _.define.wavenode("else", function(supermodel) {
+        this._indent = 1
+        this._name = "else"
+
+        this.construct = function() {}
+
+        this.run = function(current) {
+            if (fn) {
+                current.spawn(fn)
+                    .ondone(function(value){
+                        current.indent()
+                    })
+            } else {
+                current.indent()
+            }
+        }
+    })
+
+    _.define.wavenode("end", function(supermodel) {
+        this._indent = -1
+        this._name = "end"
+
+        this.construct = function() {}
+    })
+
+    _.define.wavenode("wave", function() {
+        this._indent = 1
+        this._name = "wave"
+        this._lastcreated = undefined
+        this._child = undefined
+
+        this.then = function(nextwave) {
+            if (!nextwave) { throw "Error: No wave provided" }
+
+            if (_.isfunction(nextwave)) { nextwave = _.model.wavenode(nextwave) }
+            
+            if (!this._child) { 
+                this._child = nextwave 
+                nextwave._parent = this
+                nextwave._level = 1
+            } else {
+                this._lastcreated.then(nextwave)
+            }
+
+            this._lastcreated = nextwave            
+            return this
+        }
+
+        this.sleep = function(ms) {  
+            return this.then(_.model.sleep(ms)) 
+        }
+        this.if = function(fn) { return this.then(_.model.if(fn)) }
+        this.elseif = function(fn) { this.end(); return this.then(_.model.elseif(fn)) }
+        this.else = function(fn) { this.end(); return this.then(_.model.else(fn)) }
+        this.end = function() { return this.then(_.model.end()) }
+
+        this.debugout = function() {
+            if (this._child) { return this._child.debugout() }
+            return [this._name]
+        }
+
+        this.oncancel = _.model.basicsignal()
+        this.cancel = function() { this.oncancel() }    
+
+    })
+
+    _.wave = function() {
+        return _.model.wave()
+    }
+
+}).ontest("wave", function(_) {
+    
+    var wavetest = _.model.wave()
+        .sleep(1)
+        .if(function() { return true })
+            .then(function() { return "Hello" })
+            .then(function(value) { return value + " World" })
+            .then(function(value) { return value + "!" })
+        .else().if(function() { return false })
+            .then(function() { return "Hello" })
+            .then(function(value) { return value + " World" })
+            .then(function(value) { return value + "!" })
+        .else()
+            .then(function() { return "Goodbye" })
+            .then(function(value) { return value + " World" })
+            .then(function(value) { return value + "!" })    
+        .end()
+
+    _.console.write(wavetest.debugout().join("\n") + "\n")
+})
+
+
  
         // this.getnext = function(current) {
         //     return this._next
@@ -205,40 +239,3 @@ _.ambient.module("wave", function(_) {
         //         current.next(err, 'rejected')
         //     }
         // }
-
-        this.oncancel = _.model.basicsignal()
-        this.cancel = function() { this.oncancel() }    
-    })
-
-    _.define.wave("wavehead", function() {
-        this._indent = 1
-        this._name = "wavehead"
-    })
-
-    _.wave = function() {
-        return _.model.wavehead()
-    }
-
-
-}).ontest("wave", function(_) {
-    var waveroot = _.wave()
-    
-    waveroot.sleep(1)
-        .if(function() { return true })
-            .then(function() { return "Hello" })
-            .then(function(value) { return value + " World" })
-            .then(function(value) { return value + "!" })
-        .elseif(function() { return false })
-            .then(function() { return "Hello" })
-            .then(function(value) { return value + " World" })
-            .then(function(value) { return value + "!" })
-        .else()
-            .then(function() { return "Goodbye" })
-            .then(function(value) { return value + " World" })
-            .then(function(value) { return value + "!" })    
-        .endif()
-
-    _.debug(waveroot.debugout().join("\n"))
-})
-
-

@@ -41,15 +41,36 @@ _.ambient.module("object").source(function (_) {
         , destroy: _.noop
 
         , debugout: function() {}
+        , debugjson: function(full) {
+            var result = {
+                _name: this._name
+                , _modelname: this._modelname
+            }
+
+            for (var key in this) {
+                if (key.startsWith("_")) {
+                    switch (key) {
+                        case "_name":
+                        case "_modelname":
+                        case "_parent":
+                        case "_supermodel":
+                        case "_definition":
+
+                            break
+                        default:
+                            var value = this[key]
+
+                            if (value && _.isfunction(value.debugjson)) {
+                                result[key] = value.debugjson()
+                            } else if (full) {
+                                result[key] = value
+                            }
+                    }
+                }
+            }
+
+            return result
+        }
         , debugvalidate: function() {}
     } 
 })
-
-
-
-
-
-
-
-
-
