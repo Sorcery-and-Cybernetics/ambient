@@ -9,14 +9,26 @@
 _.ambient.module("wave", function(_) {
     _.define.object("wavenode", function(supermodel) {
         this._name = "then"
-        this._source = null   
         this._parent = null 
+        this._source = null   
+        this._blockparent = null 
+        this._prevwave = null
+        this._nextwave = null
+
         this._child = null
         this._indent = 0
         this._level = 0
-        this._prevwave = null
-        this._nextwave = null
         this._orderindex = 1
+
+        this._branches = ["_child"]
+
+        this._isblock = false
+        this._isblockend = false
+        // this._blockname = ""
+        // this._blockindex = 0
+        // this._blockparentname = ""
+        // this._blockparentbranchname = ""
+
 
         this.construct = function(source) {
             this._source = source
@@ -26,18 +38,25 @@ _.ambient.module("wave", function(_) {
             if (!nextwave) { throw "Error: No wave provided" } 
 
             var parent
-
-            switch (this._indent) {
-                case -1:
-                    parent = this._parent._parent
-                    break
-                case 0:
-                    parent = this._parent
-                    break
-                case 1:
-                    parent = this
-                    break
+            if (this._isblockend) {
+                parent = this._parent._parent
+            } else if (this._isblock) {
+                parent = this
+            } else {
+                parent = this._parent
             }
+
+            // switch (this._indent) {
+            //     case -1:
+            //         parent = this._parent._parent
+            //         break
+            //     case 0:
+            //         parent = this._parent
+            //         break
+            //     case 1:
+            //         parent = this
+            //         break
+            // }
 
             if (parent._child) {
                 //append after last child of this parent. It is possible that there is only 1 child, so no next and prevwave defined
@@ -70,9 +89,16 @@ _.ambient.module("wave", function(_) {
             var level = this._level + (this._indent == -1? -1: 0)
             var result = [_.string$(level, "\t") + this._name]
 
-            if (this._child) {
-                result = result.concat(this._child.debugout())
-            }
+            // if (this._branches) {
+            //     for (var i = 0; i < this._branches.length; i++) {
+            //         var branch = this._branches[i]
+            //         if (this[branch]) {
+            //             result = result.concat(this[branch].debugout())
+            //         }
+            //     }
+            // }
+
+            if (this._child) { result = result.concat(this._child.debugout()) }
 
             if (this._nextwave) {  
                 result = result.concat(this._nextwave.debugout())
@@ -100,52 +126,68 @@ _.ambient.module("wave", function(_) {
     _.define.wavenode("if", function(supermodel) {
         this._indent = 1
         this._name = "if"
+        this._isblock = true
+        this._isblockend = false
+
+        this._branches = ["_condition", "_whentrue", "_whenfalse", "_end"]
         this._condition = null
+        this._truewave = null
+        this._falsewave = null
+        this._endwave = null
+        this._nextwave = null
 
         this.construct = function(condition) {
             this._condition = condition
         }
 
-        this.run = function(current) {
-            current.spawn(this._condition)
-                .ondone(function(value){
-                    if (value) { current.indent() }
-                    else { current.next() }
-                })
-        }
-
+        // this.run = function(current) {
+        //     current.do(this._condition)
+        //         .thendo(function(value){
+        //             if (value) { current.do(this._whentrue) }
+        //             else { current.do(this._whenfalse) }
+        //         })
+        //         .thendo(function() {
+        //             current.do(this._nextwave)
+        //         })
+        // }
     })
 
     _.define.wavenode("else", function(supermodel) {
+        this._isblock = true
+        this._isblockend = true
+
         this._indent = 1
         this._name = "else"
 
         this.construct = function() {}
 
-        this.run = function(current) {
-            if (fn) {
-                current.spawn(fn)
-                    .ondone(function(value){
-                        current.indent()
-                    })
-            } else {
-                current.indent()
-            }
-        }
+        // this.run = function(current) {
+        //     if (fn) {
+        //         current.spawn(fn)
+        //             .ondone(function(value){
+        //                 current.indent()
+        //             })
+        //     } else {
+        //         current.next()
+        //     }
+        // }
     })
 
     _.define.wavenode("end", function(supermodel) {
-        this._indent = -1
         this._name = "end"
+        this._indent = -1
+        this._isblock = false
+        this._isblockend = true
 
         this.construct = function() {}
     })
 
     _.define.wavenode("wave", function() {
-        this._indent = 1
         this._name = "wave"
+        this._isblock = true
+        this._indent = 0
+
         this._lastcreated = undefined
-        this._child = undefined
 
         this.then = function(nextwave) {
             if (!nextwave) { throw "Error: No wave provided" }
@@ -168,14 +210,9 @@ _.ambient.module("wave", function(_) {
             return this.then(_.model.sleep(ms)) 
         }
         this.if = function(fn) { return this.then(_.model.if(fn)) }
-        this.elseif = function(fn) { this.end(); return this.then(_.model.elseif(fn)) }
-        this.else = function(fn) { this.end(); return this.then(_.model.else(fn)) }
+//        this.elseif = function(fn) { this.end(); return this.then(_.model.elseif(fn)) }
+        this.else = function(fn) { return this.then(_.model.else(fn)) }
         this.end = function() { return this.then(_.model.end()) }
-
-        this.debugout = function() {
-            if (this._child) { return this._child.debugout() }
-            return [this._name]
-        }
 
         this.oncancel = _.model.basicsignal()
         this.cancel = function() { this.oncancel() }    
@@ -194,10 +231,10 @@ _.ambient.module("wave", function(_) {
             .then(function() { return "Hello" })
             .then(function(value) { return value + " World" })
             .then(function(value) { return value + "!" })
-        .else().if(function() { return false })
-            .then(function() { return "Hello" })
-            .then(function(value) { return value + " World" })
-            .then(function(value) { return value + "!" })
+        // .else().if(function() { return false })
+        //     .then(function() { return "Hello" })
+        //     .then(function(value) { return value + " World" })
+        //     .then(function(value) { return value + "!" })
         .else()
             .then(function() { return "Goodbye" })
             .then(function(value) { return value + " World" })
