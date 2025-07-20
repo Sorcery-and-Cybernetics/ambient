@@ -23,7 +23,7 @@ _.ambient.module("webserver").source(function (_) {
             var server = _.model.httpserver(this._host, this._port)
 
             server.onerror(function(err) {
-                me.handleerror(err);
+                me.onerror(err)
             })
             .onrequest(function(response) {
                 me.handleresponse(response)
@@ -39,25 +39,6 @@ _.ambient.module("webserver").source(function (_) {
             this._server.stop();
             return this;
         }
-
-        this.handleerror = function(response, message, errcode) {
-            var errcode = errcode || 404
-            var params = [response.url]
-
-            params.push(sessiontoken)
-
-            if (sessiontoken) { params = params.concat(sessiontoken) }
-
-            response.senderror(errordescription, errcode, params)
-
-            response.senderror(error)
-            return this.onerror(error)
-        }
-
-        this.handleerror = function(response, error) {
-            response.senderror(error)
-            return this.onerror(error)
-        }        
 
         this.handlefileresponse = function(response) {
             //todo: check file exist
