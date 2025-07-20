@@ -11,83 +11,70 @@ _.ambient.module("wave", function(_) {
         this._name = "then"
         this._parent = null 
         this._source = null   
-        this._blockparent = null 
         this._prevwave = null
         this._nextwave = null
 
         this._child = null
-        this._indent = 0
-        this._level = 0
+        this._displayindent = 0
+        this._displaylevel = 0
         this._orderindex = 1
-
-        this._branches = []
 
         this._isblock = false
         this._isblockend = false
+        this._issoftblock = false
+        this._issoftblockend = false
 
         this.construct = function(source) {
             this._source = source
         }
        
+        this.assign = function (parent) {
+            if (!parent) { throw "error" }
+            me = this
 
-        //generic find
-        this.findparent = function(parentwave) {
-            if (!parentwave) { throw "error" }
-
-            if (this._issoftblockend || this._isblockend) {
-                while (parentwave && (!parentwave._isblock)) {
-                    parentwave = parentwave._parent
+            //find the correct parent
+            if (me._issoftblockend || me._isblockend) {
+                while (parent && (!parent._isblock)) {
+                    parent = parent._parent
                 }
-                return parentwave
+            } else if (parent._isblockend) {
+                parent = parent._parent._parent
+
+                while (parent && (!parent._isblock && !parent._issoftblock)) {
+                    parent = parent._parent
+                }                    
             }
 
-            if (parentwave._isblockend) {
-                parentwave = parentwave._parent._parent
-            }
-
-            while (parentwave && (!parentwave._isblock && !parentwave._issoftblock)) {
-                parentwave = parentwave._parent
-            }
-
-            return parentwave
-        }
-
-
-        this.assign = function (lastwave) {
-            nextwave = this
-            //if (!nextwave) { throw "Error: No wave provided" }
-
-            var parent = nextwave.findparent(lastwave)
-
-            // Default: parent-child/nextwave logic
+            //Add me to parent
             if (parent._child) {
                 var root = parent._child
                 if (!root._prevwave) {
-                    root._nextwave = nextwave
-                    root._prevwave = nextwave
+                    root._nextwave = me
+                    root._prevwave = me
                 } else {
-                    nextwave._prevwave = root._prevwave
-                    nextwave._orderindex = nextwave._prevwave._orderindex + 1
-                    root._prevwave._nextwave = nextwave
-                    root._prevwave = nextwave
+                    me._prevwave = root._prevwave
+                    me._orderindex = me._prevwave._orderindex + 1
+                    root._prevwave._nextwave = me
+                    root._prevwave = me
                 }
-                nextwave._parent = parent
+                me._parent = parent
+
             } else {
-                parent._child = nextwave
-                nextwave._parent = parent
+                parent._child = me
+                me._parent = parent
             }
 
             if (!parent._isblock) {
-                nextwave._level = parent._level
+                me._displaylevel = parent._displaylevel
             } else {
-                nextwave._level = parent._level + 1
+                me._displaylevel = parent._displaylevel + 1
             }
 
-            return nextwave
+            return me
         }
 
         this.debugout = function() {
-            var level = this._level + (this._indent == -1? -1: 0)
+            var level = this._displaylevel + (this._displayindent == -1? -1: 0)
             var result = [(this._sameline? "": _.string$(level, "\t")) + this._name] // + (this._parent? " (" + this._parent._name + ")": "")]
 
             if (this._child) { 
@@ -160,7 +147,7 @@ _.ambient.module("wave", function(_) {
         this._isblockend = false
         this._issoftblock = true
         this._issoftblockend = true
-        this._indent = -1
+        this._displayindent = -1
 
         this.construct = function(condition) {
             this._condition = condition
@@ -180,7 +167,7 @@ _.ambient.module("wave", function(_) {
 
     _.define.wavenode("else", function(supermodel) {
         this._name = "else"
-        this._indent = -1
+        this._displayindent = -1
         this._isblock = false
         this._isblockend = false
         this._issoftblock = true
@@ -203,7 +190,7 @@ _.ambient.module("wave", function(_) {
     _.define.wavenode("end", function(supermodel) {
         this._name = "end"
         this._isblock = false
-        this._indent = -1
+        this._displayindent = -1
         this._isblockend = true
         this._issoftblock = false
         this._issoftblockend = false
@@ -249,11 +236,11 @@ _.ambient.module("wave", function(_) {
     
     var wavetest = _.model.wave()
         .sleep(1)
-        .if(function() { return true }).do()
+        wavetest.if(function() { return true }).do()
             wavetest.then(function() { return "Hello" })
             .then(function(value) { return value + " World" })
             .then(function(value) { return value + "!" })
-        .elseif(function() { return false }).do()
+        wavetest.elseif(function() { return false }).do()
             .then(function() { return "Hello" })
             .then(function(value) { return value + " World" })
             .then(function(value) { return value + "!" })
