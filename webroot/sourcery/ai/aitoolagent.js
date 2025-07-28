@@ -24,7 +24,7 @@ _.ambient.module("aitoolagent", function(_) {
       prompt.push(`
 Given a text and a list of tools (format: tool.name - [tool.params]: tool.description), identify applicable tools and return an array ofJSON objects with their names and parameter values derived from the text. Return only valid javascript JSON.
 
-## Expected output:
+                ## Expected output:
 An array of JSON objects with the following format: [{ action: toolname, params: { param1: value1, param2: value2, ... } }, ...].
 If no tools apply, return [].
 

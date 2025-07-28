@@ -17,22 +17,24 @@ _.ambient.module("object").source(function (_) {
         , _supermodel: null
         , _phase: 0
         , _definition: null
+        , _self: null
 
         , parent: function() { return this._parent }
         , name: function() { return this._name }        
         , modelname: function () { return this._modelname }
         , supermodel: function() { return this._supermodel }
         , ismodel: function(modelname) { return this._modelname === modelname }
+        , self: _.noop
         , instanceof: function(modelname) {                 
-            var cursor = this;
+            var cursor = this
 
             while (cursor) {
-                if (cursor._modelname === modelname) { return true; }
-                cursor = cursor._supermodel;
+                if (cursor._modelname === modelname) { return true }
+                cursor = cursor._supermodel
             }
             return false;
          }        
-        , construct: _.noop        
+        , construct: _.noop      
         , assign: function(parent, name) {
             this._parent = parent
             this._name = name
@@ -55,6 +57,7 @@ _.ambient.module("object").source(function (_) {
                         case "_parent":
                         case "_supermodel":
                         case "_definition":
+                        case "_self":
 
                             break
                         default:

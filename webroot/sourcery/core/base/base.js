@@ -294,13 +294,14 @@ _.ambient.module("base", function (_) {
     _.define.enum("vartype", [
         "null"
         , "string"
-        , "number"
         , "boolean"
+        , "number"
         , "date"
         , "regex"
         , "function"
         , "array"
         , "json"
+        , "blob"
         , "model"
     ]);
 

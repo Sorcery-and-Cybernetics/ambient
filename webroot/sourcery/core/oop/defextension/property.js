@@ -1,6 +1,11 @@
-//*************************************************************************************************
-// property - Copyright (c) 2025 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
+//****************************************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// 
+// Style: Be Basic!
+// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
+// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
+//****************************************************************************************************************************
+
 _.ambient.module("property", function (_) {
     var makeproperty = function (def, modeldef) {
         var traitname = "_" + def._name
@@ -10,10 +15,17 @@ _.ambient.module("property", function (_) {
             var me = this
 
             if (value === undefined) {
+                value = me[traitname]
+
+                if (value == null) {
+                    var self = this.self()
+                    if (self) { value = self[traitname] }
+                } 
+
                 if (def._onget) {
-                    return def._onget.call(me, me[traitname])
+                    return def._onget.call(me, value)
                 }
-                return me[traitname]
+                return value
             }
 
             var oldvalue = me[traitname]
