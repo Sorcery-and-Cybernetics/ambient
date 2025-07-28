@@ -23,8 +23,8 @@ _.ambient.module("skiplist", function(_) {
             this.construct = function(sortvaluename) {
                 this._list = this
 
-                this._nodenext = this
-                this._nodeprev = this
+                this._nextnode = this
+                this._prevnode = this
 
                 this._sortvaluename = sortvaluename
                 if (sortvaluename) { this._issortlist = true }
@@ -79,11 +79,11 @@ _.ambient.module("skiplist", function(_) {
             this.level = function() { return 1 }
 
             this.segmentnext = function () {
-                return this._nodenext
+                return this._nextnode
             }
 
             this.segmentprev = function () { 
-                return this._nodeprev
+                return this._prevnode
             }
 
             this.segmentdown = function () { 
@@ -137,7 +137,7 @@ _.ambient.module("skiplist", function(_) {
                 } else { 
                     if (orderindex) {
                         if (orderindex < 0) {
-                            var lastNode = this.nodelast()
+                            var lastNode = this.lastnode()
                             cursor = this.findrelativenode(lastNode, orderindex)
                         } else {
                             cursor = this.nodebyindex(orderindex)
@@ -303,7 +303,7 @@ _.ambient.module("skiplist", function(_) {
 
                 // while (cursor) {
                 //     if (cursor.valueinsegment(search, compareoption)) { return cursor }
-                //     cursor = cursor.nodeprev()
+                //     cursor = cursor.prevnode()
                 // }
 
                 // return cursor
@@ -338,7 +338,7 @@ _.ambient.module("skiplist", function(_) {
 
                 while (cursor) {
                     if (cursor.valueinsegment(search, compareoption)) { return cursor }
-                    cursor = cursor.nodeprev()
+                    cursor = cursor.prevnode()
                 }
 
                 return cursor
@@ -389,7 +389,7 @@ _.ambient.module("skiplist", function(_) {
                 result += "]\n"
 
                 var result = "Items #" + this.count() + ": "
-                var lastnode = this.nodelast()
+                var lastnode = this.lastnode()
 
                 this.foreach(function(node) {
                     result += node.value()
@@ -401,7 +401,7 @@ _.ambient.module("skiplist", function(_) {
 
             this.debugvalidate = function() {
                 var errors = []
-                var cursor = this.nodefirst()
+                var cursor = this.firstnode()
                 var count = 0
 
                 var errors = supermodel.debugvalidate.call(this) || []
@@ -410,7 +410,7 @@ _.ambient.module("skiplist", function(_) {
                     var result = cursor.debugvalidate()
 
                     if (result) { errors = errors.concat(result) }
-                    cursor = cursor.nodenext()
+                    cursor = cursor.nextnode()
                 }
 
                 var segment = this._upsegment

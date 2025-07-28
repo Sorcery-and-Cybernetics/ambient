@@ -72,35 +72,54 @@ _.ambient.module("dom", function(_) {
             return element            
         }
 
-        this.appendelement = function (element, relative, appendmode) {
+        this.appendelement = function (relative,element, appendmode) {
             relative = relative || document.body
             appendmode = appendmode || _.enum.dom.lastchild
 
             switch (appendmode) {
                 case _.enum.dom.lastchild:
-                    relative.appendChild(element)
+                    this.appendlastchild(relative, element)
                     break
-                    
                 case _.enum.dom.firstchild:
-                    if (!relative.firstChild) {
-                        relative.appendChild(element)
-                    } else {
-                        relative.insertBefore(element, relative.firstChild)
-                    }
+                    this.appendfirstchild(relative, element)
                     break
-
                 case _.enum.dom.afterelement:
-                    if (relative.nextSibling) {
-                        relative.parentNode.insertBefore(element, relative.nextSibling)
-                    } else {
-                        relative.parentNode.appendChild(element)
-                    }
+                    this.appendafter(relative, element)
                     break
-
                 case _.enum.dom.beforeelement:
-                    relative.parentNode.insertBefore(element, relative)
+                    this.appendbefore(relative, element)
                     break
             }
+        }
+
+        this.appendlastchild = function(relative, element) {
+            relative = relative || document.body
+            relative.appendChild(element)
+            return this
+        }
+
+        this.appendfirstchild = function(relative, element) {
+            relative = relative || document.body
+            if (!relative.firstChild) {
+                relative.appendChild(element)
+            } else {
+                relative.insertBefore(element, relative.firstChild)
+            }
+            return this
+        }
+
+        this.appendafter = function(relative, element) {
+            if (relative.nextSibling) {
+                relative.parentNode.insertBefore(element, relative.nextSibling)
+            } else {
+                relative.parentNode.appendChild(element)
+            }
+            return this
+        }
+
+        this.appendbefore = function(relative, element) {
+            relative.parentNode.insertBefore(element, relative)
+            return this
         }
 
         this.removeelement = function (element) {

@@ -324,39 +324,39 @@ _.ambient.module("treelistnode", function (_) {
             // if (this._evolution == _.enum.evolution.destroy) { return null }
             // this._evolution = _.enum.evolution.destroy
 
-            var nodelast = null
+            var lastnode = null
 
             if (this._leftnode && this._rightnode) {
-                var nodelast = this.next()
-                nodelast._topnode.updatecount(-1)
+                var lastnode = this.next()
+                lastnode._topnode.updatecount(-1)
 
-                nodelast._leftnode = this._leftnode
-                this._leftnode._topnode = nodelast
+                lastnode._leftnode = this._leftnode
+                this._leftnode._topnode = lastnode
 
-                if (this._rightnode != nodelast) {
-                    if (nodelast._rightnode) {
-                        nodelast._topnode._leftnode = nodelast._rightnode
-                        nodelast._rightnode._topnode = nodelast._topnode
+                if (this._rightnode != lastnode) {
+                    if (lastnode._rightnode) {
+                        lastnode._topnode._leftnode = lastnode._rightnode
+                        lastnode._rightnode._topnode = lastnode._topnode
                     } else {
-                        nodelast._topnode._leftnode = null
+                        lastnode._topnode._leftnode = null
                     }
 
-                    nodelast._rightnode = this._rightnode
-                    this._rightnode._topnode = nodelast
+                    lastnode._rightnode = this._rightnode
+                    this._rightnode._topnode = lastnode
                 }
 
-                nodelast._count = this._count
+                lastnode._count = this._count
 
                 if (!this._topnode) {
-                    this._list._rootnode = nodelast
-                    nodelast._topnode = null
+                    this._list._rootnode = lastnode
+                    lastnode._topnode = null
                 } else {
-                    nodelast._topnode = this._topnode
+                    lastnode._topnode = this._topnode
 
                     if (this.ishangingleft()) {
-                        this._topnode._leftnode = nodelast
+                        this._topnode._leftnode = lastnode
                     } else {
-                        this._topnode._rightnode = nodelast
+                        this._topnode._rightnode = lastnode
                     }
                 }
 
@@ -366,28 +366,28 @@ _.ambient.module("treelistnode", function (_) {
                 }
 
                 if (this._leftnode) {
-                    var nodelast = this._leftnode
+                    var lastnode = this._leftnode
                 } else if (this._rightnode) {
-                    var nodelast = this._rightnode
+                    var lastnode = this._rightnode
                 } else {
-                    nodelast = null
+                    lastnode = null
                 }
 
                 if (!this._topnode) {
-                    this._list._rootnode = nodelast
-                    if (nodelast) {
-                        nodelast._topnode = null
+                    this._list._rootnode = lastnode
+                    if (lastnode) {
+                        lastnode._topnode = null
                     }
 
                 } else {
-                    if (nodelast) {
-                        nodelast._topnode = this._topnode
+                    if (lastnode) {
+                        lastnode._topnode = this._topnode
                     }
 
                     if (this.ishangingleft()) {
-                        this._topnode._leftnode = nodelast
+                        this._topnode._leftnode = lastnode
                     } else {
-                        this._topnode._rightnode = nodelast
+                        this._topnode._rightnode = lastnode
                     }
                 }
             }

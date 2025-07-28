@@ -8,23 +8,23 @@
 
 _.ambient.module("linkedlist", function(_) {
     _.define.object("linkedlist", function (supermodel) {
-        this._nodenext = null
-        this._nodeprev = null
+        this._nextnode = null
+        this._prevnode = null
         this._count = 0
 
         this.objectbehavior = _.behavior(function() {
             this.construct = function() {
-                this._nodenext = this
-                this._nodeprev = this
+                this._nextnode = this
+                this._prevnode = this
             }
 
             this.destroy = function () {
-                var cursor = this._nodefirst
+                var cursor = this._firstnode
 
                 while (cursor) {
-                    var nodenext = cursor.nodenext()
+                    var nextnode = cursor.nextnode()
                     cursor.destroy()
-                    cursor = nodenext
+                    cursor = nextnode
                 }
                 return null
             }
@@ -33,8 +33,8 @@ _.ambient.module("linkedlist", function(_) {
         this.linkedlistbehavior = _.behavior(function () {
             this.count = function () { return this._count }
             this.isroot = function () { return true }
-            this.nodefirst = function () { return this._nodenext.isroot()? null: this._nodenext }
-            this.nodelast = function () { return this._nodeprev.isroot()? null: this._nodeprev }
+            this.firstnode = function () { return this._nextnode.isroot()? null: this._nextnode }
+            this.lastnode = function () { return this._prevnode.isroot()? null: this._prevnode }
 
             this._makenode = function(item) {
                 if (item instanceof _.model.linkedlistnode) { return item }
@@ -43,12 +43,12 @@ _.ambient.module("linkedlist", function(_) {
 
             this.foreach = function(fn) {
                 var nodes = []
-                var cursor = this.nodefirst()
+                var cursor = this.firstnode()
                 var context = null
 
                 while (cursor) {
                     nodes.push(cursor)
-                    cursor = cursor.nodenext()
+                    cursor = cursor.nextnode()
                 }
 
                 for (var index = 0; index < nodes.length; index++) {
@@ -65,7 +65,7 @@ _.ambient.module("linkedlist", function(_) {
         this.debugbehavior = _.behavior(function() {
             this.debugvalidate = function() {
                 var errors = []
-                var cursor = this.nodefirst()
+                var cursor = this.firstnode()
                 var count = 0
 
                 while (cursor && cursor != this) {
@@ -73,23 +73,23 @@ _.ambient.module("linkedlist", function(_) {
 
                     if (cursor.list() != this) { errors.push("Node not in list") }
 
-                    if (!cursor.nodeprev()) {
-                        if (this.nodefirst() != cursor) { errors.push("nodefirst not pointing to this node") }                             
-                    } else if (!cursor.nodeprev()){
-                        errors.push("Missing nodeprev") 
+                    if (!cursor.prevnode()) {
+                        if (this.firstnode() != cursor) { errors.push("firstnode not pointing to this node") }                             
+                    } else if (!cursor.prevnode()){
+                        errors.push("Missing prevnode") 
                     } else {
-                        if (cursor.nodeprev().nodenext() != cursor) { errors.push("nodeprev not pointing to this node") }
+                        if (cursor.prevnode().nextnode() != cursor) { errors.push("prevnode not pointing to this node") }
                     }
 
-                    if (!cursor.nodenext()) {
-                        if (this.nodelast() != cursor) { errors.push("nodelast not pointing to this node") }                             
-                    } else if (!cursor.nodenext()) {
-                        errors.push("Missing nodenext")
+                    if (!cursor.nextnode()) {
+                        if (this.lastnode() != cursor) { errors.push("lastnode not pointing to this node") }                             
+                    } else if (!cursor.nextnode()) {
+                        errors.push("Missing nextnode")
                     } else {
-                        if (cursor.nodenext().nodeprev() != cursor) { errors.push("nodenext not pointing to this node") }
+                        if (cursor.nextnode().prevnode() != cursor) { errors.push("nextnode not pointing to this node") }
                     }
 
-                    cursor = cursor.nodenext()
+                    cursor = cursor.nextnode()
                 }
 
                 if (count != this.count()) { errors.push("Count mismatch") }

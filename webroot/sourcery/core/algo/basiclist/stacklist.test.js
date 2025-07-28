@@ -7,8 +7,8 @@ _.ambient.module("stacklist.test")
 
     stack.pushfirst(5)
 
-    this.assert(stack.nodefirst().value(), 5, "First node value should be 5")
-    this.assert(stack.nodelast().value(), 30, "Last node value should be 30")
+    this.assert(stack.firstnode().value(), 5, "First node value should be 5")
+    this.assert(stack.lastnode().value(), 30, "Last node value should be 30")
     this.assert(stack.count(), 4, "Stack length should be 4")
 
     var value = stack.pop()

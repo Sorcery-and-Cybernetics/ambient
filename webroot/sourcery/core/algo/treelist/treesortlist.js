@@ -15,13 +15,13 @@ _.ambient.module("treesortlist", function (_) {
         this.push = function (item) {
             var node = this.makenode(item)
             var value = this.nodesortvalue(item)
-            var found = this.findnodelast(value, true)
+            var found = this.findlastnode(value, true)
 
             this.insertnodeafter(found, node)
             return this;
         };
 
-        this.findnodefirst = function (search, findclosest) {
+        this.findfirstnode = function (search, findclosest) {
             var list = this;
             //var searchtoken = _.model.listsearchtoken(search);
 
@@ -47,7 +47,7 @@ _.ambient.module("treesortlist", function (_) {
             return findclosest == true ? closest : found
         }
 
-        this.findnodelast = function (search, findclosest) {
+        this.findlastnode = function (search, findclosest) {
             var list = this
             //var searchtoken = _.model.listsearchtoken(search);
 
@@ -76,12 +76,12 @@ _.ambient.module("treesortlist", function (_) {
         }
 
         this.findfirstposition = function (search) {
-            var node = this.findnodefirst(search)
+            var node = this.findfirstnode(search)
             return node ? node.position() : 0
         }
 
         this.findlastposition = function (search) {
-            var node = this.findnodelast(search)
+            var node = this.findlastnode(search)
             return node ? node.position() : 0
         }
     })

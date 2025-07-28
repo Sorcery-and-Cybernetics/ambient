@@ -9,8 +9,8 @@
 _.ambient.module("signaldata", function(_) {    
     _.define.object("signaldatanode", function (supermodel) {
         this.fnevent = null
-        this._nodenext = null
-        this._nodeprev = null
+        this._nextnode = null
+        this._prevnode = null
         this._isroot = false
 
         this.construct = function(fnevent) {
@@ -18,54 +18,54 @@ _.ambient.module("signaldata", function(_) {
         }
 
         this.next = function() {
-            return this._nodenext && this._nodenext._isroot ? null : this._nodenext
+            return this._nextnode && this._nextnode._isroot ? null : this._nextnode
         }
 
         this.prev = function() {
-            return this._nodeprev && this._nodeprev._isroot ? null : this._nodeprev
+            return this._prevnode && this._prevnode._isroot ? null : this._prevnode
         }
 
         this.destroy = function() {
-            this._nodenext._nodeprev = this._nodeprev
-            this._nodeprev._nodenext = this._nodenext
+            this._nextnode._prevnode = this._prevnode
+            this._prevnode._nextnode = this._nextnode
 
-            this._nodenext = null
-            this._nodeprev = null
+            this._nextnode = null
+            this._prevnode = null
         }
     })
 
     _.define.object("signaldatalist", function (supermodel) {
         this._parent = null
         this._name = null
-        this._nodenext = null
-        this._nodeprev = null
+        this._nextnode = null
+        this._prevnode = null
         this._isroot = false
 
         this.construct = function(parent, name) {
             this._parent = parent
             this._name = name
 
-            this._nodenext = this
-            this._nodeprev = this
+            this._nextnode = this
+            this._prevnode = this
         }
 
         this.add = function(fnevent) {
             var node = _.model.signaldatanode(fnevent)
 
-            node._nodeprev = this._nodeprev
-            node._nodenext = this._nodeprev._nodenext
-            node._nodeprev._nodenext = node
-            this._nodeprev = node
+            node._prevnode = this._prevnode
+            node._nextnode = this._prevnode._nextnode
+            node._prevnode._nextnode = node
+            this._prevnode = node
 
             return node
         }
 
         this.foreach = function(fn) {
-            var cursor = this._nodenext
+            var cursor = this._nextnode
             var nextcursor = null
 
             while (cursor && cursor != this) {
-                nextcursor = cursor._nodenext
+                nextcursor = cursor._nextnode
                 fn(cursor)
                 cursor = nextcursor
             }
@@ -73,11 +73,11 @@ _.ambient.module("signaldata", function(_) {
         }
 
         this.destroy = function() {
-            while (this._nodenext && this._nodenext != this) {
-                this._nodenext.destroy()
+            while (this._nextnode && this._nextnode != this) {
+                this._nextnode.destroy()
             }
-            this._nodenext = null
-            this._nodeprev = null
+            this._nextnode = null
+            this._prevnode = null
             this._parent = null
             this._name = null
         }

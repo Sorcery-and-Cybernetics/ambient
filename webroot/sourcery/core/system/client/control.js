@@ -6,17 +6,17 @@
 // Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
-_.ambient.module("dombody", function(_) {
-    _.define.enum("controlstate", ["destroyed", "none", "created", "loaded", "showed"], -1)
+_.ambient.module("control", function(_) {
+    _.define.enum("controlphase", ["destroyed", "none", "assigned", "loaded", "showed"], -1)
 
-    _.define.model("documentbody", function (supermodel) {
+    _.define.model("control", function (supermodel) {
 
         this.tagname = "DIV"
         this.tagtype = ""
 
 
-        this.controlstate = 0
-        this.controlstates = _.enum.controlstate
+        this._phase = 0
+        this.phases = _.enum.controlphase
 
         this.behavior = _.efb.none
         this.behaviors = _.efb   
@@ -29,38 +29,10 @@ _.ambient.module("dombody", function(_) {
             this._parent._childinsert(this, name, orderindex)
 
             this.setdirty()
-            this.controlstate = this.controlstates.created
+            this._phase = this.phases.assigned
 
             return this
         }
-
-        this._assignchild = function (child, name, orderindex) {
-            if (orderindex != null) {
-                var controls = this.control[name]
-                if (!controls) {
-                    controls = this.control[name] = []
-                    if (!this[name]) { this[name] = controls }
-                }
-
-                if (orderindex < 0) { orderindex = controls.length - orderindex }
-                if ((orderindex < 0) || (orderindex > controls.length)) { orderindex = 0 }
-
-                if (orderindex == 0) {
-                    controls.push(child)
-                    child.orderindex = controls.length
-                } else {
-                    controls.splice(orderindex - 1, 0, child)
-                    controlarray.reindex(controls, orderindex)
-                }
-            } else {
-                if (this[name]) {
-                    throw name + " already exists in " + parent.name
-                }
-
-                this[name] = child
-                this.control[name] = child
-            }
-        }        
 
     })
 })

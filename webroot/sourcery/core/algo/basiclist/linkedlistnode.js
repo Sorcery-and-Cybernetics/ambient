@@ -4,8 +4,8 @@
 _.ambient.module("linkedlistnode", function (_) {
 
     _.define.object("linkedlistnode", function (supermodel) {
-        this._nodenext = null
-        this._nodeprev = null
+        this._nextnode = null
+        this._prevnode = null
 
         this._list = null
         this._value = null
@@ -25,13 +25,13 @@ _.ambient.module("linkedlistnode", function (_) {
                 if (Math.abs(index) <= list.count()) { 
                     if (index < 0) {
                         while (index < -1) {
-                            cursor = cursor._nodeprev
+                            cursor = cursor._prevnode
                             index += 1
                         }
 
                     } else {
                         while (index > 0) {
-                            cursor = cursor._nodenext
+                            cursor = cursor._nextnode
                             index -= 1
                         }
                     }
@@ -39,13 +39,13 @@ _.ambient.module("linkedlistnode", function (_) {
 
                 // while (index) {
                 //     if (index < -1) {
-                //         cursor = cursor._nodeprev
+                //         cursor = cursor._prevnode
                 //         if (cursor == list) { break }
                 //         index += 1
 
                 //     } else {
-                //         cursor = cursor._nodenext
-                //         if (cursor._nodenext == list) { break }
+                //         cursor = cursor._nextnode
+                //         if (cursor._nextnode == list) { break }
                 //         index -= 1
                 //     }
                 // }
@@ -53,11 +53,11 @@ _.ambient.module("linkedlistnode", function (_) {
                 this._list = list
                 list._count += 1
 
-                this._nodenext = cursor
-                this._nodeprev = cursor._nodeprev
+                this._nextnode = cursor
+                this._prevnode = cursor._prevnode
 
-                this._nodeprev._nodenext = this
-                this._nodenext._nodeprev = this
+                this._prevnode._nextnode = this
+                this._nextnode._prevnode = this
 
                 return this
             }
@@ -67,12 +67,12 @@ _.ambient.module("linkedlistnode", function (_) {
                     this._list._count -= 1
                 }
 
-                if (this._nodenext) { this._nodenext._nodeprev = this._nodeprev }
-                if (this._nodeprev) { this._nodeprev._nodenext = this._nodenext }
+                if (this._nextnode) { this._nextnode._prevnode = this._prevnode }
+                if (this._prevnode) { this._prevnode._nextnode = this._nextnode }
 
                 this._list = null
-                this._nodenext = null
-                this._nodeprev = null
+                this._nextnode = null
+                this._prevnode = null
             }
 
             this.destroy = function () {
@@ -103,12 +103,12 @@ _.ambient.module("linkedlistnode", function (_) {
         });
 
         this.navigationbehavior = _.behavior(function() {
-            this.nodenext = function () {
-                return !this._nodenext || (this._nodenext == this._list ? null : this._nodenext)
+            this.nextnode = function () {
+                return !this._nextnode || (this._nextnode == this._list ? null : this._nextnode)
             }
 
-            this.nodeprev = function () {
-                return !this._nodeprev || (this._nodeprev == this._list ? null : this._nodeprev)
+            this.prevnode = function () {
+                return !this._prevnode || (this._prevnode == this._list ? null : this._prevnode)
             }
         })
     })

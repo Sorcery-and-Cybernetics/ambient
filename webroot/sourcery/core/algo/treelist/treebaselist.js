@@ -32,7 +32,7 @@ _.ambient.module("treebaselist", function (_) {
             if (!node) { throw "error" }
 
             if (!cursor) {
-                cursor = this.nodelast()
+                cursor = this.lastnode()
 
                 if (cursor) {
                     return this.insertnodeafter(cursor, node)
@@ -63,7 +63,7 @@ _.ambient.module("treebaselist", function (_) {
             if (!node) { throw "error" }
 
             if (!cursor) {
-                cursor = this.nodefirst()
+                cursor = this.firstnode()
 
                 if (cursor) {
                     return this.insertnodebefore(cursor, node)
@@ -137,18 +137,18 @@ _.ambient.module("treebaselist", function (_) {
         }
 
         this.firstitem = function(){
-            var cursor = this.nodefirst()
+            var cursor = this.firstnode()
 
             return cursor? cursor.item(): null
         }
 
         this.lastitem = function () {
-            var cursor = this.nodelast()
+            var cursor = this.lastnode()
 
             return cursor ? cursor.item() : null
         }
 
-        this.nodefirst = function () {
+        this.firstnode = function () {
             var cursor = this._rootnode
 
             while (cursor && cursor._leftnode) {
@@ -157,7 +157,7 @@ _.ambient.module("treebaselist", function (_) {
             return cursor
         }
 
-        this.nodelast = function () {
+        this.lastnode = function () {
             var cursor = this._rootnode
 
             while (cursor && cursor._rightnode) {
@@ -167,7 +167,7 @@ _.ambient.module("treebaselist", function (_) {
         }
 
         this.foreachitem = function (next) {
-            var cursor = this.nodefirst()
+            var cursor = this.firstnode()
 
             while (cursor) {
                 next(cursor.item())
@@ -189,7 +189,7 @@ _.ambient.module("treebaselist", function (_) {
                 _.debug("")
                 _.debug("Treelist debugdump")
 
-                var cursor = this.nodefirst()
+                var cursor = this.firstnode()
 
                 while (cursor) {
                     cursor.debugdump()
