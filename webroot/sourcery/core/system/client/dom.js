@@ -17,7 +17,10 @@ _.ambient.module("dom", function(_) {
         this.lastmousetime = 0
         this.eventhistory = null
 
+        this.elements = null
+
         this.construct = function() {
+            this.elements = {}
             this.eventhistory = {}
         }
 
@@ -72,7 +75,7 @@ _.ambient.module("dom", function(_) {
             return element            
         }
 
-        this.appendelement = function (relative,element, appendmode) {
+        this.appendelement = function (relative, element, appendmode) {
             relative = relative || document.body
             appendmode = appendmode || _.enum.dom.lastchild
 
@@ -84,52 +87,33 @@ _.ambient.module("dom", function(_) {
                     this.appendfirstchild(relative, element)
                     break
                 case _.enum.dom.afterelement:
+                    if (relative == document.body) { throw "error" }
                     this.appendafter(relative, element)
                     break
                 case _.enum.dom.beforeelement:
+                    if (relative == document.body) { throw "error" }
                     this.appendbefore(relative, element)
                     break
             }
+
+            element._uid = _.uniqueid()
+            this.elements[element._uid] = element
+
+            return element
         }
 
-        this.appendlastchild = function(relative, element) {
-            relative = relative || document.body
-            relative.appendChild(element)
-            return this
-        }
-
-        this.appendfirstchild = function(relative, element) {
-            relative = relative || document.body
-            if (!relative.firstChild) {
-                relative.appendChild(element)
-            } else {
-                relative.insertBefore(element, relative.firstChild)
-            }
-            return this
-        }
-
-        this.appendafter = function(relative, element) {
-            if (relative.nextSibling) {
-                relative.parentNode.insertBefore(element, relative.nextSibling)
-            } else {
-                relative.parentNode.appendChild(element)
-            }
-            return this
-        }
-
-        this.appendbefore = function(relative, element) {
-            relative.parentNode.insertBefore(element, relative)
-            return this
-        }
+        this.appendlastchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.lastchild) }
+        this.appendfirstchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.firstchild) }
+        this.appendafter = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.afterelement) }
+        this.appendbefore = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.beforeelement) }
 
         this.removeelement = function (element) {
-            if (element.uniqueid) { delete elements[element.uniqueid] }
-            if (!element.parentNode) {
-                _.debug("Element doesn't exist")
-            } else {
-                element.parentNode.removeChild(element)
-            }
-            return null
+            if (!element) { _.system.warn("Element doesn't exist") }
+
+            if (element._uid) { delete this.elements[element._uid] }
+            element.parentNode.removeChild(element)
+
+            return this
         } 
     })    
 })
