@@ -63,16 +63,22 @@
     }
 
     _.foreach = function (items, next) {
-        if (_.isarray(items)) {
-            for (var index = 0; index < items.length; index++) {
-                next(items[index], index)
-            }
-        } else {
-            for (var key in items) {
-                if (items.hasOwnProperty(key)) {
-                    next(items[key], key)
-                }
-            }
+        var items = _.isarray(items) ? items : Object.keys(items)
+        var index = 0
+
+        while (index < items.length) {
+            next(items[index], index)
+            index++
+        }
+    }
+
+    _.rofeach = function (items, next) {
+        var items = _.isarray(items) ? items : Object.keys(items)
+        var index = items.length
+
+        while (index) {
+            index--
+            next(items[index], index)
         }
     }
     

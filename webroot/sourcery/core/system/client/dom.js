@@ -1,10 +1,8 @@
-//****************************************************************************************************************************
+//**************************************************************************************************
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
-// 
-// Style: Be Basic!
-// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
-//****************************************************************************************************************************
+// See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
+
 
 _.ambient.module("dom", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
@@ -115,5 +113,36 @@ _.ambient.module("dom", function(_) {
 
             return this
         } 
-    })    
+
+        this.observe = function() {
+            var me = this
+
+            this.observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.removedNodes.forEach(function(removedNode) {
+                        var uid = removedNode._uid
+
+                        var element = me.elements[uid]
+                        if (element) { 
+                            element.destroy()
+                            delete me.elements[uid] 
+                        }
+                    })
+                })
+            })
+
+            this.observer.observe(document.body, { childList: true, subtree: true })            
+        }
+
+        this.unobserve = function() {
+            this.observer.disconnect()
+            this.observer = null
+        }
+    })
+}).onload(function(_) {
+    _.dom.observe()
+}).onunload(function(_) {
+    _.dom.unobserve()
 })
+
+

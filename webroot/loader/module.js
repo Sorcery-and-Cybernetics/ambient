@@ -12,6 +12,7 @@
 
             , _source: ""
             , _onload: null
+            , _onunload: null
             , _tests: null
             
             , construct: function (parent, name, rule) {
@@ -73,6 +74,11 @@
             , onload: function(source) {
                 this._onload = source
                 return this                
+            }
+
+            , onunload: function(source) {
+                this._onunload = source
+                return this
             }
 
             , ontest: function(testname, source) {

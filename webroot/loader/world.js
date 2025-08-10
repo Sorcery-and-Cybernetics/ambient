@@ -29,6 +29,16 @@
                 
                 return this
             }
+
+            , unload: function() {
+                var me = this
+
+                _.rofeach(this._modules, function(module) {
+                    if (module._onunload) { module._onunload(me) }
+                }) 
+                
+                return this
+            }
         }
     })
 }) (_.ambient)
