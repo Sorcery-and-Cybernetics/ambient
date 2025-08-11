@@ -149,50 +149,91 @@ _.ambient.module("dom", function(_) {
         }
 
         this.eventbehavior = _.behavior(function() {
+            this.eventconfig = [
+                [{ name: "keydown", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "keyup", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "selectstart", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "input", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "focus", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "click", target:  "body",  execute: bodyeventhandler }]
+                , [{ name: "change", target:  "body",  execute: bodyeventhandler }]
+
+                , [{ name: "scroll", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "resize", target:  "window",  execute: function(event) { me.onresize(event) } }]
+                , [{ name: "unload", target:  "window",  execute: function(event) { me.onunload(event) } }]
+                , [{ name: "touchstart", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "touchend", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "touchmove", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "mouseout", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "mousedown", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "mouseup", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "mouseover", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "mousemove", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "wheel", target:  "window",  execute: bodyeventhandler }]
+                , [{ name: "beforeunload", target:  "window",  execute: function(event) { me.onbeforeunload(event) } }]
+                , [{ name: "visibilitychange", target:  "document",  execute: function(event) { me.onvisibilitychange(event) } }]
+            ]
+
             this.addevent = function (element, eventname, eventhandler) {
-                element.addEventListener(eventname, eventhandler || this.defaulteventhandler, true)
+                element.addEventListener(eventname, eventhandler, true)
             }
 
             this.removeevent = function (element, eventname, eventhandler) {
-                element.removeEventListener(eventname, eventhandler || this.defaulteventhandler, true)
+                element.removeEventListener(eventname, eventhandler, true)
             } 
             
             this.observeevents = function() {
                 var me = this
-                var eventhandler = this.handledomevent.bind(this)
+                
+                var bodyeventhandler = function(event) {
+                    if (me.body) {
+                        me.body.handledomevent(event)
+                    }
+                }
 
-                var bodyevents = [
-                    "keydown", "keyup", 
-                    "selectstart", "input", 
-                    "focus", "click", "change"
-                ]
+                _.foreach(this.eventconfig, function(item) {
+                    var target = null
 
-                var windowevents = [
-                    "scroll", "resize", "unload", 
-                    "touchstart", "touchend", "touchmove",
-                    "mouseout", "mousedown", "mouseup", 
-                    "mouseover", "mousemove", "wheel",
-                    "contextmenu", "beforeunload"
-                ]
-
-                var documentevents = [
-                    "visibilitychange"
-                ]
-
-                _.foreach(bodyevents, function(eventname) { 
-                    me.addevent(document.body, eventname, eventhandler) 
-                })
-
-                _.foreach(windowevents, function(eventname) { 
-                    me.addevent(window, eventname, eventhandler) 
-                })
-
-                _.foreach(documentevents, function(eventname) { 
-                    me.addevent(document, eventname, eventhandler) 
+                    switch (item.target) {
+                        case "body":
+                            target = document.body
+                            break
+                        case "window":
+                            target = window
+                            break
+                        case "document":
+                            target = document
+                            break
+                    }
+                   
+                    me.addevent(target, item.name, item.execute)
                 })
             }
 
-            this.unobserveevents = function() {}
+            this.unobserveevents = function() {
+                _.foreach(this.eventconfig, function(item) {
+                    var target = null
+
+                    switch (item.target) {
+                        case "body":
+                            target = document.body
+                            break
+                        case "window":
+                            target = window
+                            break
+                        case "document":
+                            target = document
+                            break
+                    }
+                   
+                    me.removeevent(target, item.name, item.execute)
+                })
+            }            
+
+            this.onresize = _.signal()
+            this.onunload = _.signal()
+            this.onbeforeunload = _.signal()
+            this.onvisibilitychange = _.signal()
         })
     })
 })
