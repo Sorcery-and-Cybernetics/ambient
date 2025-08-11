@@ -4,7 +4,7 @@
 //**************************************************************************************************
 
 _.ambient.module("domelement", function(_) {
-    _.define.object("basicdomelement", function(supermodel) {
+    _.define.object("domelement", function(supermodel) {
         this.element = null
         this.listeners = null
 
@@ -49,6 +49,65 @@ _.ambient.module("domelement", function(_) {
             this.tag = function() {
                 return this.element? _.lcase$(this.element.tagName): null
             } 
+
+            this.classname = function(value) {
+                if (value === undefined) { return (this.element? this.element.className: null) }
+
+                if (this.element) { this.element.className = value }
+                return this            
+            }
+
+            this.text = function(value) {
+                if (value === undefined) { return (this.element? this.element.textContent: null) }
+
+                if (this.element) { this.element.textContent = value }
+                return this           
+            }
+
+            this.html = function(value) {
+                if (value === undefined) { return (this.element? this.element.innerHTML: null) }
+
+                if (this.element) { this.element.innerHTML = value }
+                return this
+            }
+
+            this.attr = function(name, value) {
+                if (value === undefined) { return this.element? this.element.getAttribute(name): null }
+
+                if (this.element) {
+                    if (value === null) { 
+                        this.element.removeAttribute(name) 
+
+                    } else { 
+                        this.element.setAttribute(name, value) 
+                    }
+                }
+                return this
+            }
+
+            this.style = function(name, value) {
+                if (value === undefined) { return this.element? this.element.style[name]: null }
+
+                if (this.element) { this.element.style[name] = value }
+                return this
+            }
+
+            this.rect = function() {
+                return this.element ? this.element.getBoundingClientRect() : null
+            }
+
+            this.scrolltop = function(value) {
+                if (value === undefined) { return this.element ? this.element.scrollTop : null }
+                if (this.element) { this.element.scrollTop = value }
+                return this
+            }
+
+            this.scrollleft = function(value) {
+                if (value === undefined) { return this.element ? this.element.scrollLeft : null }
+                if (this.element) { this.element.scrollLeft = value }
+                return this
+            }            
+
         })
         
         this.eventbehavior = _.behavior(function() {
@@ -80,93 +139,35 @@ _.ambient.module("domelement", function(_) {
                 return this
             } 
         })       
-    })
-
-    _.define.basicdomelement("domelement", function(supermodel) {
-        this.classname = function(value) {
-            if (value === undefined) { return (this.element? this.element.className: null) }
-
-            if (this.element) { this.element.className = value }
-            return this            
-        }
 
 
-        this.text = function(value) {
-            if (value === undefined) { return (this.element? this.element.textContent: null) }
-
-            if (this.element) { this.element.textContent = value }
-            return this           
-        }
-
-        this.html = function(value) {
-            if (value === undefined) { return (this.element? this.element.innerHTML: null) }
-
-            if (this.element) { this.element.innerHTML = value }
-            return this
-        }
-
-        this.attr = function(name, value) {
-            if (value === undefined) { return this.element? this.element.getAttribute(name): null }
-
-            if (this.element) {
-                if (value === null) { 
-                    this.element.removeAttribute(name) 
-
-                } else { 
-                    this.element.setAttribute(name, value) 
-                }
+        this.statebehavior = _.behavior(function() {
+            this.show = function() {
+                if (this.element) { this.element.style.display = "" }
+                return this
             }
-            return this
-        }
 
-        this.style = function(name, value) {
-            if (value === undefined) { return this.element? this.element.style[name]: null }
+            this.hide = function() {
+                if (this.element) { this.element.style.display = "none" }
+                return this
+            }
 
-            if (this.element) { this.element.style[name] = value }
-            return this
-        }
+            this.focus = function() {
+                if (this.element && this.element.focus) { this.element.focus() }
+                return this
+            }
 
-        this.show = function() {
-            if (this.element) { this.element.style.display = "" }
-            return this
-        }
+            this.defocus = function() {
+                if (this.element && this.element.blur) { this.element.blur() }
+                return this
+            }        
 
-        this.hide = function() {
-            if (this.element) { this.element.style.display = "none" }
-            return this
-        }
+            this.enabled = function(value) {
+                if (value === undefined) { return !(this.element && this.element.disabled) }
 
-        this.focus = function() {
-            if (this.element && this.element.focus) { this.element.focus() }
-            return this
-        }
-
-        this.defocus = function() {
-            if (this.element && this.element.blur) { this.element.blur() }
-            return this
-        }        
-
-        this.enabled = function(value) {
-            if (value === undefined) { return !(this.element && this.element.disabled) }
-
-            if (this.element) { this.element.disabled = !value }
-            return this
-        }        
-
-        this.rect = function() {
-            return this.element ? this.element.getBoundingClientRect() : null
-        }
-
-        this.scrolltop = function(value) {
-            if (value === undefined) { return this.element ? this.element.scrollTop : null }
-            if (this.element) { this.element.scrollTop = value }
-            return this
-        }
-
-        this.scrollleft = function(value) {
-            if (value === undefined) { return this.element ? this.element.scrollLeft : null }
-            if (this.element) { this.element.scrollLeft = value }
-            return this
-        }
+                if (this.element) { this.element.disabled = !value }
+                return this
+            } 
+        })       
     })
 })

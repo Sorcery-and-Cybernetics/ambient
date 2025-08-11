@@ -17,104 +17,113 @@ _.ambient.module("dom", function(_) {
 
         this.elements = null
 
-        this.construct = function() {
-            this.elements = {}
-            this.eventhistory = {}
-        }
+        this.constructbehavior = _.behavior(function() {
+            this.construct = function() {
+                this.elements = {}
+                this.eventhistory = {}
 
-        this.orientation = function () { return (this.pagewidth() >= (this.pageheight())) ? "landscape" : "portrait" }
+                this.observemutations()
+                this.observeevents()
 
-        this.pageleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
-        this.pagetop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
-        this.pagewidth = function () { return document.body.clientWidth }
-        this.pageheight = function () { return document.body.clientHeight }
+            }
 
-        this.bodyleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
-        this.bodytop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
-        this.bodywidth = function () { return _.dom.page? _.dom.page.currentstyle.width: 0 }
-        this.bodyheight = function () { return _.dom.page? _.dom.page.currentstyle.height: 0 }
+            this.destroy = function() {
+                this.unobservemutations()
+                this.unobserveevents()
+            }
+        })
 
-        this.devicepixels = function () { return window.devicePixelRatio || 1 }
+        this.pagebehavior = _.behavior(function() {
+            this.orientation = function () { return (this.pagewidth() >= (this.pageheight())) ? "landscape" : "portrait" }
 
-        this.scrolleft = function (value) { 
-            if (value === undefined) { return window.pageXOffset || document.documentElement.scrollLeft }            
-            window.scrollTo(value, this.scroltop())
-            return this
-        }
+            this.pageleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
+            this.pagetop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
+            this.pagewidth = function () { return document.body.clientWidth }
+            this.pageheight = function () { return document.body.clientHeight }
 
-        this.scroltop = function (value) { 
-            if (value === undefined) { return window.pageYOffset || document.documentElement.scrollTop } 
-            window.scrollTo(this.scrolleft(), value) 
-            return this
-        }
+            this.bodyleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
+            this.bodytop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
+            this.bodywidth = function () { return _.dom.page? _.dom.page.currentstyle.width: 0 }
+            this.bodyheight = function () { return _.dom.page? _.dom.page.currentstyle.height: 0 }
 
-        this.scrolwidth = function () { return document.body.scrollWidth }
-        this.scrolheight = function () { return document.body.scrollHeight }
+            this.devicepixels = function () { return window.devicePixelRatio || 1 }
 
-        this.page = function () { return document.body }
+            this.scrolleft = function (value) { 
+                if (value === undefined) { return window.pageXOffset || document.documentElement.scrollLeft }            
+                window.scrollTo(value, this.scroltop())
+                return this
+            }
 
-        this.attribute = function(element, name, value) {
-            if (value === undefined) { return element.getAttribute(name) }
-            element.setAttribute(name, value)
-            return this
-        }
+            this.scroltop = function (value) { 
+                if (value === undefined) { return window.pageYOffset || document.documentElement.scrollTop } 
+                window.scrollTo(this.scrolleft(), value) 
+                return this
+            }
 
-        this.createelement = function (tag, tagtype, namespace) {
-            if (_.iselement(tag)) {
-                var element = tag
-            } else {
-                if (namespace) {
-                    var element = document.createElementNS(namespace, tag)
+            this.scrolwidth = function () { return document.body.scrollWidth }
+            this.scrolheight = function () { return document.body.scrollHeight }
+
+            this.page = function () { return document.body }
+        })
+
+        this.elementbehavior = _.behavior(function() {
+            this.createelement = function (tag, tagtype, namespace) {
+                if (_.iselement(tag)) {
+                    var element = tag
                 } else {
-                    var element = document.createElement(tag)
+                    if (namespace) {
+                        var element = document.createElementNS(namespace, tag)
+                    } else {
+                        var element = document.createElement(tag)
+                    }
+                    if (tagtype) { this.attribute(element, "type", tagtype) }                
                 }
-                if (tagtype) { this.attribute(element, "type", tagtype) }                
-            }
-            return element            
-        }
-
-        this.appendelement = function (relative, element, appendmode) {
-            relative = relative || document.body
-            appendmode = appendmode || _.enum.dom.lastchild
-
-            switch (appendmode) {
-                case _.enum.dom.lastchild:
-                    this.appendlastchild(relative, element)
-                    break
-                case _.enum.dom.firstchild:
-                    this.appendfirstchild(relative, element)
-                    break
-                case _.enum.dom.afterelement:
-                    if (relative == document.body) { throw "error" }
-                    this.appendafter(relative, element)
-                    break
-                case _.enum.dom.beforeelement:
-                    if (relative == document.body) { throw "error" }
-                    this.appendbefore(relative, element)
-                    break
+                return element            
             }
 
-            element._uid = _.uniqueid()
-            this.elements[element._uid] = element
+            this.appendelement = function (relative, element, appendmode) {
+                relative = relative || document.body
+                appendmode = appendmode || _.enum.dom.lastchild
 
-            return element
-        }
+                switch (appendmode) {
+                    case _.enum.dom.lastchild:
+                        this.appendlastchild(relative, element)
+                        break
+                    case _.enum.dom.firstchild:
+                        this.appendfirstchild(relative, element)
+                        break
+                    case _.enum.dom.afterelement:
+                        if (relative == document.body) { throw "error" }
+                        this.appendafter(relative, element)
+                        break
+                    case _.enum.dom.beforeelement:
+                        if (relative == document.body) { throw "error" }
+                        this.appendbefore(relative, element)
+                        break
+                }
 
-        this.appendlastchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.lastchild) }
-        this.appendfirstchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.firstchild) }
-        this.appendafter = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.afterelement) }
-        this.appendbefore = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.beforeelement) }
+                element._uid = _.uniqueid()
+                this.elements[element._uid] = element
 
-        this.removeelement = function (element) {
-            if (!element) { _.system.warn("Element doesn't exist") }
+                return element
+            }
 
-            if (element._uid) { delete this.elements[element._uid] }
-            element.parentNode.removeChild(element)
+            this.appendlastchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.lastchild) }
+            this.appendfirstchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.firstchild) }
+            this.appendafter = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.afterelement) }
+            this.appendbefore = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.beforeelement) }
 
-            return this
-        } 
+            this.removeelement = function (element) {
+                if (!element) { _.system.warn("Element doesn't exist") }
 
-        this.observe = function() {
+                if (element._uid) { delete this.elements[element._uid] }
+                element.parentNode.removeChild(element)
+
+                return this
+            } 
+        })
+
+        this.observemutations = function() {
             var me = this
 
             this.observer = new MutationObserver(function(mutations) {
@@ -134,15 +143,56 @@ _.ambient.module("dom", function(_) {
             this.observer.observe(document.body, { childList: true, subtree: true })            
         }
 
-        this.unobserve = function() {
+        this.unobservemutations = function() {
             this.observer.disconnect()
             this.observer = null
         }
+
+        this.eventbehavior = _.behavior(function() {
+            this.addevent = function (element, eventname, eventhandler) {
+                element.addEventListener(eventname, eventhandler || this.defaulteventhandler, true)
+            }
+
+            this.removeevent = function (element, eventname, eventhandler) {
+                element.removeEventListener(eventname, eventhandler || this.defaulteventhandler, true)
+            } 
+            
+            this.observeevents = function() {
+                var me = this
+                var eventhandler = this.handledomevent.bind(this)
+
+                var bodyevents = [
+                    "keydown", "keyup", 
+                    "selectstart", "input", 
+                    "focus", "click", "change"
+                ]
+
+                var windowevents = [
+                    "scroll", "resize", "unload", 
+                    "touchstart", "touchend", "touchmove",
+                    "mouseout", "mousedown", "mouseup", 
+                    "mouseover", "mousemove", "wheel",
+                    "contextmenu", "beforeunload"
+                ]
+
+                var documentevents = [
+                    "visibilitychange"
+                ]
+
+                _.foreach(bodyevents, function(eventname) { 
+                    me.addevent(document.body, eventname, eventhandler) 
+                })
+
+                _.foreach(windowevents, function(eventname) { 
+                    me.addevent(window, eventname, eventhandler) 
+                })
+
+                _.foreach(documentevents, function(eventname) { 
+                    me.addevent(document, eventname, eventhandler) 
+                })
+            }
+
+            this.unobserveevents = function() {}
+        })
     })
-}).onload(function(_) {
-    _.dom.observe()
-}).onunload(function(_) {
-    _.dom.unobserve()
 })
-
-
