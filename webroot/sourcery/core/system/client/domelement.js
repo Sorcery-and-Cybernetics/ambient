@@ -4,95 +4,168 @@
 //**************************************************************************************************
 
 _.ambient.module("domelement", function(_) {
-    _.define.object("domelement", function(supermodel) {
+    _.define.object("basicdomelement", function(supermodel) {
         this.element = null
+        this.listeners = null
 
-        this.construct = function(element) {
-            this.element = element || null
+        this.constructbehavior = _.behavior(function() {
+            this.construct = function(element) {
+                this.element = element || null
+            }
+
+            this.destroy = function() {
+                this.clearevents()
+
+                var element = this.element
+                if (element) {
+                    this.element = null
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element)
+                    }
+                }
+                return null
+            }
+
+            this.exists = function() {
+                return !!(this.element && document.documentElement.contains(this.element))
+            }
+        })
+
+        this.objectbehavior = _.behavior(function() {
+            this.id = function(value) {
+                if (value === undefined) { return (this.element? this.element.id: null) }
+
+                if (this.element) { this.element.id = value }
+                return this
+            }  
+            
+            this.uid = function(value) {
+                if (value === undefined) { return (this.element? this.element._uid: null) }
+
+                if (this.element) { this.element._uid = value }
+                return this
+            } 
+            
+            this.tag = function() {
+                return this.element? _.lcase$(this.element.tagName): null
+            } 
+        })
+        
+        this.eventbehavior = _.behavior(function() {
+            this.addevent = function(name, callback) {
+                if (!this.element) { return this }
+                if (!this.listeners) { this.listeners = {} }
+                if (this.listeners[name]) { this.delevent(name) }
+                this.listeners[name] = callback
+                this.element.addEventListener(name, callback)
+                return this
+            }
+
+            this.delevent = function(name) {
+                if (this.listeners && this.listeners[name]) {
+                    if (this.element) { 
+                        this.element.removeEventListener(name, this.listeners[name]) 
+                    }
+                    delete this.listeners[name]
+                }
+                return this
+            }
+
+            this.clearevents = function() {
+                for (var name in this.listeners) {
+                    this.delevent(name)
+                }
+
+                this.listeners = {}
+                return this
+            } 
+        })       
+    })
+
+    _.define.basicdomelement("domelement", function(supermodel) {
+        this.classname = function(value) {
+            if (value === undefined) { return (this.element? this.element.className: null) }
+
+            if (this.element) { this.element.className = value }
+            return this            
         }
 
-        this.getid = function() {
-            if (!this.element) { return null }
-            return this.element.id
+
+        this.text = function(value) {
+            if (value === undefined) { return (this.element? this.element.textContent: null) }
+
+            if (this.element) { this.element.textContent = value }
+            return this           
         }
 
-        this.getclass = function() {
-            if (!this.element) { return null }
-            return this.element.className
+        this.html = function(value) {
+            if (value === undefined) { return (this.element? this.element.innerHTML: null) }
+
+            if (this.element) { this.element.innerHTML = value }
+            return this
         }
 
-        this.gettag = function() {
-            if (!this.element) { return null }
-            return this.element.tagName.toLowerCase()
+        this.attr = function(name, value) {
+            if (value === undefined) { return this.element? this.element.getAttribute(name): null }
+
+            if (this.element) {
+                if (value === null) { 
+                    this.element.removeAttribute(name) 
+
+                } else { 
+                    this.element.setAttribute(name, value) 
+                }
+            }
+            return this
         }
 
-        this.gettext = function() {
-            if (!this.element) { return null }
-            return this.element.textContent
-        }
+        this.style = function(name, value) {
+            if (value === undefined) { return this.element? this.element.style[name]: null }
 
-        this.settext = function(text) {
-            if (!this.element) { return this }
-            this.element.textContent = text
+            if (this.element) { this.element.style[name] = value }
             return this
         }
 
         this.show = function() {
-            if (!this.element) { return this }
-            this.element.style.display = ""
+            if (this.element) { this.element.style.display = "" }
             return this
         }
 
         this.hide = function() {
-            if (!this.element) { return this }
-            this.element.style.display = "none"
+            if (this.element) { this.element.style.display = "none" }
             return this
         }
 
-        this.addclass = function(classname) {
-            if (!this.element) { return this }
-            if (this.element.classList) {
-                this.element.classList.add(classname)
-            } else {
-                var classes = this.element.className.split(" ")
-                if (classes.indexOf(classname) < 0) { classes.push(classname) }
-                this.element.className = classes.join(" ")
-            }
+        this.focus = function() {
+            if (this.element && this.element.focus) { this.element.focus() }
             return this
         }
 
-        this.removeclass = function(classname) {
-            if (!this.element) { return this }
-            if (this.element.classList) {
-                this.element.classList.remove(classname)
-            } else {
-                var classes = this.element.className.split(" ")
-                var idx = classes.indexOf(classname)
-                if (idx >= 0) { classes.splice(idx, 1) }
-                this.element.className = classes.join(" ")
-            }
+        this.defocus = function() {
+            if (this.element && this.element.blur) { this.element.blur() }
+            return this
+        }        
+
+        this.enabled = function(value) {
+            if (value === undefined) { return !(this.element && this.element.disabled) }
+
+            if (this.element) { this.element.disabled = !value }
+            return this
+        }        
+
+        this.rect = function() {
+            return this.element ? this.element.getBoundingClientRect() : null
+        }
+
+        this.scrolltop = function(value) {
+            if (value === undefined) { return this.element ? this.element.scrollTop : null }
+            if (this.element) { this.element.scrollTop = value }
             return this
         }
 
-        this.hasclass = function(classname) {
-            if (!this.element) { return false }
-            if (this.element.classList) {
-                return this.element.classList.contains(classname)
-            } else {
-                var classes = this.element.className.split(" ")
-                return classes.indexOf(classname) >= 0
-            }
-        }
-
-        this.on = function(event, handler) {
-            if (!this.element) { return this }
-            this.element.addEventListener(event, handler)
-            return this
-        }
-
-        this.off = function(event, handler) {
-            if (!this.element) { return this }
-            this.element.removeEventListener(event, handler)
+        this.scrollleft = function(value) {
+            if (value === undefined) { return this.element ? this.element.scrollLeft : null }
+            if (this.element) { this.element.scrollLeft = value }
             return this
         }
     })
