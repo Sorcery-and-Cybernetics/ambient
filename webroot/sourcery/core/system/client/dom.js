@@ -3,7 +3,6 @@
 // See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-
 _.ambient.module("dom", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
 
@@ -16,15 +15,26 @@ _.ambient.module("dom", function(_) {
         this.eventhistory = null
 
         this.elements = null
+        this.body = null
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function() {
                 this.elements = {}
                 this.eventhistory = {}
 
-                this.observemutations()
-                this.observeevents()
+                var me = this
 
+                if (document.body) {
+                    me.body = _.model.dombody(document.body)
+                    this.observemutations()
+                    this.observeevents()                    
+                } else {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        me.body = _.model.dombody(document.body)
+                        this.observemutations()
+                        this.observeevents()                        
+                    })
+                }                
             }
 
             this.destroy = function() {
@@ -36,15 +46,10 @@ _.ambient.module("dom", function(_) {
         this.pagebehavior = _.behavior(function() {
             this.orientation = function () { return (this.pagewidth() >= (this.pageheight())) ? "landscape" : "portrait" }
 
-            this.pageleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
-            this.pagetop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
-            this.pagewidth = function () { return document.body.clientWidth }
-            this.pageheight = function () { return document.body.clientHeight }
-
-            this.bodyleft = function () { return _.dom.page? _.dom.page.currentstyle.left: 0 }
-            this.bodytop = function () { return _.dom.page? _.dom.page.currentstyle.top: 0 }
-            this.bodywidth = function () { return _.dom.page? _.dom.page.currentstyle.width: 0 }
-            this.bodyheight = function () { return _.dom.page? _.dom.page.currentstyle.height: 0 }
+            this.pageleft = function() { return window.scrollX }
+            this.pagetop = function() { return window.scrollY }
+            this.pagewidth = function() { return window.innerWidth }
+            this.pageheight = function() { return window.innerHeight }
 
             this.devicepixels = function () { return window.devicePixelRatio || 1 }
 
@@ -60,8 +65,8 @@ _.ambient.module("dom", function(_) {
                 return this
             }
 
-            this.scrolwidth = function () { return document.body.scrollWidth }
-            this.scrolheight = function () { return document.body.scrollHeight }
+            this.scrolwidth = function () { return document.documentElement.scrollWidth }
+            this.scrolheight = function () { return document.documentElement.scrollHeight }
 
             this.page = function () { return document.body }
         })

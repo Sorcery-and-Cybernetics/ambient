@@ -10,7 +10,9 @@ _.ambient.module("domelement", function(_) {
 
         this.constructbehavior = _.behavior(function() {
             this.construct = function(element) {
-                this.element = element || null
+                if (!element) { throw "error" }
+                if (!element._uid) { element._uid = _.uniqueid() }
+                this.element = element
             }
 
             this.destroy = function() {
@@ -91,11 +93,45 @@ _.ambient.module("domelement", function(_) {
                 if (this.element) { this.element.style[name] = value }
                 return this
             }
+        })
 
-            this.rect = function() {
+        this.positionbehavior = _.behavior(function() {
+            this.boundingrect = function() {
                 return this.element ? this.element.getBoundingClientRect() : null
             }
 
+            this.left = function(value) {
+                if (value === undefined) { return this.element ? this.element.offsetLeft : null }
+                if (this.element) { this.element.style.left = value + "px" }
+                return this
+            }
+
+            this.top = function(value) {
+                if (value === undefined) { return this.element ? this.element.offsetTop : null }
+                if (this.element) { this.element.style.top = value + "px" }
+                return this
+            }
+
+            this.width = function(value) {
+                if (value === undefined) { return this.element ? this.element.offsetWidth : null }
+                if (this.element) { this.element.style.width = value + "px" }
+                return this
+            }
+
+            this.absoluteleft = function() {
+                return this.element ? this.element.getBoundingClientRect().left : null
+            }
+
+            this.absolutetop = function() {
+                return this.element ? this.element.getBoundingClientRect().top : null
+            }
+
+            this.height = function(value) {
+                if (value === undefined) { return this.element ? this.element.offsetHeight : null }
+                if (this.element) { this.element.style.height = value + "px" }
+                return this
+            }  
+            
             this.scrolltop = function(value) {
                 if (value === undefined) { return this.element ? this.element.scrollTop : null }
                 if (this.element) { this.element.scrollTop = value }
@@ -106,8 +142,15 @@ _.ambient.module("domelement", function(_) {
                 if (value === undefined) { return this.element ? this.element.scrollLeft : null }
                 if (this.element) { this.element.scrollLeft = value }
                 return this
-            }            
+            }  
 
+            this.scrollwidth = function() {
+                return this.element ? this.element.scrollWidth : null
+            }  
+
+            this.scrollheight = function() {
+                return this.element ? this.element.scrollHeight : null
+            }            
         })
         
         this.eventbehavior = _.behavior(function() {
@@ -135,7 +178,7 @@ _.ambient.module("domelement", function(_) {
                     this.delevent(name)
                 }
 
-                this.listeners = {}
+                this.listeners = null
                 return this
             } 
         })       
