@@ -56,7 +56,6 @@ _.ambient.module("property", function (_) {
         }
 
         this.definetrait = function (modeldef, traitname) {
-            this._parent = modeldef
             this._name = traitname
 
             var result = makeproperty(this, modeldef)

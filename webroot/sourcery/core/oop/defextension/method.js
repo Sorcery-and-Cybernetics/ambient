@@ -25,7 +25,6 @@ _.ambient.module("method", function (_) {
         }            
 
         this.definetrait = function (modeldef, traitname) {
-            this._parent = modeldef
             this._name = traitname
 
             var result = makemethod(this, modeldef)

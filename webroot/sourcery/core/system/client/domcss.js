@@ -141,7 +141,7 @@ _.ambient.module("domcss", function(_) {
                 bottom = height * -1
                 bottom = 0
             }
-            return this.move(left, top, width, right, bottom)
+            return this.move(left, top, width, height, right, bottom)
         }
 
         this.setborder = function (border, color, width, style) {

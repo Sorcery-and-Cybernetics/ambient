@@ -18,11 +18,14 @@ _.ambient.module("defextender", function (_) {
 
                 if (!_.isfunction(traitvalue) && this.hasOwnProperty(traitname)) {
                     switch (traitname) {
-                        case "_modelname":
                         case "_parent":
+                        case "_modelname":
+                        case "_supermodel":    
+                        case "_phase":
                         case "_definition":
-                        case "_name":
+                        case "_self":                         
                             break
+                            
                         default:
                             var supervalue = superdef[traitname]
 

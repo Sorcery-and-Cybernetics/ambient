@@ -210,10 +210,12 @@ _.ambient.module("oophelper", function (_) {
                 if (extenddef.hasOwnProperty(traitname)) {
                     
                     switch (traitname) {
+                        case "_parent":
                         case "_modelname":
                         case "_supermodel":    
+                        case "_phase":
                         case "_definition":
-                            
+                        case "_self":                 
                             //Filter out protected keys
                             break
 

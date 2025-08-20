@@ -3,10 +3,23 @@
 // See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("dom", function(_) {
+_.ambient.module("domdocument", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
 
-    _.define.globalobject("dom", function (supermodel) {
+    _.cunit = function (coord, units) {
+        units = units || "px"
+        if ((coord == null) || (coord == "")) { return coord }
+        var result = _.cstr(coord)
+        var length = result.length
+
+        if (length > 0) {
+            var charcode = result.charCodeAt(length - 1);
+            if ((charcode >= 48) && (charcode <= 57)) { result += units; }
+        }
+        return result;
+    }    
+
+    _.define.globalobject("domdocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
