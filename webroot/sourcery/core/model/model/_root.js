@@ -1,5 +1,6 @@
 _.ambient.rootmodule("model/")
-    .include("model/")
     .include("selfnode")
+    .include("ofnode")
+    .include("model")
     .include("modelagent")
     .include("modelvalue")
