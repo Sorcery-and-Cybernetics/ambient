@@ -7,7 +7,7 @@ Ambient supports modular and event-driven testing. Tests can be placed in dedica
 - Assert with:
  --`this.test(actual)` and related methods (`is`, `isnot`, `has`, `hasnot`).
  --`this.assert(actual, expected, message)` 
-- Use signals (e.g., `this.ontest = _.model.basicsignal()`) for event-driven checks.
+- Use `this.group("title")` to group tests.
 
 ### Example: Inline Test Handler
 ```js
