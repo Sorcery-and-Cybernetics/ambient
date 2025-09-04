@@ -58,7 +58,8 @@ _.ambient.module("skiplistnode", function(_) {
                 if (this._upsegment) { this._upsegment.unlink() }
                 this._topsegment = null
                 
-                var prevnode = this._prevnode
+                var prevnode = this._prevnode || this._list
+
                 supermodel.unlink.call(this)
                 prevnode.segmentleftup().calcsegment(false, true)
                 return this
@@ -87,7 +88,8 @@ _.ambient.module("skiplistnode", function(_) {
                 if (relativenode) { return this.orderindex() - relativenode.orderindex() }
 
                 if (this._upsegment) { return this._upsegment.orderindex() + 1 }
-                return this._prevnode instanceof _.model.skiplist? 1: this._prevnode.orderindex() + 1
+//                return this._prevnode instanceof _.model.skiplist? 1: this._prevnode.orderindex() + 1
+                return !this._prevnode? 1: this._prevnode.orderindex() + 1
             }           
         })
 
@@ -97,8 +99,8 @@ _.ambient.module("skiplistnode", function(_) {
             this.segmenttop = function() { return this._topsegment }
             this.level = function() { return 1 }
 
-            this.segmentnext = function() { return this._nextnode }            
-            this.segmentprev = function() { return this._prevnode }
+            this.segmentnext = function() { return this._nextnode || this._list }            
+            this.segmentprev = function() { return this._prevnode || this._list }
             this.segmentdown = function() { return null }
 
             this.segmentleftup = function() {
@@ -109,7 +111,7 @@ _.ambient.module("skiplistnode", function(_) {
 
                 while (cursor) {
                     if (cursor._upsegment) { return cursor._upsegment }
-                    cursor = cursor._prevnode
+                    cursor = cursor._prevnode || this._list
                 }
             }
             

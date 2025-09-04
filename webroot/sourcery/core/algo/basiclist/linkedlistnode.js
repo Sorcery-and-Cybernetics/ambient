@@ -15,60 +15,83 @@ _.ambient.module("linkedlistnode", function (_) {
                 this._value = value
             }
 
-            this.assign = function(cursor, index) {
-                if (!cursor) { throw "Error: linkedlistnode.insertmebefore. Cursor is null"; }
-                if (cursor == this) { return this }
+            this.assign = function(target, index) {
+                if (target == this) { throw "Error: linkedlistnode.assign: Invalid target. Cannot point to itself" }
                 if (this._list) { this.unlink() }
 
-                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor._list)
+                var list = (target instanceof _.model.linkedlist || target == null) ? target || this._list : target._list
+                if (!list) { throw "Error: linkedlistnode.assign: List is null" }
 
-                if (Math.abs(index) <= list.count()) { 
-                    if (index < 0) {
-                        while (index < -1) {
-                            cursor = cursor._prevnode
-                            index += 1
-                        }
+                // If target is null, treat as root
+                if (target == null) { target = list }
 
-                    } else {
-                        while (index > 0) {
-                            cursor = cursor._nextnode
-                            index -= 1
-                        }
+                // Find to absolute target
+                if (index < 0) {
+                    while (index < -1) {
+                        target = target.prevnode()
+                        index += 1
+                        if (!target || (target === list)) { break }
                     }
-                } 
+                } else {
+                    while (index > 0) {
+                        target = target.nextnode()
+                        index -= 1
+                        if (!target || (target === list)) { break }
+                    }
+                }
 
-                // while (index) {
-                //     if (index < -1) {
-                //         cursor = cursor._prevnode
-                //         if (cursor == list) { break }
-                //         index += 1
-
-                //     } else {
-                //         cursor = cursor._nextnode
-                //         if (cursor._nextnode == list) { break }
-                //         index -= 1
-                //     }
-                // }
+                if (!target) { target = list }
 
                 this._list = list
                 list._count += 1
 
-                this._nextnode = cursor
-                this._prevnode = cursor._prevnode
-
-                this._prevnode._nextnode = this
-                this._nextnode._prevnode = this
+                // Insert logic for first/lastnode pointers
+                if (target === list) {
+                    if (!list._firstnode) {
+                        this._nextnode = null
+                        this._prevnode = null
+                        list._firstnode = this
+                        list._lastnode = this
+                    } else {
+                        this._nextnode = null
+                        this._prevnode = list._lastnode
+                        list._lastnode._nextnode = this
+                        list._lastnode = this
+                    }
+                } else {
+                    // Insert before target
+                    this._nextnode = target
+                    this._prevnode = target._prevnode
+                    
+                    if (target._prevnode) {
+                        target._prevnode._nextnode = this
+                    } else {
+                        list._firstnode = this
+                    }
+                    target._prevnode = this
+                }
 
                 return this
             }
 
             this.unlink = function() {
-                if (this.list()) {
-                    this._list._count -= 1
+                var list = this._list
+
+                if (!list) { return this }
+
+                list._count -= 1
+
+                if (this._prevnode) { 
+                    this._prevnode._nextnode = this._nextnode 
+                } else { 
+                    list._firstnode = this._nextnode 
                 }
 
-                if (this._nextnode) { this._nextnode._prevnode = this._prevnode }
-                if (this._prevnode) { this._prevnode._nextnode = this._nextnode }
+                if (this._nextnode) { 
+                    this._nextnode._prevnode = this._prevnode
+                } else {
+                    list._lastnode = this._prevnode 
+                }
 
                 this._list = null
                 this._nextnode = null
@@ -104,11 +127,11 @@ _.ambient.module("linkedlistnode", function (_) {
 
         this.navigationbehavior = _.behavior(function() {
             this.nextnode = function () {
-                return !this._nextnode || (this._nextnode == this._list ? null : this._nextnode)
+                return this._nextnode || null
             }
 
             this.prevnode = function () {
-                return !this._prevnode || (this._prevnode == this._list ? null : this._prevnode)
+                return this._prevnode || null
             }
         })
     })

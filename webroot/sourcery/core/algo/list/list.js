@@ -5,30 +5,27 @@
 
 _.ambient.module("list", function(_) {
   _.define.object("list", function(supermodel) {
-  // Properties
-  this._nodes = null
-  this.sortstyle = null // "order" or "name"
-  this._keymap = null
-  this._sortby = null
-  this.uidmap = null
-  this.sortlist = null
+    this._nodes = null
 
-  // Methods (no code yet)
-  this.add = function(item) {}
-  this.del = function(item) {}
-  this.get = function(key) {}
-  this.has = function(key) {}
+    this.ordered = _.model.boolean(false)
 
-  this.first = function() {}
-  this.last = function() {}
+    this.constructbehavior = _.behavior(function() {
+        this.construct = function() {
+        }
 
-  this.count = function() {}
-  this.sortby = function(key) {}
-  this.getitem = function(position) {}
-  this.getitembyuid = function(uid) {}
-  this.clear = function() {}
-  this.foreach = function(fn) {}
-  this.findfirst = function(fieldname, search, comparison) {}
-  this.onchange = _.signal()
+        
+    })
+
+    
+    this.add = function(item, position, relative) {}
+    this.get = function(name, position) {}
+    this.remove = function(name, from, to) {}
+    this.count = function(name) { return (this._nodes? this._nodes.count(name): 0) }
+    this.clear = function() {}
+    this.for = function (name, from, to, fn) { }
+    this.foreach = function(fn) {}
+
+    this.onchange = _.signal()
+    this.onchildchange = _.signal()
   })
 })

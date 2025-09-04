@@ -103,7 +103,6 @@ _.ambient.module("test.skiplist")
 
         me.group("Testing findrelativenode boundary conditions")
         var firstnode = list.firstnode()
-        var x = list.findrelativenode(firstnode, itemcount)
 
         _.debug.assert(firstnode.value(), 1, "firstnode.value()")
         _.debug.assert(list.findrelativenode(firstnode, -1), null, "list.findrelativenode(firstnode, -1)")
@@ -116,6 +115,7 @@ _.ambient.module("test.skiplist")
         _.debug.assert(lastnode.value(), itemcount, "Last node value")
         _.debug.assert(list.findrelativenode(lastnode, 0).value(), itemcount, "list.findrelativenode(lastnode, 0)")
         _.debug.assert(list.findrelativenode(lastnode, 1), null, "list.findrelativenode(lastnode, 1)")
+
         _.debug.assert(list.findrelativenode(lastnode, -1).value(), itemcount - 1, "list.findrelativenode(lastnode, -1)")
         _.debug.assert(list.findrelativenode(lastnode, -(itemcount - 1)).value(), 1, "list.findrelativenode(lastnode, -(itemcount - 1))")
         _.debug.assert(list.findrelativenode(lastnode, -itemcount), null, "list.findrelativenode(lastnode, -itemcount)")

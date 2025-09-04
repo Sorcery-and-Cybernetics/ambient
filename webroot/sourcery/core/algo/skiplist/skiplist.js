@@ -23,9 +23,6 @@ _.ambient.module("skiplist", function(_) {
             this.construct = function(sortvaluename) {
                 this._list = this
 
-                this._nextnode = this
-                this._prevnode = this
-
                 this._sortvaluename = sortvaluename
                 if (sortvaluename) { this._issortlist = true }
 
@@ -79,11 +76,11 @@ _.ambient.module("skiplist", function(_) {
             this.level = function() { return 1 }
 
             this.segmentnext = function () {
-                return this._nextnode
+                return this._nextnode || this._firstnode || this._list
             }
 
             this.segmentprev = function () { 
-                return this._prevnode
+                return this._prevnode || this._lastnode || this._list
             }
 
             this.segmentdown = function () { 

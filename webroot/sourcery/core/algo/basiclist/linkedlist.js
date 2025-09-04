@@ -8,14 +8,14 @@
 
 _.ambient.module("linkedlist", function(_) {
     _.define.object("linkedlist", function (supermodel) {
-        this._nextnode = null
-        this._prevnode = null
+        this._firstnode = null
+        this._lastnode = null
         this._count = 0
 
         this.objectbehavior = _.behavior(function() {
             this.construct = function() {
-                this._nextnode = this
-                this._prevnode = this
+                // this._nextnode = this
+                // this._prevnode = this
             }
 
             this.destroy = function () {
@@ -33,8 +33,14 @@ _.ambient.module("linkedlist", function(_) {
         this.linkedlistbehavior = _.behavior(function () {
             this.count = function () { return this._count }
             this.isroot = function () { return true }
-            this.firstnode = function () { return this._nextnode.isroot()? null: this._nextnode }
-            this.lastnode = function () { return this._prevnode.isroot()? null: this._prevnode }
+            this.firstnode = function () { return this._firstnode }
+            this.lastnode = function () { return this._lastnode }
+
+            this.nextnode = function () { return this._firstnode }
+            this.prevnode = function () { return this._lastnode }            
+
+            // this.firstnode = function () { return this._nextnode.isroot()? null: this._nextnode }
+            // this.lastnode = function () { return this._prevnode.isroot()? null: this._prevnode }
 
             this._makenode = function(item) {
                 if (item instanceof _.model.linkedlistnode) { return item }
