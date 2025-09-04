@@ -16,11 +16,11 @@ _.ambient.module("list", function(_) {
 		this.add = function(item) {
 			var node = _.model.skiplistnode(item)
 
-			return this._skiplist.add(node).assign(this._nodes, -1)
+			return this._nodes.add(node).assign(this._nodes, -1)
 		}
 
 		this.get = function(name, position) {
-			var node = name? this._skiplist.findfirstnode(name): this._nodes
+			var node = name? this._nodes.findfirstnode(name): this._nodes
 
 			if (position) { node = this._nodes.findrelativenode(node, position)}
 			return node
@@ -50,9 +50,9 @@ _.ambient.module("list", function(_) {
 		this.count = function() { return this._nodes? this._nodes() : 0 }
 
 		this.clear = function() {
-			if (this._skiplist) {
-				while (this._skiplist.count()) {
-					var node = this._skiplist.nodebyindex(1)
+			if (this._nodes) {
+				while (this._nodes.count()) {
+					var node = this._nodes.nodebyindex(1)
 					if (node) { node.remove() }
 				}
 			}
@@ -79,7 +79,7 @@ _.ambient.module("list", function(_) {
 			return this
 		}
 
-		this.onchange = _.signal()
-		this.onchildchange = _.signal()
+		this.onchange = _.model.signal()
+		this.onchildchange = _.model.signal()
 	})
 })
