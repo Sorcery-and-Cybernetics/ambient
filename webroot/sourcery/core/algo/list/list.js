@@ -4,28 +4,82 @@
 //**************************************************************************************************
 
 _.ambient.module("list", function(_) {
-  _.define.object("list", function(supermodel) {
-    this._nodes = null
+	_.define.object("list", function(supermodel) {
+		this._nodes = null
 
-    this.ordered = _.model.boolean(false)
+		this.constructbehavior = _.behavior(function() {
+			this.construct = function(sortvaluename) {
+				this._nodes = _.model.skiplist(sortvaluename)
+			}
+		})
 
-    this.constructbehavior = _.behavior(function() {
-        this.construct = function() {
-        }
+		this.add = function(item) {
+			var node = _.model.skiplistnode(item)
 
-        
-    })
+			return this._skiplist.add(node).assign(this._nodes, -1)
+		}
 
-    
-    this.add = function(item, position, relative) {}
-    this.get = function(name, position) {}
-    this.remove = function(name, from, to) {}
-    this.count = function(name) { return (this._nodes? this._nodes.count(name): 0) }
-    this.clear = function() {}
-    this.for = function (name, from, to, fn) { }
-    this.foreach = function(fn) {}
+		this.get = function(name, position) {
+			var node = name? this._skiplist.findfirstnode(name): this._nodes
 
-    this.onchange = _.signal()
-    this.onchildchange = _.signal()
-  })
+			if (position) { node = this._nodes.findrelativenode(node, position)}
+			return node
+		}
+
+		this.remove = function(name, from, to) {
+			if (!name) { throw "Error: list.remove: No name provided" }
+
+			var node = this.get(name, from)
+			var endnode = this.get(name, to)			
+
+			var indexfrom = nodefrom.orderindex()
+			var indexto = nodeto.orderindex()
+
+			if (indexto < indexfrom) { throw "Error: list.remove: Invalid range" }
+
+			var node = nodefrom
+
+			do {
+				var nextnode = node.nextnode()
+				node = node.destroy()
+			} while (node && node != nodeto)
+
+			return this
+		}
+
+		this.count = function() { return this._nodes? this._nodes() : 0 }
+
+		this.clear = function() {
+			if (this._skiplist) {
+				while (this._skiplist.count()) {
+					var node = this._skiplist.nodebyindex(1)
+					if (node) { node.remove() }
+				}
+			}
+		}
+
+		this.for = function(name, from, to, fn) {
+			var node = this.get(name, from)
+			var endnode = this.get(name, to)
+
+			var indexfrom = nodefrom.orderindex()
+			var indexto = nodeto.orderindex()
+
+			if (indexto < indexfrom) { throw "Error: list.remove: Invalid range" }			
+
+			while (node && node != endnode) {
+				fn(node.value())
+				node = node.nextnode()
+			}
+			return this
+		}
+
+		this.foreach = function(fn) {
+			this._nodes.foreach(fn)
+			return this
+		}
+
+		this.onchange = _.signal()
+		this.onchildchange = _.signal()
+	})
 })
