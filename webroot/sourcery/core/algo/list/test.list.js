@@ -9,13 +9,9 @@ _.ambient.module("test.list")
                 this._value = value
             }
             
-            this.name = function () {
-                return this._name
-            }
-
-            this.value = function () {
-                return this._value
-            }
+            this.name = function () { return this._name }
+            this.value = function () { return this._value }
+            this.debugout = function() { return this._name + this._value }
         })
 
         var list = _.model.list("name")
@@ -37,26 +33,10 @@ _.ambient.module("test.list")
         this.assert(result, ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4"], "list.foreach")
 
         item = list.get("B", 0)
-        _.debug(item.name(), item.value())        
-
-        item = list.get("B", 1)
-        _.debug(item.name(), item.value())
-
-
-        item = list.get("B", 2)
-        _.debug(item.name(), item.value())
-
-        item = list.get("B", -1)
-        _.debug(item.name(), item.value())        
-
-        item = list.get(null, 0) 
-
-        item = list.get(null, 1)
-        _.debug(item.name(), item.value())        
-
-        item = list.get(null, -1)
-        _.debug(item.name(), item.value())        
-
+        this.test(list.get("B", 0).debugout()).is("B1", "list.get(B, 0)")
+        this.test(list.get("B", 1).debugout()).is("B1", "list.get(B, 1)")
+        this.test(list.get("B", 2).debugout()).is("B2", "list.get(B, 2)")
+        this.test(list.get("B", -1).debugout()).is("B4", "list.get(B, -1)")
 
         debugger
     })

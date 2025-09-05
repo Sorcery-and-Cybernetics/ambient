@@ -1,6 +1,6 @@
 _.ambient.rootmodule("skiplist/")
 //    .include("skiplistcursor")
-    .require("sourcery/core/algo/basiclist/")
+    .require("sourcery/core/algo/linkedlist/")
     .include("skiplistnode")
     .include("skiplistroot")
     .include("skiplistsegment")

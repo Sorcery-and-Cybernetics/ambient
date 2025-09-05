@@ -1,4 +1,4 @@
-_.ambient.rootmodule("basiclist/")
+_.ambient.rootmodule("linkedlist/")
     .include("map")
     .include("linkedlistnode")
     .include("linkedlistroot")

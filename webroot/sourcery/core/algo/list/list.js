@@ -32,10 +32,12 @@ _.ambient.module("list", function(_) {
 
 		this.getnode = function(name, position) {
 			var nodes
-			position = position || 0
 
 			if (!name) {
-				node = this._nodes.nodebyindex(position)
+				node = this._nodes.nodebyindex(position || 0)
+
+			} else if (!position) {
+				node = this._nodes.findfirstnode(name)
 
 			} else if (position > 0) {
 				var node = this._nodes.findfirstnode(name)
@@ -44,8 +46,6 @@ _.ambient.module("list", function(_) {
 			} else if (position < 0) {
 				var node = this._nodes.findlastnode(name)
 				node = this._nodes.findrelativenode(node, position + 1)
-			} else {
-				node = this._nodes.findfirstnode(name)
 			}
 
 			return node
