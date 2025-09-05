@@ -1,10 +1,7 @@
-//****************************************************************************************************************************
+//**************************************************************************************************
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
-// 
-// Style: Be Basic!
-// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
-//****************************************************************************************************************************
+// See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
 
 _.ambient.module("skiplistnode", function(_) {    
 
@@ -58,8 +55,7 @@ _.ambient.module("skiplistnode", function(_) {
                 if (this._upsegment) { this._upsegment.unlink() }
                 this._topsegment = null
                 
-                var prevnode = this._prevnode || this._list
-
+                var prevnode = this._prevnode
                 supermodel.unlink.call(this)
                 prevnode.segmentleftup().calcsegment(false, true)
                 return this
@@ -85,15 +81,14 @@ _.ambient.module("skiplistnode", function(_) {
                 var sortby = list.sortby()
                 if (sortby) { return this._value.get(sortby) }
                 return this._value
-            }          
+            }           
 
             this.orderindex = function(relativenode) {
                 if (this.isroot()) { return 0 }
                 if (relativenode) { return this.orderindex() - relativenode.orderindex() }
 
                 if (this._upsegment) { return this._upsegment.orderindex() + 1 }
-//                return this._prevnode instanceof _.model.skiplist? 1: this._prevnode.orderindex() + 1
-                return !this._prevnode? 1: this._prevnode.orderindex() + 1
+                return this._prevnode instanceof _.model.skiplist? 1: this._prevnode.orderindex() + 1
             }           
         })
 
@@ -103,8 +98,8 @@ _.ambient.module("skiplistnode", function(_) {
             this.segmenttop = function() { return this._topsegment }
             this.level = function() { return 1 }
 
-            this.segmentnext = function() { return this._nextnode || this._list }            
-            this.segmentprev = function() { return this._prevnode || this._list }
+            this.segmentnext = function() { return this._nextnode }            
+            this.segmentprev = function() { return this._prevnode }
             this.segmentdown = function() { return null }
 
             this.segmentleftup = function() {
@@ -115,7 +110,7 @@ _.ambient.module("skiplistnode", function(_) {
 
                 while (cursor) {
                     if (cursor._upsegment) { return cursor._upsegment }
-                    cursor = cursor._prevnode || this._list
+                    cursor = cursor._prevnode
                 }
             }
             

@@ -1,8 +1,9 @@
-//*************************************************************************************************
-// linkedlistnode - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
-//*************************************************************************************************
-_.ambient.module("linkedlistnode", function (_) {
+//**************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
 
+_.ambient.module("linkedlistnode", function (_) {
     _.define.object("linkedlistnode", function (supermodel) {
         this._nextnode = null
         this._prevnode = null
@@ -15,83 +16,60 @@ _.ambient.module("linkedlistnode", function (_) {
                 this._value = value
             }
 
-            this.assign = function(target, index) {
-                if (target == this) { throw "Error: linkedlistnode.assign: Invalid target. Cannot point to itself" }
+            this.assign = function(cursor, index) {
+                if (!cursor) { throw "Error: linkedlistnode.insertmebefore. Cursor is null"; }
+                if (cursor == this) { return this }
                 if (this._list) { this.unlink() }
 
-                var list = (target instanceof _.model.linkedlist || target == null) ? target || this._list : target._list
-                if (!list) { throw "Error: linkedlistnode.assign: List is null" }
+                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor._list)
 
-                // If target is null, treat as root
-                if (target == null) { target = list }
+                if (Math.abs(index) <= list.count()) { 
+                    if (index < 0) {
+                        while (index < -1) {
+                            cursor = cursor._prevnode
+                            index += 1
+                        }
 
-                // Find to absolute target
-                if (index < 0) {
-                    while (index < -1) {
-                        target = target.prevnode()
-                        index += 1
-                        if (!target || (target === list)) { break }
+                    } else {
+                        while (index > 0) {
+                            cursor = cursor._nextnode
+                            index -= 1
+                        }
                     }
-                } else {
-                    while (index > 0) {
-                        target = target.nextnode()
-                        index -= 1
-                        if (!target || (target === list)) { break }
-                    }
-                }
+                } 
 
-                if (!target) { target = list }
+                // while (index) {
+                //     if (index < -1) {
+                //         cursor = cursor._prevnode
+                //         if (cursor == list) { break }
+                //         index += 1
+
+                //     } else {
+                //         cursor = cursor._nextnode
+                //         if (cursor._nextnode == list) { break }
+                //         index -= 1
+                //     }
+                // }
 
                 this._list = list
                 list._count += 1
 
-                // Insert logic for first/lastnode pointers
-                if (target === list) {
-                    if (!list._firstnode) {
-                        this._nextnode = null
-                        this._prevnode = null
-                        list._firstnode = this
-                        list._lastnode = this
-                    } else {
-                        this._nextnode = null
-                        this._prevnode = list._lastnode
-                        list._lastnode._nextnode = this
-                        list._lastnode = this
-                    }
-                } else {
-                    // Insert before target
-                    this._nextnode = target
-                    this._prevnode = target._prevnode
-                    
-                    if (target._prevnode) {
-                        target._prevnode._nextnode = this
-                    } else {
-                        list._firstnode = this
-                    }
-                    target._prevnode = this
-                }
+                this._nextnode = cursor
+                this._prevnode = cursor._prevnode
+
+                this._prevnode._nextnode = this
+                this._nextnode._prevnode = this
 
                 return this
             }
 
             this.unlink = function() {
-                var list = this._list
-
-                if (!list) { return this }
-
-                list._count -= 1
-
-                if (this._prevnode) { 
-                    this._prevnode._nextnode = this._nextnode 
-                } else { 
-                    list._firstnode = this._nextnode 
+                if (this.list()) {
+                    this._list._count -= 1
                 }
 
-                if (this._nextnode) { 
-                    this._nextnode._prevnode = this._prevnode
-                } else {
-                    list._lastnode = this._prevnode 
-                }
+                if (this._nextnode) { this._nextnode._prevnode = this._prevnode }
+                if (this._prevnode) { this._prevnode._nextnode = this._nextnode }
 
                 this._list = null
                 this._nextnode = null
@@ -127,11 +105,11 @@ _.ambient.module("linkedlistnode", function (_) {
 
         this.navigationbehavior = _.behavior(function() {
             this.nextnode = function () {
-                return this._nextnode || null
+                return !this._nextnode || (this._nextnode == this._list ? null : this._nextnode)
             }
 
             this.prevnode = function () {
-                return this._prevnode || null
+                return !this._prevnode || (this._prevnode == this._list ? null : this._prevnode)
             }
         })
     })

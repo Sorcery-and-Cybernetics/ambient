@@ -1,10 +1,7 @@
-//****************************************************************************************************************************
+//**************************************************************************************************
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
-// 
-// Style: Be Basic!
-// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
-//****************************************************************************************************************************
+// See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
 
 _.ambient.module("skiplist", function(_) {    
     _.define.linkedlist("skiplist", function (supermodel) {
@@ -19,9 +16,12 @@ _.ambient.module("skiplist", function(_) {
 
         this._list
 
-        this.constructbehavior = _.behavior(function() {
+        this.constructbehavior = _.behavior(function() {            
             this.construct = function(sortby) {
                 this._list = this
+
+                this._nextnode = this
+                this._prevnode = this                
 
                 this._sortby = sortby
                 if (sortby) { this._issortlist = true }
@@ -76,11 +76,11 @@ _.ambient.module("skiplist", function(_) {
             this.level = function() { return 1 }
 
             this.segmentnext = function () {
-                return this._nextnode || this._firstnode || this._list
+                return this._nextnode
             }
 
             this.segmentprev = function () { 
-                return this._prevnode || this._lastnode || this._list
+                return this._prevnode
             }
 
             this.segmentdown = function () { 

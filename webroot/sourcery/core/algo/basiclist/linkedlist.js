@@ -1,21 +1,18 @@
-//****************************************************************************************************************************
+//**************************************************************************************************
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
-// 
-// Style: Be Basic!
-// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
-//****************************************************************************************************************************
+// See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
 
 _.ambient.module("linkedlist", function(_) {
     _.define.object("linkedlist", function (supermodel) {
-        this._firstnode = null
-        this._lastnode = null
+        this._nextnode = null
+        this._prevnode = null
         this._count = 0
 
         this.objectbehavior = _.behavior(function() {
             this.construct = function() {
-                // this._nextnode = this
-                // this._prevnode = this
+                this._nextnode = this
+                this._prevnode = this
             }
 
             this.destroy = function () {
@@ -33,14 +30,8 @@ _.ambient.module("linkedlist", function(_) {
         this.linkedlistbehavior = _.behavior(function () {
             this.count = function () { return this._count }
             this.isroot = function () { return true }
-            this.firstnode = function () { return this._firstnode }
-            this.lastnode = function () { return this._lastnode }
-
-            this.nextnode = function () { return this._firstnode }
-            this.prevnode = function () { return this._lastnode }            
-
-            // this.firstnode = function () { return this._nextnode.isroot()? null: this._nextnode }
-            // this.lastnode = function () { return this._prevnode.isroot()? null: this._prevnode }
+            this.firstnode = function () { return this._nextnode.isroot()? null: this._nextnode }
+            this.lastnode = function () { return this._prevnode.isroot()? null: this._prevnode }
 
             this._makenode = function(item) {
                 if (item instanceof _.model.linkedlistnode) { return item }
