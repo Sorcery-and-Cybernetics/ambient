@@ -1,4 +1,4 @@
-_.ambient.module("listtest")
+_.ambient.module("test.list")
     .ontest("listtest", function(_) {
         _.define.object("listtestitem", function () {
             this._name = ""

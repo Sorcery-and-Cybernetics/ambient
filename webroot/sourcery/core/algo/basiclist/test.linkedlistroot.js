@@ -1,6 +1,6 @@
-_.ambient.module("linkedlist.test")
-    .ontest("linkedlist", function(_) {
-        var list = _.model.linkedlist()
+_.ambient.module("test.linkedlistroot")
+    .ontest("linkedlistroot", function(_) {
+        var list = _.model.linkedlistroot()
         
         var node3 = _.model.linkedlistnode("3").assign(list, -1)
         var node1 = _.model.linkedlistnode("1").assign(list, 1) 

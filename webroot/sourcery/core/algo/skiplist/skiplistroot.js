@@ -3,8 +3,8 @@
 // See codedesign.md – Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("skiplist", function(_) {    
-    _.define.linkedlist("skiplist", function (supermodel) {
+_.ambient.module("skiplistroot", function(_) {    
+    _.define.linkedlistroot("skiplistroot", function (supermodel) {
         this._upsegment = null
         this._topsegment = null
 
@@ -182,7 +182,7 @@ _.ambient.module("skiplist", function(_) {
             }
 
             // this.findnode = function(search, relativeindex) {
-            //     if (!this.issortlist()) { throw "skiplist.findnode: List is not a sortlist" }
+            //     if (!this.issortlist()) { throw "skiplistroot.findnode: List is not a sortlist" }
 
             //     if (search) {
             //         if (relativeindex == null) { 
@@ -218,7 +218,7 @@ _.ambient.module("skiplist", function(_) {
             
             this.findfirstnode = function(search, compareoption) {
                 return this.findnextnode(null, search, compareoption)
-                // if (!this.issortlist()) { throw "skiplist.findfirstnode: List is not a sortlist" }
+                // if (!this.issortlist()) { throw "skiplistroot.findfirstnode: List is not a sortlist" }
                 // if (!this.count()) { return null }
 
                 // var cursor = this.segmenttop()
@@ -239,7 +239,7 @@ _.ambient.module("skiplist", function(_) {
             this.findnextnode = function(segmentnode, search, compareoption) {
                 var cursor = segmentnode
 
-                if (!this.issortlist()) { throw "skiplist.findnextnode: List is not a sortlist" }
+                if (!this.issortlist()) { throw "skiplistroot.findnextnode: List is not a sortlist" }
                 if (!this.count()) { return null }
                 if (search === undefined) { return null }
                 compareoption = compareoption || "=="
@@ -282,7 +282,7 @@ _.ambient.module("skiplist", function(_) {
             }  
 
             this.findlastnode = function(search, compareoption) {
-                if (!this.issortlist()) { throw "skiplist.findlastnode: List is not a sortlist" }
+                if (!this.issortlist()) { throw "skiplistroot.findlastnode: List is not a sortlist" }
                 return this.findprevnode(null, search, compareoption)                // var cursor = this.segmenttop()
 
                 // if (search == null) { return null }                
@@ -309,7 +309,7 @@ _.ambient.module("skiplist", function(_) {
             this.findprevnode = function(segmentnode, search, compareoption) {
                 var cursor = segmentnode
 
-                if (!this.issortlist()) { throw "skiplist.findprevnode: List is not a sortlist" }
+                if (!this.issortlist()) { throw "skiplistroot.findprevnode: List is not a sortlist" }
                 if (!this.count()) { return null }
                 
                 if (search == null) { return null }
@@ -318,7 +318,7 @@ _.ambient.module("skiplist", function(_) {
                 if (!cursor || cursor.isroot()) { //Support for findfirstnode
                     cursor = this.segmenttop()
                 } else {
-                    if (!(cursor instanceof _.model.skiplistnode)) { throw "skiplist.findprevnode: segmentnode should be a skiplistnode" }
+                    if (!(cursor instanceof _.model.skiplistnode)) { throw "skiplistroot.findprevnode: segmentnode should be a skiplistnode" }
                     cursor = cursor.segmentprev()
                     if (cursor.isroot()) { return null }
                 }                

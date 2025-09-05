@@ -12,7 +12,7 @@ _.ambient.module("list", function(_) {
 
 		this.constructbehavior = _.behavior(function() {
 			this.construct = function(sortby) {
-				this._nodes = _.model.skiplist()
+				this._nodes = _.model.skiplistroot()
 
 				if (sortby) { this._sortby = sortby }
 				this._nodes.issortlist(true).sortby(sortby || "name")

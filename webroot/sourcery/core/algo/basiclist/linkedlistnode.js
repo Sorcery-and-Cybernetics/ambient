@@ -21,7 +21,7 @@ _.ambient.module("linkedlistnode", function (_) {
                 if (cursor == this) { return this }
                 if (this._list) { this.unlink() }
 
-                var list = (cursor instanceof _.model.linkedlist ? cursor : cursor._list)
+                var list = (cursor instanceof _.model.linkedlistroot ? cursor : cursor._list)
 
                 if (Math.abs(index) <= list.count()) { 
                     if (index < 0) {

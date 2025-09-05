@@ -1,5 +1,5 @@
-_.ambient.module("test.skiplist")
-    .ontest("skiplist", function(_, next) {
+_.ambient.module("test.skiplistroot")
+    .ontest("skiplistroot", function(_, next) {
         var me = this
         var showdebug = false
 
@@ -57,7 +57,7 @@ _.ambient.module("test.skiplist")
         // Test start
         //**************************************
 
-        var list = _.model.skiplist().segmentsize(2)
+        var list = _.model.skiplistroot().segmentsize(2)
 
         // Populate the skiplist with 300 nodes with values 1-300
         for (var index = 1; index <= itemcount; index++) {
@@ -163,7 +163,7 @@ _.ambient.module("test.skiplist")
         _.model.skiplistnode(1).assign(list, -1)
         _.debug.assert(list.debugvalidate(), null, "After deleting all nodes, and inserting 1")
 
-        var list = _.model.skiplist();
+        var list = _.model.skiplistroot();
         list.issortlist(true)
     
         me.group("Testing a shuffled list of nodes")
@@ -190,7 +190,7 @@ _.ambient.module("test.skiplist")
 
         me.group("Testing findfirstnode, findnextnode, findlastnode, findprevnode")
 
-        var list = _.model.skiplist()
+        var list = _.model.skiplistroot()
         list.issortlist(true)
 
         var itemcount = 3

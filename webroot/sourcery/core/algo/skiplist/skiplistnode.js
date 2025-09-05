@@ -88,7 +88,7 @@ _.ambient.module("skiplistnode", function(_) {
                 if (relativenode) { return this.orderindex() - relativenode.orderindex() }
 
                 if (this._upsegment) { return this._upsegment.orderindex() + 1 }
-                return this._prevnode instanceof _.model.skiplist? 1: this._prevnode.orderindex() + 1
+                return this._prevnode instanceof _.model.skiplistroot? 1: this._prevnode.orderindex() + 1
             }           
         })
 
