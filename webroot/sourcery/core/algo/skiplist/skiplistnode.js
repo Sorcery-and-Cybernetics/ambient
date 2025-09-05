@@ -72,14 +72,18 @@ _.ambient.module("skiplistnode", function(_) {
         })
 
         this.modelbehavior = _.behavior(function() {
+            this.name = function() { 
+                return this._value.name() 
+            }
+            
             this.value = function() { 
                 return this._value
             }
 
             this.sortvalue = function(list) { 
                 list = list || this.list()
-                var sortvaluename = list.sortvaluename()
-                if (sortvaluename) { return this._value.get(sortvaluename) }
+                var sortby = list.sortby()
+                if (sortby) { return this._value.get(sortby) }
                 return this._value
             }          
 

@@ -15,26 +15,26 @@ _.ambient.module("skiplist", function(_) {
         this._segmentsize = 7
 
         this._issortlist = false
-        this._sortvaluename = null
+        this._sortby = null
 
         this._list
 
         this.constructbehavior = _.behavior(function() {
-            this.construct = function(sortvaluename) {
+            this.construct = function(sortby) {
                 this._list = this
 
-                this._sortvaluename = sortvaluename
-                if (sortvaluename) { this._issortlist = true }
+                this._sortby = sortby
+                if (sortby) { this._issortlist = true }
 
                 this._upsegment = _.model.skiplistsegment(this)
             }
 
-            this.sortvaluename = function(value) {
-                if (value === undefined) { return this._sortvaluename }
+            this.sortby = function(value) {
+                if (value === undefined) { return this._sortby }
 
-                if (this._sortvaluename != value) {
+                if (this._sortby != value) {
                     if (this.count() > 0) { throw "Cannot change list type after adding nodes" }
-                    this._sortvaluename = value
+                    this._sortby = value
                 }
                 return this
             }
@@ -107,28 +107,28 @@ _.ambient.module("skiplist", function(_) {
                 }
 
                 if (this.issortlist()) {
-                    var firstMatch = this.findfirstnode(value)
-                    var lastMatch = this.findlastnode(value)
+                    var firstmatch = this.findfirstnode(value)
+                    var lastmatch = this.findlastnode(value)
                     
-                    if (!firstMatch) {
+                    if (!firstmatch) {
                         cursor = this.findfirstnode(value, "<")
                         if (!cursor) { cursor = this }
 
                     } else {
                         if (!orderindex || orderindex === 0) {
-                            cursor = lastMatch.segmentnext()
+                            cursor = lastmatch.segmentnext()
                         } else {
-                            var matchCount = lastMatch.orderindex() - firstMatch.orderindex() + 1
+                            var matchcount = lastmatch.orderindex() - firstmatch.orderindex() + 1
                             
-                            if (orderindex < 0) { orderindex = matchCount + orderindex + 1 }
+                            if (orderindex < 0) { orderindex = matchcount + orderindex + 1 }
                             
                             if (orderindex < 1) { 
                                 orderindex = 1
-                            } else if (orderindex > matchCount + 1) {
-                                orderindex = matchCount + 1
+                            } else if (orderindex > matchcount + 1) {
+                                orderindex = matchcount + 1
                             }
                             
-                            cursor = this.findrelativenode(firstMatch, orderindex - 1)
+                            cursor = this.findrelativenode(firstmatch, orderindex - 1)
                         }
                     }
                 } else { 

@@ -42,6 +42,11 @@ _.ambient.module("object").source(function (_) {
         }
         , destroy: _.noop
 
+        , get: function(name) { 
+            var value = this[name]
+            return (_.isfunction(value)? value.call(this): value)
+        }
+
         , debugout: function() {}
         , debugjson: function(full) {
             var result = {

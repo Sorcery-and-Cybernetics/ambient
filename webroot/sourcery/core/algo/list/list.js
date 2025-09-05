@@ -6,10 +6,16 @@
 _.ambient.module("list", function(_) {
 	_.define.object("list", function(supermodel) {
 		this._nodes = null
+		this._sortby = "name"
+
+//		this.sortby = _.model.string("name")
 
 		this.constructbehavior = _.behavior(function() {
-			this.construct = function(sortvaluename) {
-				this._nodes = _.model.skiplist(sortvaluename)
+			this.construct = function(sortby) {
+				this._nodes = _.model.skiplist()
+
+				if (sortby) { this._sortby = sortby }
+				this._nodes.issortlist(true).sortby(sortby || "name")
 			}
 		})
 
@@ -20,17 +26,36 @@ _.ambient.module("list", function(_) {
 		}
 
 		this.get = function(name, position) {
-			var node = name? this._nodes.findfirstnode(name): this._nodes
+			var node = this.getnode(name, position)
+			return node? node.value(): null
+		}
 
-			if (position) { node = this._nodes.findrelativenode(node, position)}
+		this.getnode = function(name, position) {
+			var nodes
+			position = position || 0
+
+			if (!name) {
+				node = this._nodes.nodebyindex(position)
+
+			} else if (position > 0) {
+				var node = this._nodes.findfirstnode(name)
+				node = this._nodes.findrelativenode(node, position - 1)
+
+			} else if (position < 0) {
+				var node = this._nodes.findlastnode(name)
+				node = this._nodes.findrelativenode(node, position + 1)
+			} else {
+				node = this._nodes.findfirstnode(name)
+			}
+
 			return node
 		}
 
 		this.remove = function(name, from, to) {
 			if (!name) { throw "Error: list.remove: No name provided" }
 
-			var node = this.get(name, from)
-			var endnode = this.get(name, to)			
+			var node = this.getnode(name, from)
+			var endnode = this.getnode(name, to)			
 
 			var indexfrom = nodefrom.orderindex()
 			var indexto = nodeto.orderindex()
@@ -59,8 +84,8 @@ _.ambient.module("list", function(_) {
 		}
 
 		this.for = function(name, from, to, fn) {
-			var node = this.get(name, from)
-			var endnode = this.get(name, to)
+			var node = this.getnode(name, from)
+			var endnode = this.getnode(name, to)
 
 			var indexfrom = nodefrom.orderindex()
 			var indexto = nodeto.orderindex()
@@ -75,7 +100,9 @@ _.ambient.module("list", function(_) {
 		}
 
 		this.foreach = function(fn) {
-			this._nodes.foreach(fn)
+			this._nodes.foreach(function(node) {
+				fn(node.value())
+			})
 			return this
 		}
 
