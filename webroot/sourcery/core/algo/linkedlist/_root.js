@@ -1,10 +1,9 @@
 _.ambient.rootmodule("linkedlist/")
-    .include("map")
     .include("linkedlistnode")
     .include("linkedlistroot")
-//    .include("stacklist")
 //    .include("listcursor")
 //    .include("listsegment")
-
     .include("test.linkedlistroot", "debugmode")
-//    .include("test.stacklist", "debugmode")
+
+    .include("stacklist")
+.include("test.stacklist", "debugmode")

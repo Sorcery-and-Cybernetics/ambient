@@ -38,5 +38,4 @@ _.ambient.module("test.list")
         this.test(list.get("B", 2).debugout()).is("B2", "list.get(B, 2)")
         this.test(list.get("B", -1).debugout()).is("B4", "list.get(B, -1)")
 
-        debugger
     })
