@@ -1,6 +1,0 @@
-_.ambient.rootmodule("")
-.include("sourcery/")
-.require("sourcery/core/algo/list/")
-.require("sourcery/core/system/http/")
-.require("sourcery/ai/")
-.include("script/")
