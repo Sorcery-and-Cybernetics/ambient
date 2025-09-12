@@ -1,0 +1,5 @@
+_.ambient.rootmodule("ui/")
+    .require("sourcery/core/system/client/")
+    .include("widget")
+    .include("widgetscreen")
+    .include("widgetwindow")
