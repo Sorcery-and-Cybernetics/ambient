@@ -1,2 +1,3 @@
 _.ambient.rootmodule("client/")
-    .include("clientmain")
+    .require("sourcery/core/control/")
+    .include("clientmain")    

@@ -7,4 +7,5 @@ _.ambient.rootmodule("core/")
     .include("model/")
 
     .include("system/")
+    .include("ui/")
 
