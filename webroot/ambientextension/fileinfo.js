@@ -125,7 +125,6 @@ async function fileinfo(filePath) {
             continue;
         }
 
-
         // Behavior definition
         if (line.startsWith('this.') && line.includes('_.behavior(')) {
             const match = line.match(/this\.(\w+)\s*=/);
@@ -134,11 +133,10 @@ async function fileinfo(filePath) {
                 if (currentObject) {
                     currentObject.scope.push(currentBehavior);
                 }
-            }
-        }        
+            }               
 
         // Method definition
-        else if (line.startsWith('this.') && line.includes('=') && (line.includes('function(') || line.includes('function ('))) {
+        } else if (line.startsWith('this.') && line.includes('=') && (line.includes('function(') || line.includes('function ('))) {
             const match = line.match(/this\.([\w\.]+\$?)\s*=/);
             if (match) {
                 const item = { name: match[1], type: 'method', linenum: i + 1 };
@@ -166,10 +164,9 @@ async function fileinfo(filePath) {
             if (match) {
                 currentModule.scope.push({ name: match[1], type: 'enum', linenum: i + 1 });
             }
-        }
 
         // Object definition
-        else if (line.startsWith('_.define.')) {
+        } else if (line.startsWith('_.define.')) {
             const match = line.match(/_.define\.([\w\.]+)\("([^"]+)"/);
             if (match) {
                 currentObject = { name: match[2], type: 'object', linenum: i + 1, scope: [] };
@@ -179,31 +176,42 @@ async function fileinfo(filePath) {
         // Trait definition
         else if (line.startsWith('this.') && line.includes('=') && line.includes('_.')) {
             const traitMatch = line.match(/this\.([\w\.]+\$?)\s*=\s*_\.(\w+)(\(.*\))?/);
+            
             if (traitMatch && traitMatch[2] !== 'behavior') {
                 const traitItem = { 
                     name: traitMatch[1], 
-                    type: 'trait', 
+                    type: '', 
                     linenum: i + 1, 
                     typename: traitMatch[2] 
                 };
                 
                 if (traitMatch[2] === 'enum') {
                     traitItem.type = 'enum';
-                } else if (traitMatch[2] === 'make' && line.includes('_.make.core.basicsignal')) {
+
+                } else if (traitMatch[2] === 'model' && line.includes('_.model.basicsignal')) {
                     traitItem.type = 'eventhandler';
-                } else if (traitMatch[2] === 'make' && line.includes('_.make.core.signal')) {
+
+                } else if (traitMatch[2] === 'model' && line.includes('_.model.signal')) {
                     traitItem.type = 'eventhandler';
+
+                } else if (traitMatch[2] === 'property') {
+                    traitItem.type = 'property';
+
+                } else if (traitMatch[2] === 'model') {
+                    traitItem.type = 'trait';                    
                 }
 
-                if (currentBehavior) {
-                    currentBehavior.scope.push(traitItem);
-                } else if (currentObject) {
-                    currentObject.scope.push(traitItem);
+                if (traitItem.type != '') {
+                    if (currentBehavior) {
+                        currentBehavior.scope.push(traitItem);
+                    } else if (currentObject) {
+                        currentObject.scope.push(traitItem);
+                    }
                 }
             }
-        }
+
         // Global function definition
-        else if (line.startsWith('_.') && line.includes('=')) {
+        } else if (line.startsWith('_.') && line.includes('=')) {
             const match = line.match(/_\.([\w\.]+\$?)\s*=/);
             if (match && !line.startsWith('_.ambient.module')) {
                 currentModule.scope.push({ 

@@ -111,6 +111,9 @@ class TreeItem extends vscode.TreeItem {
                 this.iconPath = new vscode.ThemeIcon('symbol-method');
                 break;
             case 'trait':
+                this.iconPath = new vscode.ThemeIcon('symbol-field');
+                break;
+            case 'property':
                 this.iconPath = new vscode.ThemeIcon('symbol-property');
                 break;
             case 'behavior':

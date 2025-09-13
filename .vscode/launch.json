@@ -12,8 +12,8 @@
             "request": "launch",
             "type": "chrome",
             "url": "http://localhost:80",
-            "webRoot": "${workspaceFolder}/webroot/product/testtide",
-            "file": "${workspaceFolder}/webroot/product/testtide/index.html"
+            "webRoot": "${workspaceFolder}/webroot/product/test.ambient",
+            "file": "${workspaceFolder}/webroot/product/test.ambient/index.html"
         },
 
         {
@@ -23,8 +23,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/webroot/product/testtide/server.js",
-            "cwd":     "${workspaceFolder}/webroot/product/testtide/",
+            "program": "${workspaceFolder}/webroot/product/test.ambient/server.js",
+            "cwd":     "${workspaceFolder}/webroot/product/test.ambient/",
             "console": "integratedTerminal"
         },
         {
