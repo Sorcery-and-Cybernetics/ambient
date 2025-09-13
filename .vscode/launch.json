@@ -10,10 +10,18 @@
         {
             "name": "Launch Client",
             "request": "launch",
-            "type": "chrome",
+            "type": "pwa-chrome",
             "url": "http://localhost:80",
             "webRoot": "${workspaceFolder}/webroot/product/test.ambient",
-            "file": "${workspaceFolder}/webroot/product/test.ambient/index.html"
+            "file": "${workspaceFolder}/webroot/product/test.ambient/index.html", 
+
+            "sourceMaps": true,
+
+            "sourceMapPathOverrides": {
+                "/product/*": "${workspaceFolder}/webroot/product/*",
+                "/sourcery/*": "${workspaceFolder}/webroot/sourcery/*",
+                "/*": "${workspaceFolder}/*"
+            }             
         },
 
         {

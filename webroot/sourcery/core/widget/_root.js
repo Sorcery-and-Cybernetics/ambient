@@ -1,4 +1,4 @@
-_.ambient.rootmodule("ui/")
+_.ambient.rootmodule("widget/")
     .require("sourcery/core/system/client/")
     .include("widget")
     .include("widgetscreen")

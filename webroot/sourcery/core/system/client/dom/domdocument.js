@@ -19,7 +19,7 @@ _.ambient.module("domdocument", function(_) {
         return result;
     }    
 
-    _.define.globalobject("domdocument", function (supermodel) {
+        _.define.globalobject("domdocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
@@ -165,6 +165,12 @@ _.ambient.module("domdocument", function(_) {
             this.observer.disconnect()
             this.observer = null
         }
+                
+        var bodyeventhandler = function(event) {
+            if (me.body) {
+                me.body.handledomevent(event)
+            }
+        }
 
         this.eventbehavior = _.behavior(function() {
             this.eventconfig = [
@@ -202,12 +208,6 @@ _.ambient.module("domdocument", function(_) {
             
             this.observeevents = function() {
                 var me = this
-                
-                var bodyeventhandler = function(event) {
-                    if (me.body) {
-                        me.body.handledomevent(event)
-                    }
-                }
 
                 _.foreach(this.eventconfig, function(item) {
                     var target = null
@@ -248,10 +248,10 @@ _.ambient.module("domdocument", function(_) {
                 })
             }            
 
-            this.onresize = _.signal()
-            this.onunload = _.signal()
-            this.onbeforeunload = _.signal()
-            this.onvisibilitychange = _.signal()
+            this.onresize = _.model.signal()
+            this.onunload = _.model.signal()
+            this.onbeforeunload = _.model.signal()
+            this.onvisibilitychange = _.model.signal()
         })
     })
 })

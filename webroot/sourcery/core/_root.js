@@ -1,4 +1,4 @@
-_.ambient.rootmodule("core/")
+var x = _.ambient.rootmodule("core/")
     .include("debug/")
     .include("base/")
     .include("oop/")
@@ -7,5 +7,5 @@ _.ambient.rootmodule("core/")
     .include("model/")
 
     .include("system/")
-    .include("ui/")
+    .include("widget/")
 

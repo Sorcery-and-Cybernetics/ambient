@@ -6,7 +6,7 @@
 // Single line if use brackets; Privates start with _; Library functions are preceded by _.;
 //****************************************************************************************************************************
 
-_.ambient.module("clientconsole", function (_) {
+_.ambient.module("console", function (_) {
     _.define.globalobject("console", function() {
         this.log = function (line, mode) {
             console.log(line)

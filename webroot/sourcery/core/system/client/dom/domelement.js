@@ -4,47 +4,6 @@
 //**************************************************************************************************
 
 _.ambient.module("domelement", function(_) {
-    _.define.defextender("domstyle", function(supermodel) {
-        var makeproperty = function (stylename) {
-            return this.style(stylename)
-        }
-
-        this.construct = function(stylename) {
-            this._stylename = stylename
-        }        
-
-        this.definetrait = function (modeldef, traitname) {
-            this._name = traitname
-
-            var result = makeproperty(traitname, this._stylename || traitname)
-            result.definition = this
-
-            return result            
-        }        
-    })
-
-    _.define.defextender("domattr", function(supermodel) {
-        var makeproperty = function (stylename) {
-            return function (value) { 
-                return this.attr(value)
-            }
-        }
-
-        this.construct = function(stylename) {
-            this._stylename = stylename
-        }          
-
-        this.definetrait = function (modeldef, traitname) {
-            this._name = traitname
-
-            var result = makeproperty(this._stylename || traitname)
-            result.definition = this
-
-            return result            
-        }        
-    })    
-
-
     _.define.object("domelement", function(supermodel) {
         this.element = null
         this.listeners = null
