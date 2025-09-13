@@ -41,9 +41,24 @@ _.ambient.module("webserver").source(function (_) {
         }
 
         this.handlefileresponse = function(response) {
+            //todo: Quick and dirty solution is implemented, fixed this later
             //todo: check file exist
             //todo: check file rights
             //todo: send file
+            if (response.url == "") { 
+                response.url = "index.html" 
+            } else {
+            var basepath = _.leftof$(response.url, "/")
+
+            switch (basepath) {
+                case "loader":
+                case "sourcery":
+                    response.url = "../../" + response.url
+                    break
+                }
+            }
+
+
             return response.sendfile(response.url)
         }
 

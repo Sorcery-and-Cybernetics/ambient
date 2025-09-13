@@ -46,7 +46,7 @@
         } else {
             //libpath should be relative to the index.html for visual studio to work
             _.productpath = ""
-            _.webroot = "../../" 
+            _.webroot = "" 
         }
         
         return config

@@ -93,7 +93,7 @@
                 
                 script.type = "text/javascript";
                 script.src = url;
-                script.async = false;
+                script.async = false;             
                 
                 script.onerror = function () {
                     next("Couldn't load " + url)

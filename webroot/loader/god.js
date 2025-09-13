@@ -125,7 +125,7 @@
                 var me = this
 
                 var path = module.fullpath()
-                //_.debug(this.name + " is loading: " + path)        
+                _.debug(this.name + " is loading: " + path)        
                 _.currentpath = path
 
                 path += (module.isrootmodule()? "_root.js": ".js")

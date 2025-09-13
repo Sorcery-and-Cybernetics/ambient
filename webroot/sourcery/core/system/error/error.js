@@ -157,7 +157,7 @@ _.ambient.module("error").source(function (_) {
             var error = _.model.error(description)
                 .errorinfo(obj, funcname, args, level)
 
-            _.debug.write(false, error.type, error.message)
+            _.debug.write(error.type, error.message)
 
             if (_.dom) { _.dom.notifyerror(error) }
 
