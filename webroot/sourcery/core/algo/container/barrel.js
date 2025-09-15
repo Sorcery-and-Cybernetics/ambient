@@ -41,8 +41,8 @@ _.ambient.module("barrel", function(_) {
             if (value.pipeid) {this.pipeid = value.pipeid }
             if (value.data) { this.data = value.data }
             if (value.progress) { this.progress = value.progress }
-            if (this.error) { this.error = value.error }
-            if (this.closed) { this._closed = true }
+            if (value.error) { this.error = value.error }
+            if (value.closed) { this._closed = true }
 
             return this
         }
@@ -66,10 +66,12 @@ _.ambient.module("barrel", function(_) {
                     break
 
                 case _.vtobject:
+                    // todo: support object conversion or reject objects entirely
                     throw "Error: Not implemented"
                     this.data = [this.data]
 
                 case _.vtarray:
+                    // todo: support object-to-array conversion or reject objects entirely
                     throw "Error: Not implemented"
 
                     switch (datatype) {
