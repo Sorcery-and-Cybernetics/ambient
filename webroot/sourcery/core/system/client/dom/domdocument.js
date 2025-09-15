@@ -19,7 +19,7 @@ _.ambient.module("domdocument", function(_) {
         return result;
     }    
 
-        _.define.globalobject("domdocument", function (supermodel) {
+    _.define.globalobject("domdocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
@@ -174,30 +174,30 @@ _.ambient.module("domdocument", function(_) {
 
         this.eventbehavior = _.behavior(function() {
             this.eventconfig = [
-                [{ name: "keydown", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "keyup", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "selectstart", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "input", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "focus", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "click", target:  "body",  execute: bodyeventhandler }]
-                , [{ name: "change", target:  "body",  execute: bodyeventhandler }]
+                { name: "keydown", target:  "body",  execute: bodyeventhandler }
+                , { name: "keyup", target:  "body",  execute: bodyeventhandler }
+                , { name: "selectstart", target:  "body",  execute: bodyeventhandler }
+                , { name: "input", target:  "body",  execute: bodyeventhandler }
+                , { name: "focus", target:  "body",  execute: bodyeventhandler }
+                , { name: "click", target:  "body",  execute: bodyeventhandler }
+                , { name: "change", target:  "body",  execute: bodyeventhandler }
 
-                , [{ name: "scroll", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "resize", target:  "window",  execute: function(event) { me.onresize(event) } }]
-                , [{ name: "unload", target:  "window",  execute: function(event) { me.onunload(event) } }]
-                , [{ name: "touchstart", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "touchend", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "touchmove", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "mouseout", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "mousedown", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "mouseup", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "mouseover", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "mousemove", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "wheel", target:  "window",  execute: bodyeventhandler }]
-                , [{ name: "beforeunload", target:  "window",  execute: function(event) { me.onbeforeunload(event) } }]
-                , [{ name: "visibilitychange", target:  "document",  execute: function(event) { me.onvisibilitychange(event) } }]
+                , { name: "scroll", target:  "window",  execute: bodyeventhandler }
+                , { name: "resize", target:  "window",  execute: null } //todo: function(event) { me.onresize(event) } }
+                , { name: "unload", target:  "window",  execute: null } //todo: function(event) { me.onunload(event) } }
+                , { name: "touchstart", target:  "window",  execute: bodyeventhandler }
+                , { name: "touchend", target:  "window",  execute: bodyeventhandler }
+                , { name: "touchmove", target:  "window",  execute: bodyeventhandler }
+                , { name: "mouseout", target:  "window",  execute: bodyeventhandler }
+                , { name: "mousedown", target:  "window",  execute: bodyeventhandler }
+                , { name: "mouseup", target:  "window",  execute: bodyeventhandler }
+                , { name: "mouseover", target:  "window",  execute: bodyeventhandler }
+                , { name: "mousemove", target:  "window",  execute: bodyeventhandler }
+                , { name: "wheel", target:  "window",  execute: bodyeventhandler }
+                , { name: "beforeunload", target:  "window",  execute: function(event) { me.onbeforeunload(event) } }
+                , { name: "visibilitychange", target:  "document",  execute: function(event) { me.onvisibilitychange(event) } }
             ]
-
+            
             this.addevent = function (element, eventname, eventhandler) {
                 element.addEventListener(eventname, eventhandler, true)
             }

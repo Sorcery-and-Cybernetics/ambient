@@ -54,7 +54,7 @@ _.ambient.module("widget", function(_) {
         this.behavior = _.efb.none
         this.behaviors = _.efb
         
-        this.widget = _.list()
+//        this.widget = _.list()
 
         this.element = null
 

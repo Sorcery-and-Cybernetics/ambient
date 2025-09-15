@@ -8,7 +8,7 @@
 
 _.ambient.module("console", function (_) {
     _.define.globalobject("console", function() {
-        this.log = function (line, mode) {
+        this.write = function (line, mode) {
             console.log(line)
         }
 
