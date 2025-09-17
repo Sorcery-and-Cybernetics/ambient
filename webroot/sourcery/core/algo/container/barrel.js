@@ -20,7 +20,7 @@ _.ambient.module("barrel", function(_) {
         this._closed = false
         this._failed = false
 
-        this.create = function(id, pipe) {
+        this.create = function(id, pipeid) {
             this.id = id || 0
             this.pipeid = pipeid || 0
         }
