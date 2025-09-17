@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "685ce95b5d5c1160",
+    "id": "52b4ee65c5bd5a7b",
     "type": "split",
     "children": [
       {
-        "id": "5230d3a9faf1f2f7",
+        "id": "9b6af5cf04113a0a",
         "type": "tabs",
         "children": [
           {
-            "id": "975fca74e0014148",
+            "id": "313b37fd2a19568b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codedesign.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "codedesign"
+              "title": "New tab"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "d39bd008096f96d0",
+    "id": "2cece7b67c41c6da",
     "type": "split",
     "children": [
       {
-        "id": "701684f8ac395717",
+        "id": "d890413708d698c4",
         "type": "tabs",
         "children": [
           {
-            "id": "d65fd20d72097770",
+            "id": "51c7721abd0bf0af",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +44,7 @@
             }
           },
           {
-            "id": "9e4e4e0af771cfac",
+            "id": "f0af80f81f4345a2",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +61,7 @@
             }
           },
           {
-            "id": "f36919bd6d7f6598",
+            "id": "b3d9a3012b5410d9",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -81,20 +77,19 @@
     "width": 300
   },
   "right": {
-    "id": "910d2ca081045133",
+    "id": "54103a86a00acc30",
     "type": "split",
     "children": [
       {
-        "id": "7e2fd0f63fd47638",
+        "id": "ffaee041ab6c70d3",
         "type": "tabs",
         "children": [
           {
-            "id": "9db84987428eaec2",
+            "id": "aff9f06afd6af8c3",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "codedesign.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,25 +99,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for codedesign"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "b643709c789b9a64",
+            "id": "c9e39fdaca04f4dc",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "codedesign.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from codedesign"
+              "title": "Outgoing links"
             }
           },
           {
-            "id": "1b8867e942e990b0",
+            "id": "2680d22301bad107",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -137,18 +131,17 @@
             }
           },
           {
-            "id": "6b5043045dca3d58",
+            "id": "99f0cde574d0d455",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "codedesign.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of codedesign"
+              "title": "Outline"
             }
           }
         ]
@@ -169,11 +162,6 @@
       "bases:Create new base": false
     }
   },
-  "active": "975fca74e0014148",
-  "lastOpenFiles": [
-    "_launch.json",
-    "Welcome.md",
-    "testing.md",
-    "codedesign.md"
-  ]
+  "active": "313b37fd2a19568b",
+  "lastOpenFiles": []
 }
