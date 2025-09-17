@@ -14,9 +14,9 @@ _.ambient.module("domdocument", function(_) {
 
         if (length > 0) {
             var charcode = result.charCodeAt(length - 1);
-            if ((charcode >= 48) && (charcode <= 57)) { result += units; }
+            if ((charcode >= 48) && (charcode <= 57)) { result += units }
         }
-        return result;
+        return result
     }    
 
     _.define.globalobject("domdocument", function (supermodel) {
@@ -194,7 +194,7 @@ _.ambient.module("domdocument", function(_) {
                 , { name: "mouseover", target:  "window",  execute: bodyeventhandler }
                 , { name: "mousemove", target:  "window",  execute: bodyeventhandler }
                 , { name: "wheel", target:  "window",  execute: bodyeventhandler }
-                , { name: "beforeunload", target:  "window",  execute: function(event) { me.onbeforeunload(event) } }
+                , { name: "beforeunload", target:  "window",  execute: null } //todo: function(event) { me.onbeforeunload(event) } }
                 , { name: "visibilitychange", target:  "document",  execute: function(event) { me.onvisibilitychange(event) } }
             ]
             
