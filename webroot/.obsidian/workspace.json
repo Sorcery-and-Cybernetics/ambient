@@ -4,17 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "9b6af5cf04113a0a",
+        "id": "3433bfe4f87a9e96",
         "type": "tabs",
         "children": [
           {
-            "id": "313b37fd2a19568b",
+            "id": "09c7a986d84e1a6d",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "vscode-editor",
+              "state": {
+                "file": "sourcery/ai/aichatagent.js"
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "aichatagent"
             }
           }
         ]
@@ -49,7 +51,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "aichat",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -159,9 +161,42 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "vscode-editor:Create Code File": false
     }
   },
-  "active": "313b37fd2a19568b",
-  "lastOpenFiles": []
+  "active": "09c7a986d84e1a6d",
+  "lastOpenFiles": [
+    "sourcery/core/algo/container/__pipe.js",
+    "sourcery/ai/aimodel.js",
+    "sourcery/ai/aichatagent.js",
+    "docs/bfm/INFO_modeldefiner_JS.md",
+    "docs/bfm/INFO_aichatagent_JS.md",
+    "docs/bfm/INFO__control2_JS.md",
+    "docs/bfm/INFO_domelement_JS.md",
+    "docs/bfm/INFO_domdocument_JS.md",
+    "docs/bfm/INFO_dombody_JS.md",
+    "docs/bfm/INFO_timerevent_JS.md",
+    "docs/bfm/INFO_timer_JS.md",
+    "docs/bfm/INFO_webserverhelper_JS.md",
+    "docs/bfm/INFO_webserver_JS.md",
+    "docs/bfm/INFO_fileroute_JS.md",
+    "docs/bfm/INFO_path_JS.md",
+    "docs/bfm/INFO_folder_JS.md",
+    "docs/bfm/INFO_file_JS.md",
+    "docs/bfm/INFO_basicpath_JS.md",
+    "docs/bfm/INFO_test.http_JS.md",
+    "docs/bfm/INFO_httpserver_JS.md",
+    "docs/bfm/INFO_httpresponse_JS.md",
+    "docs/bfm/INFO_httprequest_JS.md",
+    "docs/bfm/INFO_httphelper_JS.md",
+    "docs/bfm/INFO_error_JS.md",
+    "docs/bfm/INFO__dombody_JS.md",
+    "docs/bfm/INFO__control_JS.md",
+    "docs/bfm/INFO_dragvent_JS.md",
+    "docs/bfm/INFO_domeventhandler_JS.md",
+    "docs/bfm",
+    "docs/binaryfilemanager",
+    "docs/New folder"
+  ]
 }

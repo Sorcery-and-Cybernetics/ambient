@@ -1,3 +1,8 @@
+//**************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, no semicolons, no let/const, no underscores (except privates), or 3rd-party libs; 1-based lists; {} for if blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
+
 _.ambient.module("pipe", function(_) {
 
     _.define.object("pipe", function(supermodel) {
@@ -6,123 +11,163 @@ _.ambient.module("pipe", function(_) {
         this.action = ""
         this.params = null
         this.progress = 0
-        this.errormessage = ""
 
         this._prev = null
         this._next = null
 
-        this.create = function(parent, id) {
+        this._isclose = false
+
+        this.construct = function(action, params) {
+            this.action = action || ""
+            this.params = params || null
+            this.progress = 0
+        }
+
+        this.assignto = function(parent, id) {
             this._parent = parent
             this.id = id || _.uniqueid()
         }
 
-        this.barrel = function() {
-            var me = this
-            me.barrelindex++
-
-            var barrel = _.model.barrel(me.id, me.barrelindex)
-
-            barrel.onclose(function() {
-                me.receive(barrel)
-            })
-
-            barrel.onerror(function() {
-                me.receive(barrel)
-            })
-
-            this.onbarrel.call(this, barrel)
-            return barrel
-        }
-
-        this.pipe = function(nextpipe) {
-            if (!(nextpipe instanceof _.model.pipe)) { throw "Error: can only pipe into another pipe" }
-            if (this._next) { throw "Error: pipe already has next pipe" }
-
-            this._next = nextpipe
-            nextpipe._prev = this
-            return nextpipe
-        }
-
         this.send = function(data, progress) {
-            var barrel = data instanceof _.model.barrel ? data : this.barrel()
+            if (this.isclose()) { throw "Error: Pipe already closed" }   
 
-            barrel.progress = progress || this.progress || 1
-            if (!(data instanceof _.model.barrel)) {
-                barrel.close(data)
+            if (data instanceof _.model.pipe) {
+                if (this._prev) { throw "Error: Pipe already connected" }
+                this._prev = data
+                data._next = this
+                return this
             }
 
-            this.receive(barrel)
+            if (data instanceof _.model.barrel) { 
+                if (!data.iserror()) {
+
+                    if (data.index == 1) {
+                        this.action = data.action
+                        this.params = data.params
+                    }
+                    this.progress = data.progress
+                    this.barrelindex = data.id
+                }
+
+            } else {
+                if (this._prev) { throw "Error: Cannot send data to a chained pipe."}
+                this.barrelindex++
+
+                var data = _.model.barrel(data, progress || this.progress).assignto(this.id, this.barrelindex)
+
+                if (this.barrelindex == 1) {
+                    data.action = this.action
+                    data.params = this.params 
+                    data.progress = 1
+                } else {
+                    data.progress = progress || this.progress
+                }                
+            }
+
+            this._send(data)
             return this
         }
 
-        this.receive = function(barrel) {
-            this.progress = barrel.progress || this.progress
+        this._send = function(barrel) {
+            if (this._next) { 
+                barrel.direction = 1
+                this._next.send(barrel)
 
-            if (barrel.iserror()) {
-                this.errormessage = barrel.error
-                this.onerror(this.errormessage)
-                this.destroy()
-                return
-            }
-
-            if (!this.barrelindex || this.progress === 0) {
-                var data = barrel.data || {}
-                this.action = data.action
-                this.params = data.params
-                this.progress = 1
-                this.onrequest()
             } else {
-                this.ondata(barrel.data)
+
+                if (barrel.iserror()) {
+                    this.onerror(barrel.error) //event
+                    this.fail(barrel.error)  // returning error through the chain
+
+                } else {
+                    this.onsend(barrel)
+
+                    if (barrel.isclose()) { //auto close when a barrel is sent with progress 100.
+                        this.close()
+                    }                    
+                }
+            }
+        }
+
+        this.reply = function(data, progress) {
+            if (data instanceof _.model.pipe) {
+               if (this._next) { throw "Error: Pipe already connected" }
+
+               this._next = data
+               data._prev = this
+               return this
             }
 
-            // route barrel by direction
-            if (barrel.direction === 1 && this._next) {
-                this._next.receive(barrel)
-            } else if (barrel.direction === -1 && this._prev) {
-                this._prev.receive(barrel)
+            if (progress) { this.progress = progress }
+
+            if (!(data instanceof _.model.barrel)) {
+                data = _.model.barrel(data, this.progress).assignto(this.id, this.barrelindex)
+            }
+            
+            this._reply(data)
+
+            return this
+        }
+
+        this._reply = function(barrel) {
+
+            if (this._prev) { 
+                barrel.direction = -1
+                this._prev.reply(barrel)
+
+            } else {
+                if (barrel.iserror()) {
+                    this.onerror(barrel.error)
+                } else {
+                    this.onreply(barrel)
+                }
             }
 
-            if (barrel.isclose() || this.progress >= 100) {
+            if (barrel.isclose()) {
                 this.onclose()
-                this.ondestroy()
+                this.destroy()
             }
+        }
+
+        this.fail = function(message) {
+            if (this.isclose()) { return this }
+
+            this._isclose = true
+
+            var barrel = _.model.barrel(null, this.progress).assignto(this.id, this.barrelindex)
+            barrel.error = message || "Error: Unknown"
+
+            // send error downstream if next exists, otherwise reply upstream
+            return this._next? this._send(barrel) : this._reply(barrel)
+        }
+
+        this.isclose = function() { return this._isclose }
+
+        this.close = function() {
+            if (this.isclose()) { return this }
+            
+            this._isclose = true
+            var barrel = _.model.barrel(null, 100).assignto(this.id, this.barrelindex)
+
+            // send error downstream if next exists, otherwise reply upstream
+            return this._next? this._send(barrel) : this._reply(barrel)
         }
 
         this.destroy = function() {
-            var barrel = this.barrel()
+            if (this._prev) { this._prev._next = this._next }
+            if (this._next) { this._next._prev = this._prev }
 
-            if (this._prev && this._next) {
-                // middle of chain → unlink
-                this._prev._next = this._next
-                this._next._prev = this._prev
-                this._prev = null
-                this._next = null
-                this.ondestroy()
-            } else if (!this._prev && !this._next) {
-                // isolated pipe
-                this.ondestroy()
-            
-            } else if (this._prev) {
-                // end of chain → send close backward
-                barrel.direction = -1
-                barrel.close()
-                this._prev.receive(barrel)                
+            this._prev = null
+            this._next = null            
 
-            } else if (this._next) {
-                // start of chain → send close forward
-                barrel.direction = 1
-                barrel.close()
-                this._next.receive(barrel)                
-
-            }
+            return supermodel.destroy.call(this)            
         }
 
-        this.onbarrel = _.model.signal()
-        this.ondata = _.model.signal()
-        this.onrequest = _.model.signal()
+        this.onsend = _.model.signal()
+        this.onreply = _.model.signal()
+
         this.onerror = _.model.signal()
         this.onclose = _.model.signal()
-        this.ondestroy = _.model.signal()
     })
 
 })
