@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "3433bfe4f87a9e96",
+        "id": "4e456dc64e923ef7",
         "type": "tabs",
         "children": [
           {
-            "id": "09c7a986d84e1a6d",
+            "id": "7f1481c25a08830b",
             "type": "leaf",
             "state": {
-              "type": "vscode-editor",
+              "type": "markdown",
               "state": {
-                "file": "sourcery/ai/aichatagent.js"
+                "file": "docs/daily/2025-09-19.md",
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "aichatagent"
+              "title": "2025-09-19"
             }
           }
         ]
@@ -51,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "aichat",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -145,6 +147,20 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "1ea984c9cc3330c8",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
           }
         ]
       }
@@ -162,14 +178,35 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "vscode-editor:Create Code File": false
+      "vscode-editor:Create Code File": false,
+      "templater-obsidian:Templater": false
     }
   },
-  "active": "09c7a986d84e1a6d",
+  "active": "7f1481c25a08830b",
   "lastOpenFiles": [
-    "sourcery/core/algo/container/__pipe.js",
-    "sourcery/ai/aimodel.js",
-    "sourcery/ai/aichatagent.js",
+    "sourcery/core/system/http/testserver.http.js",
+    "sourcery/core/model/alias/tests/_root.js",
+    "sourcery/core/model/alias/_root.js",
+    "sourcery/core/model/alias/tests",
+    "sourcery/core/model/alias/aliasnode.js",
+    "sourcery/core/model/alias/aliasmap.js",
+    "sourcery/core/model/alias/aliasdb.js",
+    "sourcery/core/model/alias",
+    "sourcery/core/ocean/pipe.js",
+    "sourcery/core/ocean/barrel.js",
+    "sourcery/core/ocean/_root.js",
+    "docs/3rd Party/Indextts2.md",
+    "docs/daily/2025-09-19.md",
+    "docs/3rd Party/Python.md",
+    "docs/config/default.md",
+    "docs/Testing Design Guidelines.md",
+    "webroot/Welcome.md",
+    "docs/Code Design Guidelines.md",
+    "docs/Welcome.md",
+    "docs/Untitled.md",
+    "2025-09-18.md",
+    "docs/3rd Party/kkjkj.md",
+    "sourcery/Untitled.md",
     "docs/bfm/INFO_modeldefiner_JS.md",
     "docs/bfm/INFO_aichatagent_JS.md",
     "docs/bfm/INFO__control2_JS.md",
@@ -182,21 +219,6 @@
     "docs/bfm/INFO_webserver_JS.md",
     "docs/bfm/INFO_fileroute_JS.md",
     "docs/bfm/INFO_path_JS.md",
-    "docs/bfm/INFO_folder_JS.md",
-    "docs/bfm/INFO_file_JS.md",
-    "docs/bfm/INFO_basicpath_JS.md",
-    "docs/bfm/INFO_test.http_JS.md",
-    "docs/bfm/INFO_httpserver_JS.md",
-    "docs/bfm/INFO_httpresponse_JS.md",
-    "docs/bfm/INFO_httprequest_JS.md",
-    "docs/bfm/INFO_httphelper_JS.md",
-    "docs/bfm/INFO_error_JS.md",
-    "docs/bfm/INFO__dombody_JS.md",
-    "docs/bfm/INFO__control_JS.md",
-    "docs/bfm/INFO_dragvent_JS.md",
-    "docs/bfm/INFO_domeventhandler_JS.md",
-    "docs/bfm",
-    "docs/binaryfilemanager",
-    "docs/New folder"
+    "docs/bfm/INFO_folder_JS.md"
   ]
 }

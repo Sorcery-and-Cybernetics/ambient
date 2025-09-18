@@ -1,5 +1,3 @@
-# Ambient Testing Design
-
 Ambient supports modular and event-driven testing. Tests can be placed in dedicated files (usually in a `tests/` folder) or defined directly in modules using `.ontest` event handlers. The root module can include tests conditionally (e.g., with a `debugmode` flag).
 
 ## How to Write Tests

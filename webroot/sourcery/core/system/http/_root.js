@@ -6,5 +6,5 @@ _.ambient.rootmodule("http/")
     .include("httpserver", "server")
     .include("httpresponse", "server")
     .include("httprequest", "server") 
-    .include("test.http", "server && debugmode")
+    .include("testserver.http", "server && debugmode")
         

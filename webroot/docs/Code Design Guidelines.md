@@ -1,4 +1,3 @@
-# Sourcery Ambient – Code Design Guidelines
 
 ## Purpose
 Defines the style and structure for Sorcery Ambient `sourcery` modules. All contributors must follow these rules for clarity and consistency.
