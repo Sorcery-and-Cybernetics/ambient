@@ -1,3 +1,8 @@
+//**************************************************************************************************
+// Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
+// See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
+
 _.ambient.module("circularlistnode", function(_) {
     _.define.object("circularlistnode", function (supermodel) {
         this._nextnode = null
@@ -10,15 +15,8 @@ _.ambient.module("circularlistnode", function(_) {
                 this._value = value
             }
 
-            this.assignbefore = function(cursor) {
-                if (!cursor) { throw "Error: circularlistnode.assignbefore. Cursor is null" }
-                return this.assignafter(cursor._prevnode || cursor)
-            }
-
-            this.assignafter = function(cursor) {
-                if (!cursor) { throw "Error: circularlistnode.assignafter. Cursor is null" }
-                if (cursor == this) { throw "Error: circularlistnode.assignafter. Cursor is itself" }
-
+            this.assign = function(cursor, index) {
+                if (!cursor || (cursor == this)) { throw "Error: Invalid cursor" }
                 if (this._list || this._nextnode) { this.unlink() }
 
                 var list = cursor._list
@@ -26,19 +24,38 @@ _.ambient.module("circularlistnode", function(_) {
                 if (list) {
                     this._list = list
                     list._count += 1
+
+                    if (index < 0) {
+                        if (list._firstnode == cursor) { list._firstnode = this }
+                    }
                 }
 
-                this._nextnode = cursor._nextnode
-                this._prevnode = cursor    
+                if (index < 0) {
+                    // link before cursor
+                    this._prevnode = cursor._prevnode || null
+                    this._nextnode = cursor
 
-                cursor._nextnode = this
-                if (this._nextnode) { this._nextnode._prevnode = this }
+                    cursor._prevnode = this
+                    if (this._prevnode) { this._prevnode._nextnode = this }
+                } else {
+                    this._nextnode = cursor._nextnode
+                    this._prevnode = cursor    
 
-                return this
+                    cursor._nextnode = this
+                    if (this._nextnode) { this._nextnode._prevnode = this }                    
+
+                }
+
+                return this            
             }
 
             this.unlink = function() {
-                if (this._list) { this._list._count -= 1 }
+                var list = this._list
+
+                if (list) { 
+                    list._count -= 1 
+                    if (list._firstnode == this) { list._firstnode = this._nextnode || null }                    
+                }
 
                 if (this._nextnode) { this._nextnode._prevnode = this._prevnode }
                 if (this._prevnode) { this._prevnode._nextnode = this._nextnode }
@@ -72,7 +89,7 @@ _.ambient.module("circularlistnode", function(_) {
             this.value = function(value) {
                 if (value === undefined) { return this._value }
 
-                if (value != value) {
+                if (this._value != value) {
                     this._value = value
                 }
                 return this

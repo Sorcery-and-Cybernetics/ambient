@@ -96,7 +96,7 @@ _.ambient.module("linkedlistnode", function (_) {
             this.value = function(value) {
                 if (value === undefined) { return this._value }
 
-                if (value != value) {
+                if (this._value != value) {
                     this._value = value
                 }
                 return this
