@@ -15,54 +15,81 @@ _.ambient.module("circularlistnode", function(_) {
                 this._value = value
             }
 
+            //The linkedlist is circular. We insert before the cursor.
+            //When cursor is the list iteself, index 0 inserts at the end, index 1 inserts at head
+            //When cursor is a node. 0 inserts before the cursor and 1 inserts after cursor
             this.assign = function(cursor, index) {
-                if (!cursor || (cursor == this)) { throw "Error: Invalid cursor" }
-                if (this._list || this._nextnode) { this.unlink() }
+                if (!cursor) { throw "Error: circularlistnode.insertmebefore - Cursor is null"; }
+                if (cursor == this) { return this }
+                if (this._list) { this.unlink() }
 
-                var list = cursor._list
+                var list
+                var replacehead = false                
 
-                if (list) {
-                    this._list = list
-                    list._count += 1
+                if (cursor instanceof _.model.circularlist) {
+                    list = cursor
+                    cursor = list._firstnode
 
-                    if (index < 0) {
-                        if (list._firstnode == cursor) { list._firstnode = this }
+                    if (!cursor) {
+                        this._list = list
+                        this._nextnode = this
+                        this._prevnode = this
+                        list._firstnode = this
+                        list._count = 1
+                        
+                        return this
                     }
-                }
 
-                if (index < 0) {
-                    // link before cursor
-                    this._prevnode = cursor._prevnode || null
-                    this._nextnode = cursor
+                    if (index == 1) { replacehead = true }
 
-                    cursor._prevnode = this
-                    if (this._prevnode) { this._prevnode._nextnode = this }
                 } else {
-                    this._nextnode = cursor._nextnode
-                    this._prevnode = cursor    
+                    list = cursor._list
+                    if (!list) { throw "Error: cursor not in a list" }
 
-                    cursor._nextnode = this
-                    if (this._nextnode) { this._nextnode._prevnode = this }                    
+                    if (index == 1) {
+                        cursor = cursor._nextnode
+                    } else {
+                        if (cursor == list._firstnode) { replacehead = true }   
+                    }
+                }         
 
-                }
+                this._list = list
+                list._count += 1
 
-                return this            
+                this._nextnode = cursor
+                this._prevnode = cursor._prevnode
+
+                this._prevnode._nextnode = this
+                this._nextnode._prevnode = this
+
+                if (replacehead) { list._firstnode = this }
+
+                return this
             }
+
 
             this.unlink = function() {
                 var list = this._list
-
+         
                 if (list) { 
-                    list._count -= 1 
-                    if (list._firstnode == this) { list._firstnode = this._nextnode || null }                    
-                }
+                    list._count -= 1
 
-                if (this._nextnode) { this._nextnode._prevnode = this._prevnode }
-                if (this._prevnode) { this._prevnode._nextnode = this._nextnode }
+                    if (!list._count) {
+                        list._firstnode = null
+
+                    } else {
+                        this._prevnode._nextnode = this._nextnode
+                        this._nextnode._prevnode = this._prevnode
+                        
+                        if (list._firstnode == this) { list._firstnode = this._nextnode }
+                    }
+                }
 
                 this._list = null
                 this._nextnode = null
-                this._prevnode = null
+                this._prevnode = null 
+                
+                return this
             }
 
             this.destroy = function() {
@@ -74,17 +101,8 @@ _.ambient.module("circularlistnode", function(_) {
         this.modelbehavior = _.behavior(function() {
             this.parent = function () { return this._list? this._list._parent: null }            
             this.list = function() { return this._list }
-
-            this.isfirst = function() { 
-                if (this._prevnode && !this._prevnode._nextnode) { return true }
-                if (!this._prevnode) { return true }
-                return false
-            }
-
-            this.islast = function() { 
-                if (!this._nextnode) { return true }
-                return false
-            }
+            this.isfirst = function() { return this._list && this._list._firstnode == this }
+            this.islast = function() { return this._list && this._list._firstnode._prevnode == this }
 
             this.value = function(value) {
                 if (value === undefined) { return this._value }
@@ -99,11 +117,11 @@ _.ambient.module("circularlistnode", function(_) {
 
         this.navigationbehavior = _.behavior(function() {
             this.nextnode = function() {
-                return this._nextnode
+                return this._list._cyclic || (!this.islast())? this._nextnode: null
             }
 
             this.prevnode = function() {
-                return this.isfirst()? null:this._prevnode
+                return this._list._cyclic || (!this.isfirst())? this._prevnode: null
             }
         })
     })

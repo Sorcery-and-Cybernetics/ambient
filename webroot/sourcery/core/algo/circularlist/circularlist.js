@@ -7,65 +7,58 @@ _.ambient.module("circularlist", function(_) {
     _.define.object("circularlist", function (supermodel) {
         this._firstnode = null
         this._count = 0
+        this._cyclic = false
 
-        this.constructbehavior = _.behavior(function() {
+        this.modelbehavior = _.behavior(function() {
             this.count = function() { return this._count }
-            this.first = function() { return this._firstnode }
-            this.last = function() { return this._firstnode? this._firstnode._prevnode: null }
+            this.firstnode = function() { return this._firstnode }
+            this.lastnode = function() { return this._firstnode? this._firstnode._prevnode: null }
 
-            this.add = function(node, index) {
-                if (!node) { throw "Error: circularlist.add. Node is null" }
-                if (!(node instanceof _.model.circularlistnode)) { throw "Error: circularlist.add. Node is not a circularlistnode" }
+            this.foreach = function(callback) {
+                if (!this._firstnode || !callback) { return this }
 
-                if (index === undefined) { index = -1 }  // default: add at tail
+                var cursor = this._firstnode
 
-                if (!this._firstnode) {
-                    // Insert as first
-                    this._firstnode = node
-
-                    node.unlink()
-
-                    node._list = this
-                    this._count = 1
-
-                } else if (index < 0) {
-                    // insert at tail
-                    var tail = this._firstnode._prevnode || this._firstnode
-                    node.assignafter(tail)
-
-                } else {
-                    // insert at head
-                    node.assignbefore(this._firstnode)
-                    this._firstnode = node
+                while (cursor) {
+                    if (callback(cursor) === _.done) { break }
+                    cursor = cursor.islast()? null:cursor.nextnode()
                 }
 
-                return node
-            }            
-        })
-
-        this.foreach = function(callback) {
-            if (!this._firstnode || !callback) { return this }
-
-            var cursor = this._firstnode
-            
-            while (cursor) {
-                var nextnode = cursor.nextnode()
-                if (callback(cursor) === _.done) { break }
-                cursor = nextnode
-            }
-            
-            return this
-        }        
+                return this
+            }  
+        })      
 
         this.debugbehavior = _.behavior(function() {
-            this.debugout = function() {
-                var result = []
+            this.debugvalidate = function() {
+                var errors = []
+                var count = 0
+
                 var cursor = this.firstnode()
 
                 while (cursor) {
-                    result.push(cursor.value())
-                    cursor = cursor.nextnode()
+                    count += 1
+
+                    if (cursor.list() != this) { errors.push("node " + count + " not in list") }
+                    if (!cursor._prevnode) { errors.push("node " + count + " has no prevnode") }
+                    if (!cursor._nextnode) { errors.push("node " + count + " has no nextnode") }
+
+                    if (cursor._nextnode._prevnode != cursor) { errors.push("node " + count + " nextnode does not point back to this node") }
+                    if (cursor._prevnode._nextnode != cursor) { errors.push("node " + count + " prevnode does not point to the correct nextnode") }
+
+                    cursor = cursor.islast()? null:cursor.nextnode()
                 }
+
+                if (count != this._count) { errors.push("list count mismatch (" + count + " vs " + this._count + ")") }
+                return errors.length? errors: null
+            }
+
+            this.debugout = function() {
+                var result = []
+
+                this.foreach(function(node) {
+                    result.push(node.value())
+                })
+
                 return result
             }
         })

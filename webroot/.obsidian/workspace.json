@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/daily/2025-09-19.md",
+                "file": "docs/3rd Party/Indextts2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2025-09-19"
+              "title": "Indextts2"
             }
           }
         ]
@@ -184,6 +184,11 @@
   },
   "active": "7f1481c25a08830b",
   "lastOpenFiles": [
+    "docs/basiclist design.md",
+    "docs/3rd Party/Indextts2.md",
+    "docs/daily/2025-09-20.md",
+    "sourcery/core/algo/circularlist/temp",
+    "sourcery/core/algo/circularlist/_temp",
     "sourcery/core/algo/circularlist/test.circularlist.js",
     "sourcery/core/algo/circularlist/circularlistnode.js",
     "sourcery/core/algo/circularlist/circularlist.js",
@@ -192,11 +197,6 @@
     "sourcery/core/algo/circularlist",
     "sourcery/core/model/model/modelmutation.js",
     "sourcery/core/model/modelmutation.js",
-    "sourcery/core/model/modelmutation",
-    "sourcery/core/system/http/testserver.http.js",
-    "sourcery/core/model/alias/tests/_root.js",
-    "docs/3rd Party/Indextts2.md",
-    "docs/daily/2025-09-19.md",
     "docs/3rd Party/Python.md",
     "docs/config/default.md",
     "docs/Testing Design Guidelines.md",
@@ -218,7 +218,6 @@
     "docs/bfm/INFO_webserverhelper_JS.md",
     "docs/bfm/INFO_webserver_JS.md",
     "docs/bfm/INFO_fileroute_JS.md",
-    "docs/bfm/INFO_path_JS.md",
-    "docs/bfm/INFO_folder_JS.md"
+    "docs/bfm/INFO_path_JS.md"
   ]
 }
