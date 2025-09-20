@@ -14,6 +14,9 @@ _.ambient.module("circularlist", function(_) {
             this.firstnode = function() { return this._firstnode }
             this.lastnode = function() { return this._firstnode? this._firstnode._prevnode: null }
 
+            // this.first = function() { return this.firstnode()? this.firstnode().value(): null }
+            // this.last = function() { return this.lastnode()? this.lastnode().value(): null }
+
             this.foreach = function(callback) {
                 if (!this._firstnode || !callback) { return this }
 

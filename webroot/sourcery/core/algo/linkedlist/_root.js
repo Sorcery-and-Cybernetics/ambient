@@ -5,5 +5,5 @@ _.ambient.rootmodule("linkedlist/")
 //    .include("listsegment")
     .include("test.linkedlistroot", "debugmode")
 
-    .include("stacklist")
+//    .include("stacklist")
 .include("test.stacklist", "debugmode")

@@ -182,8 +182,10 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "7f1481c25a08830b",
+  "active": "51c7721abd0bf0af",
   "lastOpenFiles": [
+    "sourcery/core/algo/circularlist/stacklist.js",
+    "sourcery/core/algo/linkedlist/stacklist.js",
     "docs/basiclist design.md",
     "docs/3rd Party/Indextts2.md",
     "docs/daily/2025-09-20.md",
@@ -196,7 +198,6 @@
     "sourcery/core/algo/circularlist/_root.js",
     "sourcery/core/algo/circularlist",
     "sourcery/core/model/model/modelmutation.js",
-    "sourcery/core/model/modelmutation.js",
     "docs/3rd Party/Python.md",
     "docs/config/default.md",
     "docs/Testing Design Guidelines.md",

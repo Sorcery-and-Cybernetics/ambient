@@ -2,24 +2,9 @@
 // stacklist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("stacklist", function (_) {
-    _.define.object("stacklist", function (supermodel) {
-        this._nodes = null
-
-        this.construct = function () {
-            this._nodes = _.model.circularlist()
-        }
-
-        this.first = function () {
-            var item = this._nodes.firstnode()
-            return item? item.value(): null
-        }
-
-        this.last = function () {
-            var item = this._nodes.lastnode()
-            return item? item.value(): null
-        }
-
-        this.count = function () { return this._nodes.count() }
+    _.define.circularlist("stacklist", function (supermodel) {
+        this.first = function() { return this.firstnode()? this.firstnode().value(): null }
+        this.last = function() { return this.lastnode()? this.lastnode().value(): null }
 
         this.push = function (value) {
             if (!value) { throw "Error: stacklist.push - value is null" }
@@ -28,11 +13,11 @@ _.ambient.module("stacklist", function (_) {
                 value = _.model.circularlistnode(value)
             }
 
-            return value.assign(this._nodes, 0) // index 0 → append at end
+            return value.assign(this, 0) // 0 → append at end
         }
 
         this.pop = function () {
-            var cursor = this._nodes.lastnode()
+            var cursor = this.lastnode()
             var value = null
 
             if (cursor) {
@@ -50,11 +35,11 @@ _.ambient.module("stacklist", function (_) {
                 value = _.model.circularlistnode(value)
             }
 
-            return value.assign(this._nodes, 1) // index 1 → insert at head
+            return value.assign(this, 1) // 1 → insert at head
         }
 
         this.popfirst = function () {
-            var cursor = this._nodes.firstnode()
+            var cursor = this.firstnode()
             var value = null
 
             if (cursor) {
