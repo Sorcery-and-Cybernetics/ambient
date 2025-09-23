@@ -9,6 +9,16 @@ _.ambient.module("circularlist", function(_) {
         this._count = 0
         this._cyclic = false
 
+        this.constructbehavior = _.behavior(function() {
+
+            this.destroy = function() {
+                this._phase = -1
+
+                this.clear()
+                return null
+            }
+        })
+
         this.modelbehavior = _.behavior(function() {
             this.count = function() { return this._count }
             this.firstnode = function() { return this._firstnode }
@@ -16,19 +26,35 @@ _.ambient.module("circularlist", function(_) {
 
             // this.first = function() { return this.firstnode()? this.firstnode().value(): null }
             // this.last = function() { return this.lastnode()? this.lastnode().value(): null }
+                
 
             this.foreach = function(callback) {
                 if (!this._firstnode || !callback) { return this }
 
                 var cursor = this._firstnode
+                var nodes = []
 
                 while (cursor) {
-                    if (callback(cursor) === _.done) { break }
-                    cursor = cursor.islast()? null:cursor.nextnode()
-                }
+                    nodes.push(cursor)
+                    cursor = cursor.islast()? null: cursor.nextnode()
+                } 
+                
+                for (var index = 0; index < nodes.length; index++) {
+                    cursor = nodes[index]
 
+                    if (!cursor.isdestroy()) {
+                        if (callback.call(null, cursor, index + 1) == _.done) { break }
+                    }
+                }                
                 return this
-            }  
+            } 
+            
+            this.clear = function() {
+                this.foreach(function(node) {
+                    node.destroy()
+                })
+                return this
+            }
         })      
 
         this.debugbehavior = _.behavior(function() {

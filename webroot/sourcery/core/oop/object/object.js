@@ -40,6 +40,8 @@ _.ambient.module("object").source(function (_) {
             this._name = name
             return this
         }
+
+        , isdestroy: function() { return this._phase < 0 }
         , destroy: _.noop
 
         , get: function(name) { 
