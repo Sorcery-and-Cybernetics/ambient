@@ -10,6 +10,8 @@ _.ambient.module("model", function(_) {
     _.define.object("model", function (supermodel) {
         this._self = null
         this.uid = _.model.property()
+        this.groot = _.model.property()
+        this.grootid = function() { return (this._groot? this._groot.uid(): null) }
 
         this.assign = function(parent, name, orderindex) {
             if (name) { this._name = name }
@@ -27,5 +29,31 @@ _.ambient.module("model", function(_) {
         }
         
         this.hasself = function() { return this._self? true: false }
+
+        //Dirty mode:
+        // < 0 : control is locked
+        // 0 : nothing to repaint
+        // 1: repaint self
+        // 2 : force repaint on all children
+        // 4 : repaint child
+
+        // , setdirty: function (dirtymode) {
+        //     if (this.dirty < 0) { return }
+
+        //     //            if (this.dirty != 0) { return }
+        //     if (!this.dirty) {
+        //         if (this._parent) {
+        //             this._parent.setdirty(4)
+        //         } else {
+        //             _.dom.setdirty()
+        //         }
+        //     }
+
+        //     this.dirty |= (dirtymode || 1);
+        //     return this;
+        // } 
+        
+        this.onchildchange = _.model.signal()
+
     })
 })

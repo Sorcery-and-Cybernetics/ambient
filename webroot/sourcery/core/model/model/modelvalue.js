@@ -56,6 +56,11 @@ _.ambient.module("modelvalue", function(_) {
             if (value == this._value) { return this }
             this._value = value
 
+            if (this._parent) {
+                var mutation = _.model.modelmutation("change", this._parent.grootid(), this._parent.uid(), this._name, value)
+                this._parent.onchildchange(mutation)
+            }
+
             return this
         }
 

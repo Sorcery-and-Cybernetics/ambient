@@ -4,8 +4,19 @@
 //**************************************************************************************************
 
 _.ambient.module("modelmutation", function(_) {
+    var safedate = function (value) {
+        if (value) {
+            if (!_.isdate(value)) {
+                value = new Date(value)
+            }
+        } else {
+            value = new Date()
+        }
 
-    var makereadabledate = function (value) {
+        return value
+    }
+
+    var readabledate = function (value) {
         if (value) {
             if (!_.isdate(value)) {
                 value = new Date(value)
@@ -18,33 +29,30 @@ _.ambient.module("modelmutation", function(_) {
     }
     
     _.define.object("modelmutation", function (supermodel) {
-        this.method = _.property("")
-        this.grootid = _.property("")
-        this.uid = _.property("")
-        this.parent = _.property("")     // may contain "parent:model"
-        this.model = _.property("")
-        this.date = _.property("").onset(function(value) { return makereadabledate(value) })       // "YYYYMMDD:HHmmSS"
-        this.value = _.property(null)
+        this.method = _.model.property(null)
+        this.grootid = _.model.property(null)
+        this.uid = _.model.property(null)
+        this.parentid = _.model.property(null)  
+        this.date = _.model.property(null) 
+        this.value = _.model.property(null)
 
-        this.construct = function (method, grootid, uid, parent, model, date, value) {
-            this.method(method)
-            this.grootid(grootid)
-            this.uid(uid)
-            this.parent(parent)
-            this.model(model)
-            this.date(makereadabledate(date))
-            this.value(value)
+        this.construct = function (method, grootid, uid, parentid, value, date) {
+            if (method) {this.method(method) }
+            if (grootid) { this.grootid(grootid) }
+            if (uid) {  this.uid(uid) }
+            if (parentid) { this.parentid(parentid) }
+            if (value) { this.value(value) }
+            this.date(safedate(date))
         }
 
         this.json = function (data) {
             if (data) {
-                this.method(data[0] || "")
-                this.grootid(data[1] || "")
-                this.uid(data[2] || "")
-                this.parent(_.leftof$(data[3], ":") || "")
-                this.model(_.rightof$(data[3], ":") || "")
-                this.date(data[4] || "")
-                this.value(data[5])
+                this.method(data[0] || null)
+                this.grootid(data[1] || null)
+                this.uid(data[2] || null)
+                this.parentid(data[3] || null)
+                this.date(data[4] || null)
+                this.value(readabledate(data[5]))
                 return this
 
             } else {
@@ -52,7 +60,7 @@ _.ambient.module("modelmutation", function(_) {
                     this.method()
                     , this.grootid()
                     , this.uid()
-                    , _.combine$(this.parent(), ":", this.model()) 
+                    , this.parentid()
                     , this.date()
                     , this.value()
                 ]

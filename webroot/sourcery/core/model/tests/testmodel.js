@@ -1,6 +1,6 @@
 _.ambient.module("testmodel", function(_) {
     //Define a new object that uses the trait
-    _.define.object("test.model", function(supermodel) {
+    _.define.model("test.model", function(supermodel) {
         this.teststring = _.model.string("Test String")  //Basic type: String
     })
 
@@ -15,7 +15,5 @@ _.ambient.module("testmodel", function(_) {
 
     object1.teststring().let("New String")
     this.test(object1.teststring(), "New String")
-
-    //_.console.log("mooo!!!")
 })  
 

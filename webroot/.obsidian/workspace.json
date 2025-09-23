@@ -184,6 +184,7 @@
   },
   "active": "51c7721abd0bf0af",
   "lastOpenFiles": [
+    "sourcery/core/model/model/test.model.js",
     "sourcery/core/algo/chainlist/test.chainlist.js",
     "sourcery/core/algo/chainlist/_root.js",
     "sourcery/core/algo/chainlist/test.circularlist.js",
@@ -194,7 +195,6 @@
     "sourcery/core/algo/circularlist/chainlistnode.js",
     "sourcery/core/algo/circularlist/chainlist.js",
     "sourcery/core/algo/circularlist/stacklist.js",
-    "sourcery/core/algo/linkedlist/stacklist.js",
     "docs/basiclist design.md",
     "docs/3rd Party/Indextts2.md",
     "docs/daily/2025-09-20.md",

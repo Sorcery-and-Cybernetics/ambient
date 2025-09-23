@@ -41,6 +41,7 @@ _.ambient.module("modelagent", function(_) {
                 this._lastuid = uid
                 if (!this.ismaster()) { uid = -uid }
                 model._uid = uid
+                model._parent = parent
             }
 
             this._models[uid] = model
