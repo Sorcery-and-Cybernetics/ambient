@@ -2,15 +2,15 @@
 // stacklist - Copyright (c) 2024 Sorcery and Cybernetics. All rights reserved.
 //*************************************************************************************************
 _.ambient.module("stacklist", function (_) {
-    _.define.circularlist("stacklist", function (supermodel) {
+    _.define.chainlist("stacklist", function (supermodel) {
         this.first = function() { return this.firstnode()? this.firstnode().value(): null }
         this.last = function() { return this.lastnode()? this.lastnode().value(): null }
 
         this.push = function (value) {
             if (!value) { throw "Error: stacklist.push - value is null" }
 
-            if (!(value instanceof _.model.circularlistnode)) {
-                value = _.model.circularlistnode(value)
+            if (!(value instanceof _.model.chainlistnode)) {
+                value = _.model.chainlistnode(value)
             }
 
             return value.assign(this, 0) // 0 → append at end
@@ -31,8 +31,8 @@ _.ambient.module("stacklist", function (_) {
         this.pushfirst = function (value) {
             if (!value) { throw "Error: stacklist.pushfirst - value is null" }
 
-            if (!(value instanceof _.model.circularlistnode)) {
-                value = _.model.circularlistnode(value)
+            if (!(value instanceof _.model.chainlistnode)) {
+                value = _.model.chainlistnode(value)
             }
 
             return value.assign(this, 1) // 1 → insert at head

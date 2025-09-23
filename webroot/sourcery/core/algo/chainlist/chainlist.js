@@ -3,8 +3,8 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("circularlist", function(_) {
-    _.define.object("circularlist", function (supermodel) {
+_.ambient.module("chainlist", function(_) {
+    _.define.object("chainlist", function (supermodel) {
         this._firstnode = null
         this._count = 0
         this._cyclic = false

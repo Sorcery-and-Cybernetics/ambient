@@ -6,7 +6,7 @@ _.ambient.module("stacklist", function (_) {
         this._nodes = null
 
         this.construct = function () {
-            this._nodes = _.model.circularlist()
+            this._nodes = _.model.chainlist()
         }
 
         this.first = function () {
@@ -24,8 +24,8 @@ _.ambient.module("stacklist", function (_) {
         this.push = function (value) {
             if (!value) { throw "Error: stacklist.push - value is null" }
 
-            if (!(value instanceof _.model.circularlistnode)) {
-                value = _.model.circularlistnode(value)
+            if (!(value instanceof _.model.chainlistnode)) {
+                value = _.model.chainlistnode(value)
             }
 
             return value.assign(this._nodes, 0) // index 0 → append at end
@@ -46,8 +46,8 @@ _.ambient.module("stacklist", function (_) {
         this.pushfirst = function (value) {
             if (!value) { throw "Error: stacklist.pushfirst - value is null" }
 
-            if (!(value instanceof _.model.circularlistnode)) {
-                value = _.model.circularlistnode(value)
+            if (!(value instanceof _.model.chainlistnode)) {
+                value = _.model.chainlistnode(value)
             }
 
             return value.assign(this._nodes, 1) // index 1 → insert at head

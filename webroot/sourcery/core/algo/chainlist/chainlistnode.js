@@ -3,8 +3,8 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("circularlistnode", function(_) {
-    _.define.object("circularlistnode", function (supermodel) {
+_.ambient.module("chainlistnode", function(_) {
+    _.define.object("chainlistnode", function (supermodel) {
         this._nextnode = null
         this._prevnode = null
         this._list = null
@@ -19,14 +19,14 @@ _.ambient.module("circularlistnode", function(_) {
             //When cursor is the list iteself, index 0 inserts at the end, index 1 inserts at head
             //When cursor is a node. 0 inserts before the cursor and 1 inserts after cursor
             this.assign = function(cursor, index) {
-                if (!cursor) { throw "Error: circularlistnode.insertmebefore - Cursor is null"; }
+                if (!cursor) { throw "Error: chainlistnode.insertmebefore - Cursor is null"; }
                 if (cursor == this) { return this }
                 if (this._list) { this.unlink() }
 
                 var list
                 var replacehead = false                
 
-                if (cursor instanceof _.model.circularlist) {
+                if (cursor instanceof _.model.chainlist) {
                     list = cursor
                     cursor = list._firstnode
 
