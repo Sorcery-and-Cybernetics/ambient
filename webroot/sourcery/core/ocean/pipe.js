@@ -9,7 +9,7 @@ _.ambient.module("pipe", function(_) {
         this.id = 0
         this.barrelindex = 0
         this.action = ""
-        this.params = null
+        this.param = null
         this.progress = 0
 
         this._prev = null
@@ -17,10 +17,9 @@ _.ambient.module("pipe", function(_) {
 
         this._isclose = false
 
-        this.construct = function(action, params) {
+        this.construct = function(action, param) {
             this.action = action || ""
-            this.params = params || null
-            this.progress = 0
+            this.param = param || null
         }
 
         this.assignto = function(parent, id) {
@@ -41,26 +40,26 @@ _.ambient.module("pipe", function(_) {
             if (data instanceof _.model.barrel) { 
                 if (!data.iserror()) {
 
-                    if (data.index == 1) {
+                    if (data.id == 1) {
                         this.action = data.action
-                        this.params = data.params
+                        this.param = data.param
                     }
                     this.progress = data.progress
                     this.barrelindex = data.id
                 }
 
             } else {
-                if (this._prev) { throw "Error: Cannot send data to a chained pipe."}
+                if (this._prev) { throw "Error: Cannot insert data into a chained pipe."}
                 this.barrelindex++
 
                 var data = _.model.barrel(data, progress || this.progress).assignto(this.id, this.barrelindex)
 
                 if (this.barrelindex == 1) {
                     data.action = this.action
-                    data.params = this.params 
+                    data.param = this.param
                     data.progress = 1
                 } else {
-                    data.progress = progress || this.progress
+                    data.progress = progress || this.progress                    
                 }                
             }
 
@@ -98,13 +97,22 @@ _.ambient.module("pipe", function(_) {
                return this
             }
 
-            if (progress) { this.progress = progress }
 
-            if (!(data instanceof _.model.barrel)) {
+            if (data instanceof _.model.barrel) {
+                this.progress = data.progress
+
+            } else {
+                if (progress) { this.progress = progress }
                 data = _.model.barrel(data, this.progress).assignto(this.id, this.barrelindex)
             }
             
             this._reply(data)
+
+            if (data.isclose()) {
+                this._isclose = true
+                this.onclose()
+                this.destroy()
+            }            
 
             return this
         }
@@ -121,11 +129,6 @@ _.ambient.module("pipe", function(_) {
                 } else {
                     this.onreply(barrel)
                 }
-            }
-
-            if (barrel.isclose()) {
-                this.onclose()
-                this.destroy()
             }
         }
 
@@ -170,4 +173,28 @@ _.ambient.module("pipe", function(_) {
         this.onclose = _.model.signal()
     })
 
+})
+
+.ontest("pipe", function(_) { 
+    var pipe1 = _.model.pipe()
+        .onsend(function(barrel) {
+            _.debug(this.action + " " + this.param.param + ": " + barrel.data)
+            this.reply(barrel.data + " to you too!", 100)
+        })
+        .onreply(function() {
+            _.debug("Reply received")
+        })   
+
+
+    var pipe2 = _.model.pipe("test", { "param": "Pipe 1" })
+        .onreply(function(barrel) {
+            _.debug(this.action + " " + this.param.param + ": " + barrel.data)
+        })
+
+    pipe1.send(pipe2)
+
+    pipe2.send("Hello World 1")
+
+    var isclosed1 = pipe1.isclose()
+    var isclosed2 = pipe2.isclose()
 })

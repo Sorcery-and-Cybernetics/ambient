@@ -13,6 +13,9 @@ _.ambient.module("barrel", function(_) {
         this.progress = 0       // 0–100 or stream chunk index
         this.error = ""         // error string, empty if no error
 
+        this.action = null      // action name (only set for the first barrel in a pipe)
+        this.param = null       // action parameters (only set for the first barrel in a pipe)
+
         this.construct = function(data, progress) {
             if (data) { this.data = data }
             if (progress) { this.progress = progress }
