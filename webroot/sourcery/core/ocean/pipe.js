@@ -22,9 +22,9 @@ _.ambient.module("pipe", function(_) {
             this.param = param || null
         }
 
-        this.assignto = function(parent, id) {
+        this.assignto = function(parent) {
             this._parent = parent
-            this.id = id || _.uniqueid()
+            this.id = _.uniqueid()
         }
 
         this.send = function(data, progress) {
