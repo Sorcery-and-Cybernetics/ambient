@@ -34,7 +34,8 @@ _.ambient.module("object").source(function (_) {
             }
             return false;
          }        
-        , construct: _.noop      
+        , construct: _.noop
+             
         , assign: function(parent, name) {
             this._parent = parent
             this._name = name
@@ -42,7 +43,11 @@ _.ambient.module("object").source(function (_) {
         }
 
         , isdestroy: function() { return this._phase < 0 }
-        , destroy: _.noop
+        
+        , destroy: function() {
+            this._phase = -1
+            return this
+        }
 
         , get: function(name) { 
             var value = this[name]

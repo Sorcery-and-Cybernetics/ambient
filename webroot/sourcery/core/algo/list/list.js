@@ -54,8 +54,17 @@ _.ambient.module("list", function(_) {
 		this.remove = function(name, from, to) {
 			if (!name) { throw "Error: list.remove: No name provided" }
 
-			var node = this.getnode(name, from)
-			var endnode = this.getnode(name, to)			
+			if (from == null) { 
+				from = 1
+				to = -1
+			} else {
+				if (to == null) { 
+					to = from 
+				}
+			}
+
+			var nodefrom = this.getnode(name, from)
+			var nodeto = this.getnode(name, to)			
 
 			var indexfrom = nodefrom.orderindex()
 			var indexto = nodeto.orderindex()
@@ -64,10 +73,13 @@ _.ambient.module("list", function(_) {
 
 			var node = nodefrom
 
-			do {
+			while (node) {
 				var nextnode = node.nextnode()
-				node = node.destroy()
-			} while (node && node != nodeto)
+				node.destroy()
+
+				if (node == nodeto) { break }
+				node = nextnode
+			} 
 
 			return this
 		}

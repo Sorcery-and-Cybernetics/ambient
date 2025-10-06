@@ -54,15 +54,29 @@ _.ambient.module("widget", function(_) {
         this.behavior = _.efb.none
         this.behaviors = _.efb
         
-//        this.widget = _.list()
+        this.child = _.list()
 
         this.element = null
 
+        this.parentuid = function() {
+            var parent = this.parent()
+
+            return (parent? parent.uid(): 0)
+        }
+
         this.objectbehavior = _.behavior(function() {
-            this.assignto = function(parent, orderindex, relative) {
-                if (parent instanceof _.model.list) {
-                    parent.add(this, orderindex, relative)
-                }
+            this.text = _.property("")
+
+            this.link = function(parent, orderindex, relative) {
+                parent.addchild(this, orderindex, relative)
+            }
+
+            this.addchild = function(widget, orderindex, relative) {
+                this.child.add(widget, orderindex, relative)
+            }
+
+            this.delchild = function(widget) {
+                widget.destroy()
             }
 
             this.onshow = _.noop
@@ -71,125 +85,156 @@ _.ambient.module("widget", function(_) {
             this.onskin = _.noop
             this.onarrange = _.noop      
 
-        this.load = function () {
-            if (this.onload) { this.onload() }
-            this.phase = this.phases.load
-            return this
-        }        
+            this.load = function () {
+                if (this.onload) { this.onload() }
+                this.phase = this.phases.load
+                return this
+            }        
 
-        this.show = function () {
-            if (this.phase < this.phases.load) { this.load() }
-            if (this.onshow) { this.onshow()}
-            this.phase = this.phases.show
+            this.show = function () {
+                if (this._parent.phase < this.phases.show) { this._parent.show() }
 
-            this.setdirty()
-            return this
-        }
+                if (this.phase < this.phases.load) { this.load() }
+                if (this.onshow) { this.onshow()}
+                this.phase = this.phases.show
 
-        this.hide = function() {
-
-        }
-
-        this.unload = function() {
-
-        }
-        
-        this.destroy = function() {
-            this._domdestroy()
-            supermodel.destroy.call(this)
-        }
-    })
-
-    this.renderbehavior = _.behavior(function() {
-        //Dirty mode:
-        // < 0 : widget is locked
-        // 0 : nothing to repaint
-        // 1: repaint self
-        // 2 : force repaint on all children
-        // 4 : repaint child
-        this.setdirty = function (dirtymode) {
-            if (this.dirty < 0) { return }
-
-            if (!this.dirty) {
-                if (this._parent) {
-                    this._parent.setdirty(4)
-                } else {
-                    _.dom.setdirty()
-                }
+                this.setdirty()
+                return this
             }
 
-            this.dirty |= (dirtymode || 1);
-            return this;
-        } 
+            this.hide = function() {
 
-        this.render = function(force, resizing) {
-            var me = this
+            }
 
-            if (this.isdestroy()) { return this }
+            this.unload = function() {
 
-            var dirty = this.dirty
-            force = force || !!(this.dirty & 2)
-
-            if (this.widgetstate < this.phases.show) {
-                this.show()
-            }  
+            }
             
-            this._domcreate()
-            this.phase = this.phases.render
+            this.destroy = function() {
+                this._domdestroy()
+                supermodel.destroy.call(this)
+            }
+        })
 
-            this.dirty = 0
+        this.renderbehavior = _.behavior(function() {
 
-            var maxwidth = 0
-            var maxheight = 0
+            //Dirty mode:
+            // < 0 : widget is locked
+            // 0 : nothing to repaint
+            // 1: repaint self
+            // 2 : force repaint on all children
+            // 4 : repaint child
+            this.setdirty = function (dirtymode) {
+                if (this.dirty < 0) { return }
 
-            this.widget.foreach(function (child) {
-                if (child.dirty || force) {
-                    child.render(force, resizing)
-                } else if (resizing) {
-                    var childstyle = child.style()
-
-                    if ((childstyle.right() != null) || (childstyle.bottom() != null)) {
-                        child.render(undefined, resizing)
+                if (!this.dirty) {
+                    if (this._parent) {
+                        this._parent.setdirty(4)
+                    } else {
+                        _.dom.setdirty()
                     }
                 }
-            })
 
-            this.onrender()
+                this.dirty |= (dirtymode || 1);
+                return this;
+            } 
 
-            this.phase = this.phases.show
+            this.render = function(force, resizing) {
+                var me = this
 
-            return this
-        }
-        
-        this.skin = function() {}
-        this.arrange = function() {}
+                if (this.isdestroy()) { return this }
 
-        this._domcreate = function() {
-            if (this.element) { return this }
-            if (!this.tagname) { return this }
-            if (!this._parent) { return this }
+                var dirty = this.dirty
+                force = force || !!(this.dirty & 2)
 
-            if (this._parent.phase < this.phases.show) { this._parent.show() }
+                if (this.widgetstate < this.phases.show) {
+                    this.show()
+                }  
+                
+                this._domcreate()
+                this.phase = this.phases.render
 
-            // this.element = _.dom.createelement(this.tagname, this.tagtype)
+                this.dirty = 0
 
-            // this.element.className = this.__kindname + " " + this.name //+ " " + this.name + this.activeclasses
-            // _.dom.appendelement(this.element, relative.element, appendmode)
-            
-            // _.dom.registercontrol(this)            
+                var maxwidth = 0
+                var maxheight = 0
 
-            return this
-        }
+                this.child.foreach(function (child) {
+                    if (child.dirty || force) {
+                        child.render(force, resizing)
+                    } else if (resizing) {
+                        var childstyle = child.style()
 
-        this._domdestroy = function() {
-            if (this.element) {
-                this.element.destroy()
-                this.element = null
+                        if ((childstyle.right() != null) || (childstyle.bottom() != null)) {
+                            child.render(undefined, resizing)
+                        }
+                    }
+                })
+
+                this.onrender()
+
+                this.phase = this.phases.show
+
+                return this
             }
-        }
+            
+            this.skin = function() {}
+            this.arrange = function() {}
 
-    })
+            this._domcreate = function() {
+                if (!this.tagname) { return this }
+                if (!this._parent) { return this }
 
+                if (!this.element) {
+                    this.element = _.model.domelement(this)
+                }
+
+
+                // this.element = _.dom.createelement(this.tagname, this.tagtype)
+
+                // this.element.className = this.__kindname + " " + this.name //+ " " + this.name + this.activeclasses
+                // _.dom.appendelement(this.element, relative.element, appendmode)
+                
+                // _.dom.registercontrol(this)            
+
+                return this
+            }
+
+            this._domdestroy = function() {
+                if (this.element) {
+                    this.element.destroy()
+                    this.element = null
+                }
+            }
+
+        })
+
+        this.positionbehavior = _.behavior(function() {            
+            this.left = _.property(1)
+            this.top = _.property(1)
+            this.width = _.property(60)
+            this.height = _.property(20)
+
+            this.move = function (left, top, width, height, right, bottom) {
+                var me = this
+
+                // if (left instanceof _.model.rect) {
+                //     me.left(left.x)
+                //     me.top(left.y)
+                //     me.width(left.width)
+                //     me.height(left.height)
+                // } else {
+                    me.left(left)
+                    me.top(top)
+                    me.width(width)
+                    me.height(height)
+
+                    me.right(right)
+                    me.bottom(bottom)
+                // }
+                return this
+            }           
+        })            
 
         
         // this.assign = function(parent, name, orderindex) {
@@ -204,11 +249,6 @@ _.ambient.module("widget", function(_) {
 
         //     return this
         // }
-
-        this.left = _.model.number(1)
-        this.top = _.model.number(1)
-        this.width = _.model.number(60)
-        this.height = _.model.number(20)
 
 
         // this.positionbehavior = _.behavior(function() {            
@@ -486,9 +526,6 @@ _.ambient.module("widget", function(_) {
         //     this.enabled = function(value) {
         //     } 
         // })       
-
-        
-      
 
 
     })

@@ -39,12 +39,12 @@ _.ambient.module("domdocument", function(_) {
 
                 if (document.body) {
                     me.body = _.model.dombody(document.body)
-                    this.observemutations()
+//                    this.observemutations()
                     this.observeevents()                    
                 } else {
                     document.addEventListener('DOMContentLoaded', function() {
                         me.body = _.model.dombody(document.body)
-                        this.observemutations()
+//                        this.observemutations()
                         this.observeevents()                        
                     })
                 }                
@@ -85,6 +85,31 @@ _.ambient.module("domdocument", function(_) {
         })
 
         this.elementbehavior = _.behavior(function() {
+            this.finddomelement = function(domelement) {
+                elementid = (_.isnumber(domelement)? domelement: domelement.uid())
+
+                return this.domelements[elementid]
+            }
+
+            this.registerdomelement = function(domelement) {
+                if (!domelement) { throw "error" }
+
+                var uid = domelement.uid()
+                if (!uid) { throw "error" }
+
+                this.domelements[uid] = domelement
+                return this
+            }
+
+            this.unregisterdomelement = function (domelement) {
+                domelement = this.finddomelement(domelement)
+                if (!domelement) { throw "error" }
+
+                delete this.domelements[domelement.uid()]
+
+                return this
+            }
+
             this.createelement = function (tag, tagtype, namespace) {
                 if (_.iselement(tag)) {
                     var element = tag
@@ -100,6 +125,8 @@ _.ambient.module("domdocument", function(_) {
             }
 
             this.appendelement = function (relative, element, appendmode) {
+                if (!relative) { throw "error" }
+
                 relative = relative || document.body
                 appendmode = appendmode || _.enum.dom.lastchild
 
@@ -120,10 +147,7 @@ _.ambient.module("domdocument", function(_) {
                         break
                 }
 
-                element._uid = _.uniqueid()
-                this.elements[element._uid] = element
-
-                return element
+                return this
             }
 
             this.appendlastchild = function(relative, element) { return this.appendelement(relative, element, _.enum.dom.lastchild) }
@@ -133,8 +157,6 @@ _.ambient.module("domdocument", function(_) {
 
             this.removeelement = function (element) {
                 if (!element) { _.system.warn("Element doesn't exist") }
-
-                if (element._uid) { delete this.elements[element._uid] }
                 element.parentNode.removeChild(element)
 
                 return this
@@ -146,8 +168,8 @@ _.ambient.module("domdocument", function(_) {
 
             this.observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
-                    mutation.removedNodes.forEach(function(removedNode) {
-                        var uid = removedNode._uid
+                    mutation.removedNodes.forEach(function(node) {
+                        var uid = node._uid
 
                         var element = me.elements[uid]
                         if (element) { 

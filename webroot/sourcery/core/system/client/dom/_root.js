@@ -1,5 +1,5 @@
 _.ambient.rootmodule("dom/")
-    .include("domevent")
+//    .include("domevent")
     .include("domelement")
     .include("dombody")
     .include("domdocument")

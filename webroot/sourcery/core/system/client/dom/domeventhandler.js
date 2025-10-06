@@ -25,7 +25,7 @@ _.ambient.module("domeventhandler", function(_) {
         this.keyevent = null
         this._mousepointer = ""
 
-        this.create = function (rootelement) {
+        this.construct = function (rootelement) {
             this.rootelement = rootelement
             this.state = {}
 
@@ -65,7 +65,6 @@ _.ambient.module("domeventhandler", function(_) {
                     break
 
                 default:
-                    var x = 10
 
                 //case "mouseover":
                 //    _.debug("enter " + element.className)

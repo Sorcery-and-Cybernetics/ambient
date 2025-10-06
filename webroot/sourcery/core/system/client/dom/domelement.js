@@ -8,23 +8,29 @@ _.ambient.module("domelement", function(_) {
         this.element = null
         this.listeners = null
 
+        this.domdocument = null
+        this.widget = null
+        this._uid = 0
+
+        this.tagname = _.property("DIV")
+        this.tagtype = _.property("")
+
         this.constructbehavior = _.behavior(function() {
-            this.construct = function(element) {
-                if (!element) { throw "error" }
-                if (!element._uid) { element._uid = _.uniqueid() }
-                this.element = element
+            this.construct = function(widget) {
+                this.domdocument = _.domdocument
+
+                if (!widget) { throw "error" }
+                this.widget = widget         
+                this._uid = widget.uid()
+
+                this.tagname(widget.tagname())
+                this.tagtype(widget.tagtype())
             }
 
             this.destroy = function() {
-                this.clearevents()
+                this.unload()
+                this.widget = null
 
-                var element = this.element
-                if (element) {
-                    this.element = null
-                    if (element.parentNode) {
-                        element.parentNode.removeChild(element)
-                    }
-                }
                 return null
             }
 
@@ -41,11 +47,8 @@ _.ambient.module("domelement", function(_) {
                 return this
             }  
             
-            this.uid = function(value) {
-                if (value === undefined) { return (this.element? this.element._uid: null) }
-
-                if (this.element) { this.element._uid = value }
-                return this
+            this.uid = function() {
+                return this._uid
             } 
             
             this.tag = function() {
@@ -126,6 +129,28 @@ _.ambient.module("domelement", function(_) {
         })         
 
         this.statebehavior = _.behavior(function() {
+            this.load = function() {
+                if (!this.element) {
+                    var relative = this.domdocument.findelement(this.widget.parentuid())
+//                    if (!relative) { throw "error" }
+
+                    this.element = this.domdocument.createelement(this.tagname(), this.tagtype())
+                    this.document.appendlastchild(relative, this.element)
+
+//                    this.domdocument.appendelement(relative, null, appendmode)
+
+                }
+            }
+
+            this.unload = function() {
+                this.clearevents()
+
+                if (this.element) {
+                    this.domdocument.unregisterdomelement(this)
+                    this.domdocument.removeelement(this.element)
+                }
+            }
+
             this.show = function() {
                 if (this.element) { this.element.style.display = "" }
                 return this
