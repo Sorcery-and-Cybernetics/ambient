@@ -16,7 +16,7 @@ _.ambient.module("modelvalue", function(_) {
             if (value) { this.let(value) }
         }
 
-        this.assign = function(parent, name, orderindex) {
+        this.assignto = function(parent, name, orderindex) {
             if (name) { this._name = name }
             _.modelagent.registermodel(parent, this, orderindex)
             return this

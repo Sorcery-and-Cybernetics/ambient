@@ -18,7 +18,7 @@ _.ambient.module("chainlistnode", function(_) {
             //The linkedlist is circular. We insert before the cursor.
             //When cursor is the list iteself, index 0 inserts at the end, index 1 inserts at head
             //When cursor is a node. 0 inserts before the cursor and 1 inserts after cursor
-            this.assign = function(cursor, index) {
+            this.assignto = function(cursor, index) {
                 if (!cursor) { throw "Error: chainlistnode.insertmebefore - Cursor is null"; }
                 if (cursor == this) { return this }
                 if (this._list) { this.unlink() }

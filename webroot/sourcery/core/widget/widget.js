@@ -67,16 +67,16 @@ _.ambient.module("widget", function(_) {
         this.objectbehavior = _.behavior(function() {
             this.text = _.property("")
 
-            this.link = function(parent, orderindex, relative) {
+            this.assignto = function(parent, orderindex, relative) {
                 parent.addchild(this, orderindex, relative)
             }
 
-            this.addchild = function(widget, orderindex, relative) {
+            this.assignto = function(widget, orderindex, relative) {
                 this.child.add(widget, orderindex, relative)
             }
 
             this.delchild = function(widget) {
-                widget.destroy()
+                this.widget.destroy()
             }
 
             this.onshow = _.noop
@@ -237,7 +237,7 @@ _.ambient.module("widget", function(_) {
         })            
 
         
-        // this.assign = function(parent, name, orderindex) {
+        // this.assignto = function(parent, name, orderindex) {
         //     this._parent = parent
         //     this._name = name
 

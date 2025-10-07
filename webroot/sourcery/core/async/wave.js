@@ -28,7 +28,7 @@ _.ambient.module("wave", function(_) {
             this._source = source
         }
        
-        this.assign = function (parent) {
+        this.assignto = function (parent) {
             if (!parent) { throw "error" }
             me = this
 
@@ -209,7 +209,7 @@ _.ambient.module("wave", function(_) {
 
             if (_.isfunction(nextwave)) { nextwave = _.model.wavenode(nextwave) }
 
-            nextwave.assign(this._lastcreated || this)
+            nextwave.assignto(this._lastcreated || this)
             this._lastcreated = nextwave            
             return this
         }
@@ -262,7 +262,7 @@ _.ambient.module("wave", function(_) {
         // }
 
         // this.next = function(source) {
-        //     this._next = new _.model.wave(source).assign(this._parent)
+        //     this._next = new _.model.wave(source).assignto(this._parent)
         //     this._next._prev = this
         //     return this._next
         // }

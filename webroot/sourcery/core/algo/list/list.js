@@ -22,7 +22,7 @@ _.ambient.module("list", function(_) {
 		this.add = function(item) {
 			var node = _.model.skiplistnode(item)
 
-			return this._nodes.add(node).assign(this._nodes, -1)
+			return this._nodes.add(node).assignto(this._nodes, -1)
 		}
 
 		this.get = function(name, position) {

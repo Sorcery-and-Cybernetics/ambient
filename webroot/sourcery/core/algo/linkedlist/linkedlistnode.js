@@ -16,7 +16,7 @@ _.ambient.module("linkedlistnode", function (_) {
                 this._value = value
             }
 
-            this.assign = function(cursor, index) {
+            this.assignto = function(cursor, index) {
                 if (!cursor) { throw "Error: linkedlistnode.insertmebefore. Cursor is null"; }
                 if (cursor == this) { return this }
                 if (this._list) { this.unlink() }

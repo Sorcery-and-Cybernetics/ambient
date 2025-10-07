@@ -13,7 +13,7 @@ _.ambient.module("model", function(_) {
         this.groot = _.model.property()
         this.grootid = function() { return (this._groot? this._groot.uid(): null) }
 
-        this.assign = function(parent, name, orderindex) {
+        this.assignto = function(parent, name, orderindex) {
             if (name) { this._name = name }
             _.modelagent.registermodel(parent, this, orderindex)
         }        

@@ -28,7 +28,7 @@ _.ambient.module("stacklist", function (_) {
                 value = _.model.chainlistnode(value)
             }
 
-            return value.assign(this._nodes, 0) // index 0 → append at end
+            return value.assignto(this._nodes, 0) // index 0 → append at end
         }
 
         this.pop = function () {
@@ -50,7 +50,7 @@ _.ambient.module("stacklist", function (_) {
                 value = _.model.chainlistnode(value)
             }
 
-            return value.assign(this._nodes, 1) // index 1 → insert at head
+            return value.assignto(this._nodes, 1) // index 1 → insert at head
         }
 
         this.popfirst = function () {

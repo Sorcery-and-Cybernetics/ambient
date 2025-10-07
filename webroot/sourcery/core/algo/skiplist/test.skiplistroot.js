@@ -61,7 +61,7 @@ _.ambient.module("test.skiplistroot")
 
         // Populate the skiplist with 300 nodes with values 1-300
         for (var index = 1; index <= itemcount; index++) {
-            _.model.skiplistnode(index).assign(list, -1)
+            _.model.skiplistnode(index).assignto(list, -1)
         }        
 
         if (showdebug) { segmentdump(list) }
@@ -139,7 +139,7 @@ _.ambient.module("test.skiplistroot")
             _.debug.assert(list.debugvalidate(), null, "List validation after deleting node at position " + position)
             if (itemcount <=  1000) { testorderindex(list) }
 
-             _.model.skiplistnode(value).assign(list, -1)
+             _.model.skiplistnode(value).assignto(list, -1)
 
              _.debug.assert(list.debugvalidate(), null, "List validation after reinserting value " + value)
 
@@ -160,7 +160,7 @@ _.ambient.module("test.skiplistroot")
 
         
 
-        _.model.skiplistnode(1).assign(list, -1)
+        _.model.skiplistnode(1).assignto(list, -1)
         _.debug.assert(list.debugvalidate(), null, "After deleting all nodes, and inserting 1")
 
         var list = _.model.skiplistroot();

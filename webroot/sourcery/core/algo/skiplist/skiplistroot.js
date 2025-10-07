@@ -103,7 +103,7 @@ _.ambient.module("skiplistroot", function(_) {
                 var cursor
 
                 if (!this.count()) {
-                    return node.assign(this)
+                    return node.assignto(this)
                 }
 
                 if (this.issortlist()) {
@@ -142,7 +142,7 @@ _.ambient.module("skiplistroot", function(_) {
                     }
                 }
 
-                return node.assign(cursor || this)
+                return node.assignto(cursor || this)
             }
         })
 

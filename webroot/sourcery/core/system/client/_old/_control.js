@@ -88,7 +88,7 @@ _.ambient.module("control", function(_) {
         this.addbehavior = function (value) { this.behavior(this.behavior() | value); return this }
         this.delbehavior = function (value) { this.behavior(this.behavior() & ~value); return this }
 
-        this.assign = function (relative, name, orderindex) {
+        this.assignto = function (relative, name, orderindex) {
             if (_.isstring(relative)) { throw "Component Create Error" }
             if (!_.isstring(name)) { throw "Component Create Error" }
 

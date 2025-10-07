@@ -37,17 +37,4 @@ _.ambient.module("test.list")
         this.test(list.get("B", 1).debugout()).is("B1", "list.get(B, 1)")
         this.test(list.get("B", 2).debugout()).is("B2", "list.get(B, 2)")
         this.test(list.get("B", -1).debugout()).is("B4", "list.get(B, -1)")
-
-
-        var item1 = list.get("B", 0)
-        list.remove("B")
-
-        var item2 = list.get("B", 0)
-
-        if (item1 == item2) {
-            debugger
-        } else {
-            debugger
-        }
-
     })

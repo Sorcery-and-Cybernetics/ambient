@@ -26,8 +26,8 @@ _.ambient.module("skiplistnode", function(_) {
         this._level = 1
 
         this.constructbehavior = _.behavior(function() {
-            this.assign = function(cursor, index) {
-                supermodel.assign.call(this, cursor, index)
+            this.assignto = function(cursor, index) {
+                supermodel.assignto.call(this, cursor, index)
 
                 //todo: For now we do a simple random level 
                 // if (!this._topsegment) {

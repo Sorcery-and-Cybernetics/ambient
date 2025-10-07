@@ -179,7 +179,7 @@ _.ambient.module("oophelper", function (_) {
 
             var method = function () {
                 if (!this[internalname]) {
-                    this[internalname] = new traitmodel().assign(this, traitname)
+                    this[internalname] = new traitmodel().assignto(this, traitname)
                 }
 
                 return this[internalname]
