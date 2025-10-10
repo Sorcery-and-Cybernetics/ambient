@@ -174,6 +174,14 @@ _.ambient.module("basicstring", function (_) {
         return _.left$(word, 1).toUpperCase() + _.mid$(word, 2)
     }
 
+    _.camelize = function(word) {
+        if (!word) { return "" }
+        
+        return word.replace(/-([a-z])/g, function(match, letter) {
+            return letter.toUpperCase()
+        })
+    }    
+
     _.findcutmarks$ = function (str, left, right, outerselect, cleancut) {
         var leftlen = left ? left.length : 0
         var rightlen = right ? right.length : 0

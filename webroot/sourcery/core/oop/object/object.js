@@ -25,7 +25,7 @@ _.ambient.module("object").source(function (_) {
         , supermodel: function() { return this._supermodel }
         , ismodel: function(modelname) { return this._modelname === modelname }
         , self: _.noop
-        , setdirty: _.noop
+        , setdirty: null
 
         , instanceof: function(modelname) {                 
             var cursor = this
@@ -35,9 +35,11 @@ _.ambient.module("object").source(function (_) {
                 cursor = cursor._supermodel
             }
             return false;
-         }        
+        }        
+
         , construct: _.noop
 
+        , assign: _.noop
         , assignto: function(parent, name) {
             this._parent = parent
             this._name = name

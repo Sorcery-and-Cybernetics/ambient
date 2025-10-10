@@ -40,7 +40,7 @@ _.ambient.module("property", function (_) {
                     def._onchange.call(me, value, oldvalue)                
 
                 } else if (me.setdirty) {
-                    me.setdirty()
+                    me.setdirty(def)
                 }
             }
 
@@ -87,7 +87,7 @@ _.ambient.module("property", function (_) {
                     def._onchange.call(me, name, value, storedvalue)
 
                 } else if (me.setdirty) {
-                    me.setdirty()
+                    me.setdirty(def)
                 }
             }
 
@@ -133,7 +133,7 @@ _.ambient.module("property", function (_) {
                         def._onchange.call(me, -1)                    
 
                     } else if (me.setdirty) {
-                        me.setdirty()
+                        me.setdirty(def)
                     }
                     
                     return me
@@ -172,7 +172,7 @@ _.ambient.module("property", function (_) {
                     def._onchange.call(me, index, value, storedvalue)
 
                 } else if (me.setdirty) {
-                    me.setdirty()
+                    me.setdirty(def)
                 }
             }
 
