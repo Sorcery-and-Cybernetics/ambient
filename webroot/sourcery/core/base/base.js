@@ -243,7 +243,7 @@ _.ambient.module("base", function (_) {
     _.define.enum = function (name, items, offset) {
         var values = {};
         var names = {};
-        offset = offset || 0;
+        offset = offset || 1;
 
         _.foreach(items, function (itemname, index) {
             values[itemname] = index + offset;
@@ -253,7 +253,7 @@ _.ambient.module("base", function (_) {
         _.enum[name] = values;
         _.enum[name + "name"] = names;
 
-        return names;
+        return values;
     };
 
     _.define.binnum = function (name, items, offset) {
@@ -303,7 +303,7 @@ _.ambient.module("base", function (_) {
         , "json"
         , "blob"
         , "model"
-    ]);
+    ], 0)
 
     _.vartype = function (value) {
         if (value == null) {

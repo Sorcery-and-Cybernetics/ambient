@@ -13,8 +13,8 @@ _.ambient.module("widget", function(_) {
 
     _.define.model("widget", function (supermodel) {
 
-        this.tagname = "DIV"
-        this.tagtype = ""
+        this.tagname = _.model.property("DIV")
+        this.tagtype = _.model.property("")
 
 
         this._phase = 0
@@ -23,7 +23,7 @@ _.ambient.module("widget", function(_) {
         this.behavior = _.efb.none
         this.behaviors = _.efb
         
-        this.child = _.list()
+        this.child = _.model.list()
 
         this.element = null
 
@@ -34,14 +34,17 @@ _.ambient.module("widget", function(_) {
         }
 
         this.objectbehavior = _.behavior(function() {
-            this.text = _.property("")
+            this.text = _.model.widgetstyle()
 
             this.assignto = function(parent, orderindex, relative) {
-                parent.addchild(this, orderindex, relative)
+                parent.assign(this, orderindex, relative)
+                this._parent = parent
+                return this
             }
 
             this.assign = function(widget, orderindex, relative) {
                 this.child.add(widget, orderindex, relative)
+                return this
             }
 
         // this.assignto = function(parent, name, orderindex) {
@@ -147,20 +150,22 @@ _.ambient.module("widget", function(_) {
                 var maxheight = 0
 
                 if (this.onrender) {this.onrender() }
-                if (this.onlayout) { this.onlayout() }
-                if (this.onskin) { this.onskin() }
+                // if (this.onlayout) { this.onlayout() }
+                // if (this.onskin) { this.onskin() }
 
-                this.child.foreach(function (child) {
-                    if (child.dirty || force) {
-                        child.render(force, resizing)
-                    } else if (resizing) {
-                        var childstyle = child.style()
+                if (this._child) {
+                    this._child.foreach(function (child) {
+                        if (child.dirty || force) {
+                            child.render(force, resizing)
+                        } else if (resizing) {
+                            var childstyle = child.style()
 
-                        if ((childstyle.right() != null) || (childstyle.bottom() != null)) {
-                            child.render(undefined, resizing)
+                            if ((childstyle.right() != null) || (childstyle.bottom() != null)) {
+                                child.render(undefined, resizing)
+                            }
                         }
-                    }
-                })
+                    })
+                }
 
                 this.phase = this.phases.show
 
@@ -177,13 +182,19 @@ _.ambient.module("widget", function(_) {
                 if (!this._parent) { return this }
 
                 if (!this.element) {
-                    this.element = _.model.domelement(this)
+                    this.element = _.model.domelement().assign(this)
+                    this.element.load().show()
                     //todo: loop through all properties, and update the element
                     _.foreach(me, function(trait, name) {
-                        switch (trait._definition.modelname()) {
-                            case "widgetstyle":
-                                me.element.set(name, trait())
-                                break
+                        if (trait && trait.definition) {
+                            switch (trait.definition.modelname()) {
+                                case "widgetstyle":
+                                    var value = me[name]()
+                                    if (value != trait.definition._initial) {
+                                        me.element.set(name, me[name]())
+                                    }
+                                    break
+                            }
                         }
                     })
 
@@ -216,7 +227,7 @@ _.ambient.module("widget", function(_) {
             this.width = _.model.widgetstyle(60)
             this.height = _.model.widgetstyle(20)
 
-            this.move = function (left, top, width, height, right, bottom) {
+            this.move = function (left, top, width, height) {
                 var me = this
 
                 // if (left instanceof _.model.rect) {
@@ -230,8 +241,8 @@ _.ambient.module("widget", function(_) {
                     me.width(width)
                     me.height(height)
 
-                    me.right(right)
-                    me.bottom(bottom)
+                    // me.right(right)
+                    // me.bottom(bottom)
                 // }
                 return this
             }           
@@ -315,55 +326,17 @@ _.ambient.module("widget", function(_) {
         //     this.flex = _.model.widgetstyle("flex")
         // })
 
-        // this.stylebehavior = _.behavior(function() {
-        //     this.colorfore = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.color : null }
-        //         if (this.element) { this.element.style.color = value }
-        //         return this
-        //     }
+        this.stylebehavior = _.behavior(function() {
+            this.colorfore = _.model.widgetstyle()
+            this.colorback = _.model.widgetstyle()
+            this.opacity = _.model.widgetstyle()
+            this.visibility = _.model.widgetstyle()
+            this.font = _.model.widgetstyle()
+            this.fontsize = _.model.widgetstyle()
+            this.fontweight = _.model.widgetstyle()
+            this.fontstyle = _.model.widgetstyle()
+        })
 
-        //     this.colorback = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.backgroundColor : null }
-        //         if (this.element) { this.element.style.backgroundColor = value }
-        //         return this
-        //     }
-
-        //     this.opacity = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.opacity : null }
-        //         if (this.element) { this.element.style.opacity = value }
-        //         return this
-        //     }
-
-        //     this.visibility = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.visibility : null }
-        //         if (this.element) { this.element.style.visibility = value }
-        //         return this
-        //     }
-
-        //     this.font = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.fontFamily : null }
-        //         if (this.element) { this.element.style.fontFamily = value }
-        //         return this
-        //     }
-
-        //     this.fontsize = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.fontSize : null }
-        //         if (this.element) { this.element.style.fontSize = value }
-        //         return this
-        //     }
-
-        //     this.fontweight = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.fontWeight : null }
-        //         if (this.element) { this.element.style.fontWeight = value }
-        //         return this
-        //     }
-
-        //     this.fontstyle = function(value) {
-        //         if (value === undefined) { return this.element ? this.element.style.fontStyle : null }
-        //         if (this.element) { this.element.style.fontStyle = value }
-        //         return this
-        //     }            
-        // }) 
         
         // this.textbehavior = _.behavior(function() {
         //     this.textalign = _.model.widgetstyle("textAlign")

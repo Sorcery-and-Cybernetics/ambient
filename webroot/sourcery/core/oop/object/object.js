@@ -58,7 +58,7 @@ _.ambient.module("object").source(function (_) {
             return (_.isfunction(value)? value.call(this): value)
         }
 
-        , debugout: function() {}
+        , debugout: function() { return this.modelname() }
         , debugjson: function(full) {
             var result = {
                 _name: this._name

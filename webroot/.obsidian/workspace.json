@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/daily/2025-10-07.md",
+                "file": "docs/config/default.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2025-10-07"
+              "title": "default"
             }
           }
         ]
@@ -182,10 +182,12 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "51c7721abd0bf0af",
+  "active": "b299d48a1d02ff23",
   "lastOpenFiles": [
-    "product/Untitled.md",
+    "sourcery/core/system/client/_old/dom.js",
+    "sourcery/core/widget/widgetwindowbody.js",
     "docs/daily/2025-10-07.md",
+    "product/Untitled.md",
     "docs/config/default.md",
     "docs/daily/Some Word2025-10-07 230402.md",
     "docs/Testing Design Guidelines.md",
@@ -201,7 +203,6 @@
     "sourcery/core/ocean/ocean.js",
     "sourcery/core/ocean/_newish/channel.js",
     "sourcery/core/ocean/_newish/_root.js",
-    "sourcery/core/ocean/_newish/world.js",
     "docs/basiclist design.md",
     "docs/daily/2025-09-20.md",
     "docs/3rd Party/Python.md",
@@ -218,7 +219,6 @@
     "docs/bfm/INFO_domdocument_JS.md",
     "docs/bfm/INFO_dombody_JS.md",
     "docs/bfm/INFO_timerevent_JS.md",
-    "docs/bfm/INFO_timer_JS.md",
-    "docs/bfm/INFO_webserverhelper_JS.md"
+    "docs/bfm/INFO_timer_JS.md"
   ]
 }

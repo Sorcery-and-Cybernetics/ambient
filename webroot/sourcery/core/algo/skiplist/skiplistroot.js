@@ -102,6 +102,8 @@ _.ambient.module("skiplistroot", function(_) {
                 var value = node.sortvalue(this)
                 var cursor
 
+                if (!orderindex || orderindex == -1) { orderindex = 0 }
+
                 if (!this.count()) {
                     return node.assignto(this)
                 }
@@ -115,7 +117,7 @@ _.ambient.module("skiplistroot", function(_) {
                         if (!cursor) { cursor = this }
 
                     } else {
-                        if (!orderindex || orderindex === 0) {
+                        if (orderindex == 0) {
                             cursor = lastmatch.segmentnext()
                         } else {
                             var matchcount = lastmatch.orderindex() - firstmatch.orderindex() + 1
@@ -128,7 +130,7 @@ _.ambient.module("skiplistroot", function(_) {
                                 orderindex = matchcount + 1
                             }
                             
-                            cursor = this.findrelativenode(firstmatch, orderindex - 1)
+                            cursor = this.findrelativenode(firstmatch, orderindex)
                         }
                     }
                 } else { 

@@ -32,7 +32,7 @@ Include this at the top of each file so both humans and AI tools follow the proj
   ```
 - Objects via `_.define.object(supermodel, fn)`.
 - Behaviors via `_.behavior(fn)`.
-- Properties via `_.property()` or `_.model.*()`.
+- Properties via `_.model.property()` or `_.model.*()`.
 - Methods via `function()` or `_.method(fn)`.
 - Events via `_.signal()`.
 
@@ -42,8 +42,8 @@ Include this at the top of each file so both humans and AI tools follow the proj
 _.ambient.module("exampleclass", function(_) {
   _.define.object("exampleclass", function(supermodel) {
     // Properties
-    this.isroot = _.property(false)
-    this.parent = _.property()
+    this.isroot = _.model.property(false)
+    this.parent = _.model.property()
     this.count = _.model.number(0)  // trait
 
     // Behaviors

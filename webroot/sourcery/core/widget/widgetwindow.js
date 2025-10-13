@@ -6,6 +6,7 @@
 _.ambient.module("widgetwindow", function(_) {
     _.define.model("widgetwindow", function (supermodel) {
         this.domdocument = null
+        this._dirty = true
 
         _.constructbehavior = _.behavior(function() {
             this.construct = function() {
@@ -16,7 +17,15 @@ _.ambient.module("widgetwindow", function(_) {
                 this.disconnect()
                 supermodel.destroy.call(this)
             }
+
+            this.assign = function(widget, orderindex, relative) {
+                this.child.add(widget, orderindex, relative)
+            }
         })
+
+        this.setdirty = function() {
+            this._dirty = true
+        }
 
         this.connect = function(domdocument) {
             this.domdocument = domdocument

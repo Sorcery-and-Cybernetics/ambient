@@ -10,7 +10,7 @@ _.ambient.module("treesortlist", function (_) {
     _.define.treebaselist("treesortlist", function () {
         this._rootnode = null
 
-//        this.sortkey = _.property("key");
+//        this.sortkey = _.model.property("key");
 
         this.push = function (item) {
             var node = this.makenode(item)

@@ -13,19 +13,36 @@ _.ambient.module("domelement", function(_) {
         this.widget = null
         this._uid = 0
 
-        this.tagname = _.property("DIV")
-        this.tagtype = _.property("")
+        this.tagname = _.model.property("DIV")
+        this.tagtype = _.model.property("")
 
         this.constructbehavior = _.behavior(function() {
-            this.construct = function(widget) {
+            this.construct = function(element) {
+                if (element) {
+                    this.element = element
+                    this.tagname(element.tagName)
+                    this.tagtype(element.type)
+                }
+            }
+
+            this.parent = function() {
+                //return this.domdocument.finddomelement(this.element.parentElement._uid)
+            }
+
+            this.assign = function(widget) {
                 this.domdocument = _.domdocument
 
-                if (!widget) { throw "error" }
-                this.widget = widget         
-                this._uid = widget.uid()
+                if (widget) { 
+                    this.widget = widget         
+                    this._uid = widget.uid()
 
-                this.tagname(widget.tagname())
-                this.tagtype(widget.tagtype())
+                    this.tagname(widget.tagname())
+                    this.tagtype(widget.tagtype())
+                }
+
+                this.domdocument.registerdomelement(this)
+
+                return this
             }
 
             this.destroy = function() {
@@ -182,23 +199,21 @@ _.ambient.module("domelement", function(_) {
         this.statebehavior = _.behavior(function() {
             this.load = function() {
                 if (!this.element) {
-                    var relative = this.domdocument.findelement(this.widget.parentuid())
+                    var relative = this.domdocument.finddomelement(this.widget.parent())
 
                     this.element = this.domdocument.createelement(this.tagname(), this.tagtype())
                     this.domdocument.appendlastchild(relative, this.element)
-
-//                    this.domdocument.appendelement(relative, null, appendmode)
-
                 }
+                return this
             }
 
             this.unload = function() {
                 this.clearevents()
 
                 if (this.element) {
-                    this.domdocument.unregisterdomelement(this)
                     this.domdocument.removeelement(this.element)
                 }
+                return this
             }
 
             this.show = function() {

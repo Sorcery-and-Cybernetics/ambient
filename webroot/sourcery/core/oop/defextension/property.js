@@ -15,8 +15,10 @@ _.ambient.module("property", function (_) {
                 value = me[traitname]
 
                 if (value == null) {
-                    var self = this.self()
-                    if (self) { value = self[traitname] }
+                    if (me.self) {
+                        var self = me.self()
+                        if (self) { value = self[traitname] }
+                    }
                 } 
 
                 if (def._onget) {

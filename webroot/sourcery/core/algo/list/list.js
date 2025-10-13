@@ -19,10 +19,11 @@ _.ambient.module("list", function(_) {
 			}
 		})
 
-		this.add = function(item) {
+		this.add = function(item, orderindex) {
 			var node = _.model.skiplistnode(item)
 
-			return this._nodes.add(node).assignto(this._nodes, -1)
+			this._nodes.add(node, orderindex)
+			return node
 		}
 
 		this.get = function(name, position) {
@@ -117,6 +118,18 @@ _.ambient.module("list", function(_) {
 			})
 			return this
 		}
+
+        this.debugbehavior = _.behavior(function() {
+            this.debugout = function () {
+				var result = []
+
+				this.foreach(function(item) {
+					result.push(item.debugout())
+				})
+				return result.join(", ")
+			}
+		})
+
 
 		this.onchange = _.model.signal()
 		this.onchildchange = _.model.signal()

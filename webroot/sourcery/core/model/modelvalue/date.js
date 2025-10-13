@@ -305,8 +305,8 @@ _.ambient.module("date", function(_) {
 
 // _.define.kind("daterange", function (supermodel) {
 //     return {
-//         from: _.property()
-//         , till: _.property()
+//         from: _.modelproperty()
+//         , till: _.model.property()
 
 //         , set: function (from, till) {
 //             if (from) { this.from(_.make.date(from)) }

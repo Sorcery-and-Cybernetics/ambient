@@ -9,7 +9,7 @@
 _.ambient.module("model", function(_) {
     _.define.object("model", function (supermodel) {
         this._self = null
-        this.uid = _.model.property()
+        this.uid = _.model.property(-1)
         this.groot = _.model.property()
         this.grootid = function() { return (this._groot? this._groot.uid(): null) }
 
