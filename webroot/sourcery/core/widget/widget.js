@@ -182,7 +182,7 @@ _.ambient.module("widget", function(_) {
                 if (!this._parent) { return this }
 
                 if (!this.element) {
-                    this.element = _.model.domelement().assign(this)
+                    this.element = _.model.uielement().assign(this)
                     this.element.load().show()
                     //todo: loop through all properties, and update the element
                     _.foreach(me, function(trait, name) {

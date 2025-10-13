@@ -5,7 +5,7 @@
 
 _.ambient.module("widgetwindow", function(_) {
     _.define.model("widgetwindow", function (supermodel) {
-        this.domdocument = null
+        this.uidocument = null
         this._dirty = true
 
         _.constructbehavior = _.behavior(function() {
@@ -27,13 +27,13 @@ _.ambient.module("widgetwindow", function(_) {
             this._dirty = true
         }
 
-        this.connect = function(domdocument) {
-            this.domdocument = domdocument
+        this.connect = function(uidocument) {
+            this.uidocument = uidocument
             return this
         }
 
         this.disconnect = function() {
-            this.domdocument = null
+            this.uidocument = null
             return this
         }
     })

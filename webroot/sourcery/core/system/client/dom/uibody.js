@@ -4,6 +4,6 @@
 //**************************************************************************************************
 
 _.ambient.module("dombody", function(_) {
-    _.define.domelement("dombody", function (supermodel) {
+    _.define.uielement("dombody", function (supermodel) {
    })
 })

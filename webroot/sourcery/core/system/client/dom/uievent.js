@@ -8,7 +8,7 @@
 
 //todo: We need to track text selection better. This also means that controls should a selectable state.
 
-_.ambient.module("domevent", function(_) {
+_.ambient.module("uievent", function(_) {
 
     //todo: Is this still valid? Is this the right file?
     // _ec = -1
@@ -22,7 +22,7 @@ _.ambient.module("domevent", function(_) {
     // }
 
 
-    _.enum.domevent = {
+    _.enum.uievent = {
         "click": { name: "click", behaviortype: _.efb.click }
         , "mouseover": { name: "mouseenter", behaviortype: _.efb.highlight }
         , "mouseout": { name: "mouseleave", behaviortype: _.efb.highlight }
@@ -45,7 +45,7 @@ _.ambient.module("domevent", function(_) {
         , "selectstart": { name: "selectstart", behaviortype: _.efb.capturekeys, cancelbubble: false }
     }
 
-    _.define.event("domevent", function () {
+    _.define.event("uievent", function () {
         _.dom.keycodes = (function () {
             var result = []
             var index
@@ -81,7 +81,7 @@ _.ambient.module("domevent", function(_) {
         }) ()
 
 
-        this.domevent = ""
+        this.uievent = ""
         this.behaviortype = _.efb.none
         this.cancelbubble = false
         this.keycode = 0
@@ -99,7 +99,7 @@ _.ambient.module("domevent", function(_) {
 
             var touch = (event.originalEvent ? event.originalEvent.touches : event.touches) || []
 
-            var eventdef = _.enum.domevent[event.type] || { name: event.type, behaviortype: _.efb.none }
+            var eventdef = _.enum.uievent[event.type] || { name: event.type, behaviortype: _.efb.none }
             var mouseinfo = touch[0] || event
 
             //Normalizing button detection to 1: left, 2: right, 4: middle. This allows detection of button combinations.
@@ -137,7 +137,7 @@ _.ambient.module("domevent", function(_) {
             }
 
             this._name = eventdef.name || event.type
-            this.domevent = event.type
+            this.uievent = event.type
             this.behaviortype = eventdef.behaviortype || _.efb.none
             this.cancelbubble = eventdef.cancelbubble != null ? eventdef.cancelbubble : false
 

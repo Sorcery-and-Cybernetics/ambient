@@ -9,9 +9,9 @@
 //todo: seperate resize and dragevent 
 //todo: hang eventhandlers in dom object. Check on interval if mouse is hovering, or long press.
 
-_.ambient.module("domeventhandler", function(_) {
+_.ambient.module("uieventhandler", function(_) {
 
-    _.define.object("domeventhandler", function () {
+    _.define.object("uieventhandler", function () {
         var savepagewidth = 0
         var savepageheight = 0
 
@@ -29,7 +29,7 @@ _.ambient.module("domeventhandler", function(_) {
             this.rootelement = rootelement
             this.state = {}
 
-            var eventhandler = this.handledomevent.bind(this)
+            var eventhandler = this.handleuievent.bind(this)
             _.dom.defaulteventhandler = eventhandler
 
             var events = ["keydown", "keyup", "selectstart", "input", "focus"]
@@ -44,14 +44,14 @@ _.ambient.module("domeventhandler", function(_) {
             }
         }
 
-        this.handledomevent = function (domevent) {
-            if (!domevent) { domevent = window.event; }
+        this.handleuievent = function (uievent) {
+            if (!uievent) { uievent = window.event; }
          
             var ctrl = null;
-            var element = domevent.target || domevent.srcElement;
+            var element = uievent.target || uievent.srcElement;
 
             //Global/window events
-            switch (domevent.type) {
+            switch (uievent.type) {
                 case "unload":
                     _.dom.onunload()
                     return
@@ -77,11 +77,11 @@ _.ambient.module("domeventhandler", function(_) {
 
 
             //debug
-            //switch (domevent.type) {
+            //switch (uievent.type) {
             //    case "mousemove":
             //        break
             //    default:
-            //        //                    _.debug(domevent.type, element? element.nodeName: null)
+            //        //                    _.debug(uievent.type, element? element.nodeName: null)
             //}
 
 
@@ -97,13 +97,13 @@ _.ambient.module("domeventhandler", function(_) {
                 }
             }
 
-            var event = _.make.domevent(domevent);
+            var event = _.make.uievent(uievent);
          
             ctrl = this.checkdragevent(ctrl, event)
 
 
 
-            switch (domevent.type) {
+            switch (uievent.type) {
                 case "mousedown":
                 case "mouseup":
                     _.dom.lastmouse = _.now()
@@ -140,7 +140,7 @@ _.ambient.module("domeventhandler", function(_) {
                     //    case "keydown":
                     //        break
                     //    default:
-                    //        _.debug(domevent.type)
+                    //        _.debug(uievent.type)
             }
 
 
@@ -238,7 +238,7 @@ _.ambient.module("domeventhandler", function(_) {
                             if ((mousedownevent.ctrl == ctrl) && (!mouseupevent.timedif || (mouseupevent.timedif >= 50))) {
                                 _.debug("timedif", mouseupevent.timedif)
                                 
-                                //var debuginfo = domevent.type + " - " + ctrl._parent.fulldebugname() + " : " + mousedownevent.ctrl._parent.fulldebugname()
+                                //var debuginfo = uievent.type + " - " + ctrl._parent.fulldebugname() + " : " + mousedownevent.ctrl._parent.fulldebugname()
                                 //_.dom.debuginfo = debuginfo
                                 //_.dom.page.setdirty()
 
@@ -334,8 +334,8 @@ _.ambient.module("domeventhandler", function(_) {
             }
 
             if (event.cancelbubble || this.dragevent) {
-                domevent.stopPropagation()
-                domevent.preventDefault()
+                uievent.stopPropagation()
+                uievent.preventDefault()
                 return false
             }
         }
@@ -544,24 +544,24 @@ _.ambient.module("domeventhandler", function(_) {
             }
         }
 
-        this.highlight = function (ctrl, domevent) {
+        this.highlight = function (ctrl, uievent) {
             if (ctrl === undefined) {
                 return this.state.highlight
             } else {
                 if (this.state.highlight != ctrl) {
-                    this.setcontrolselectionstate(ctrl, domevent, "highlight", "mouseenter", "mouseleave", true)
+                    this.setcontrolselectionstate(ctrl, uievent, "highlight", "mouseenter", "mouseleave", true)
                 }
             }
         }
 
-        this.focus = function (ctrl, domevent) {
+        this.focus = function (ctrl, uievent) {
             if (ctrl === undefined) {
                 return this.state.focus
 
             } else {
                 if (this.state.focus != ctrl) {
                     //todo: should focus bubble?
-                    this.setcontrolselectionstate(ctrl, domevent, "focus", "focus", "blur", true)
+                    this.setcontrolselectionstate(ctrl, uievent, "focus", "focus", "blur", true)
 
                     if (ctrl && ctrl.element) {
 //                        _.debug("setfocus", ctrl.fullname())
@@ -571,12 +571,12 @@ _.ambient.module("domeventhandler", function(_) {
             }
         }
 
-        this.setcontrolselectionstate = function (ctrl, domevent, selectionname, eventname, uneventname, bubble) {
+        this.setcontrolselectionstate = function (ctrl, uievent, selectionname, eventname, uneventname, bubble) {
             var target = this.state[selectionname];
             var commonancestor = ctrl ? ctrl.findsharedancestor(target, "related") : null
 
             var event = _.make.event(target, uneventname)
-            event.domevent = domevent
+            event.uievent = uievent
             event.fromelement = target
             event.toelement = ctrl
 
@@ -617,5 +617,5 @@ _.ambient.module("domeventhandler", function(_) {
 .onload(function () {
     //todo: hang eventhandlers in dom object. Check on interval if mouse is hovering, or long press.
 
-    _.dom.domevents = _.make.domeventhandler(document.body)
+    _.dom.uievents = _.make.uieventhandler(document.body)
 })

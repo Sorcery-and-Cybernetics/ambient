@@ -3,7 +3,7 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("domdocument", function(_) {
+_.ambient.module("uidocument", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
 
     _.cunit = function (coord, units) {
@@ -192,7 +192,7 @@ _.ambient.module("domdocument", function(_) {
 
 
 
-    _.define.globalobject("domdocument", function (supermodel) {
+    _.define.globalobject("uidocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
@@ -200,7 +200,7 @@ _.ambient.module("domdocument", function(_) {
         this.lastmousetime = 0
         this.eventhistory = null
 
-        this.domelements = null
+        this.uielements = null
         this.body = null
         this.stylenames = null
 
@@ -210,7 +210,7 @@ _.ambient.module("domdocument", function(_) {
             this.construct = function() {
                 var me = this
 
-                me.domelements = {}
+                me.uielements = {}
                 me.eventhistory = {}
                 me.stylenames = getstyledata()
 
@@ -266,26 +266,26 @@ _.ambient.module("domdocument", function(_) {
                 this._dirty = true
             }
 
-            this.finddomelement = function(domelement) {
-                elementid = (_.isnumber(domelement)? domelement: domelement.uid())
+            this.finduielement = function(uielement) {
+                elementid = (_.isnumber(uielement)? uielement: uielement.uid())
 
-                return this.domelements[elementid]
+                return this.uielements[elementid]
             }
 
-            this.registerdomelement = function(domelement) {
-                if (!domelement) { throw "error" }
+            this.registeruielement = function(uielement) {
+                if (!uielement) { throw "error" }
 
-                var uid = domelement.uid()
+                var uid = uielement.uid()
                 if (!uid) { throw "error" }
 
-                this.domelements[uid] = domelement
+                this.uielements[uid] = uielement
                 return this
             }
 
-            this.unregisterdomelement = function (domelement) {
-                if (!domelement) { throw "error" }
+            this.unregisteruielement = function (uielement) {
+                if (!uielement) { throw "error" }
 
-                delete this.domelements[domelement.uid()]
+                delete this.uielements[uielement.uid()]
                 return this
             }
 
@@ -307,7 +307,7 @@ _.ambient.module("domdocument", function(_) {
                 if (!relative) {
                     relative = this.body.element
 
-                } else if (relative instanceof _.model.domelement) {
+                } else if (relative instanceof _.model.uielement) {
                     relative = relative.element
                 }
 
@@ -387,7 +387,7 @@ _.ambient.module("domdocument", function(_) {
                 
         var bodyeventhandler = function(event) {
             if (me.body) {
-                me.body.handledomevent(event)
+                me.body.handleuievent(event)
             }
         }
 
