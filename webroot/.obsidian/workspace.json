@@ -180,6 +180,7 @@
   },
   "active": "51c7721abd0bf0af",
   "lastOpenFiles": [
+    "sourcery/core/widget/gadget.js",
     "docs/daily/2025-10-14.md",
     "docs/daily/2025-10-21.md",
     "docs/config/default.md",
@@ -214,7 +215,6 @@
     "docs/bfm/INFO__control2_JS.md",
     "docs/bfm/INFO_domelement_JS.md",
     "docs/bfm/INFO_domdocument_JS.md",
-    "docs/bfm/INFO_dombody_JS.md",
-    "docs/bfm/INFO_timerevent_JS.md"
+    "docs/bfm/INFO_dombody_JS.md"
   ]
 }
