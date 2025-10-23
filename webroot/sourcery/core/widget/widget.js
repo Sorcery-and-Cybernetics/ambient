@@ -44,6 +44,9 @@ _.ambient.module("widget", function(_) {
 
             this.assign = function(widget, orderindex, relative) {
                 this.child.add(widget, orderindex, relative)
+
+                this.setdirty()
+                this._phase = this.phases.assign
                 return this
             }
 

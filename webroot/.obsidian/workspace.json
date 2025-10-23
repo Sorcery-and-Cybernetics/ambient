@@ -11,14 +11,10 @@
             "id": "b299d48a1d02ff23",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/config/default.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "default"
+              "title": "New tab"
             }
           }
         ]
@@ -182,8 +178,11 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "b299d48a1d02ff23",
+  "active": "51c7721abd0bf0af",
   "lastOpenFiles": [
+    "docs/daily/2025-10-14.md",
+    "docs/daily/2025-10-21.md",
+    "docs/config/default.md",
     "sourcery/core/system/client/dom/uidocument.js",
     "sourcery/core/system/client/dom/uielement.js",
     "sourcery/core/system/client/dom/uievent.js",
@@ -193,7 +192,6 @@
     "sourcery/core/widget/widgetwindowbody.js",
     "docs/daily/2025-10-07.md",
     "product/Untitled.md",
-    "docs/config/default.md",
     "docs/daily/Some Word2025-10-07 230402.md",
     "docs/Testing Design Guidelines.md",
     "docs/Code Design Guidelines.md",
@@ -202,7 +200,6 @@
     "sourcery/core/algo/chainlist/chainlist.js",
     "docs/3rd Party/Indextts2.md",
     "sourcery/core/ocean/_legacy/shell.js",
-    "sourcery/core/ocean/ship.js",
     "docs/basiclist design.md",
     "docs/daily/2025-09-20.md",
     "docs/3rd Party/Python.md",
@@ -218,7 +215,6 @@
     "docs/bfm/INFO_domelement_JS.md",
     "docs/bfm/INFO_domdocument_JS.md",
     "docs/bfm/INFO_dombody_JS.md",
-    "docs/bfm/INFO_timerevent_JS.md",
-    "docs/bfm/INFO_timer_JS.md"
+    "docs/bfm/INFO_timerevent_JS.md"
   ]
 }

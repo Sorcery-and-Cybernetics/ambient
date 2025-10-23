@@ -215,12 +215,12 @@ _.ambient.module("uidocument", function(_) {
                 me.stylenames = getstyledata()
 
                 if (document.body) {
-                    me.body = _.model.dombody(document.body)
+                    me.body = _.model.uibody(document.body)
 //                    this.observemutations()
                     this.observeevents()                    
                 } else {
                     document.addEventListener('DOMContentLoaded', function() {
-                        me.body = _.model.dombody(document.body)
+                        me.body = _.model.uibody(document.body)
 //                        this.observemutations()
                         this.observeevents()                        
                     })
