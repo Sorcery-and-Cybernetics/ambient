@@ -384,41 +384,8 @@ _.ambient.module("uidocument", function(_) {
             this.observer.disconnect()
             this.observer = null
         }
-                
-        var bodyeventhandler = function(event) {
-            if (me.body) {
-                me.body.handleuievent(event)
-            }
-        }
 
         this.eventbehavior = _.behavior(function() {
-            this.eventconfig = [
-                { name: "keydown", target:  "body",  execute: bodyeventhandler }
-                , { name: "keyup", target:  "body",  execute: bodyeventhandler }
-                , { name: "selectstart", target:  "body",  execute: bodyeventhandler }
-                , { name: "input", target:  "body",  execute: bodyeventhandler }
-                , { name: "focus", target:  "body",  execute: bodyeventhandler }
-                , { name: "click", target:  "body",  execute: bodyeventhandler }
-                , { name: "change", target:  "body",  execute: bodyeventhandler }
-
-                , { name: "scroll", target:  "window",  execute: bodyeventhandler }
-                , { name: "resize", target:  "window",  execute: null } //todo: function(event) { me.onresize(event) } }
-                , { name: "unload", target:  "window",  execute: null } //todo: function(event) { me.onunload(event) } }
-                , { name: "touchstart", target:  "window",  execute: bodyeventhandler }
-                , { name: "touchend", target:  "window",  execute: bodyeventhandler }
-                , { name: "touchmove", target:  "window",  execute: bodyeventhandler }
-                , { name: "mouseout", target:  "window",  execute: bodyeventhandler }
-                , { name: "mousedown", target:  "window",  execute: bodyeventhandler }
-                , { name: "mouseup", target:  "window",  execute: bodyeventhandler }
-                , { name: "mouseover", target:  "window",  execute: bodyeventhandler }
-                , { name: "mousemove", target:  "window",  execute: bodyeventhandler }
-                , { name: "wheel", target:  "window",  execute: bodyeventhandler }
-                , { name: "beforeunload", target:  "window",  execute: null } //todo: function(event) { me.onbeforeunload(event) } }
-                , { name: "visibilitychange", target:  "document",  execute: function(event) { 
-//                    this.onvisibilitychange(event) 
-                } }
-            ]
-            
             this.addevent = function (element, eventname, eventhandler) {
                 element.addEventListener(eventname, eventhandler, true)
             }
@@ -429,6 +396,34 @@ _.ambient.module("uidocument", function(_) {
             
             this.observeevents = function() {
                 var me = this
+
+                
+                var bodyeventhandler = function(event) { me.onuievent(event) }                
+
+                this.eventconfig = [
+                    { name: "keydown", target:  "body",  execute: bodyeventhandler }
+                    , { name: "keyup", target:  "body",  execute: bodyeventhandler }
+                    , { name: "selectstart", target:  "body",  execute: bodyeventhandler }
+                    , { name: "input", target:  "body",  execute: bodyeventhandler }
+                    , { name: "focus", target:  "body",  execute: bodyeventhandler }
+                    , { name: "click", target:  "body",  execute: bodyeventhandler }
+                    , { name: "change", target:  "body",  execute: bodyeventhandler }
+
+                    , { name: "scroll", target:  "window",  execute: bodyeventhandler }
+                    , { name: "resize", target:  "window",  execute: function(event) { me.onresize(event) } }
+                    , { name: "unload", target:  "window",  execute: function(event) { me.onunload(event) } }
+                    , { name: "touchstart", target:  "window",  execute: bodyeventhandler }
+                    , { name: "touchend", target:  "window",  execute: bodyeventhandler }
+                    , { name: "touchmove", target:  "window",  execute: bodyeventhandler }
+                    , { name: "mouseout", target:  "window",  execute: bodyeventhandler }
+                    , { name: "mousedown", target:  "window",  execute: bodyeventhandler }
+                    , { name: "mouseup", target:  "window",  execute: bodyeventhandler }
+                    , { name: "mouseover", target:  "window",  execute: bodyeventhandler }
+                    , { name: "mousemove", target:  "window",  execute: bodyeventhandler }
+                    , { name: "wheel", target:  "window",  execute: bodyeventhandler }
+                    , { name: "beforeunload", target:  "window",  execute: function(event) { me.onbeforeunload(event) } }
+                    , { name: "visibilitychange", target:  "document",  execute: function(event) { me.onvisibilitychange(event) } }
+                ]
 
                 _.foreach(this.eventconfig, function(item) {
                     var target = null
@@ -469,10 +464,11 @@ _.ambient.module("uidocument", function(_) {
                 })
             }            
 
-            this.onresize = _.model.signal()
-            this.onunload = _.model.signal()
-            this.onbeforeunload = _.model.signal()
-            this.onvisibilitychange = _.model.signal()
+            this.onuievent = _.model.basicsignal()
+            this.onresize = _.model.basicsignal()
+            this.onunload = _.model.basicsignal()
+            this.onbeforeunload = _.model.basicsignal()
+            this.onvisibilitychange = _.model.basicsignal()
         })
     })
 })

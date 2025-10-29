@@ -11,10 +11,14 @@
             "id": "b299d48a1d02ff23",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "docs/Code Design Guidelines.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Code Design Guidelines"
             }
           }
         ]
@@ -178,11 +182,13 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "51c7721abd0bf0af",
+  "active": "b299d48a1d02ff23",
   "lastOpenFiles": [
+    "docs/daily/2025-10-29.md",
+    "docs/daily/2025-10-28.md",
+    "docs/daily/2025-10-21.md",
     "sourcery/core/widget/gadget.js",
     "docs/daily/2025-10-14.md",
-    "docs/daily/2025-10-21.md",
     "docs/config/default.md",
     "sourcery/core/system/client/dom/uidocument.js",
     "sourcery/core/system/client/dom/uielement.js",
@@ -200,7 +206,6 @@
     "sourcery/core/oop/defextension/_property.js",
     "sourcery/core/algo/chainlist/chainlist.js",
     "docs/3rd Party/Indextts2.md",
-    "sourcery/core/ocean/_legacy/shell.js",
     "docs/basiclist design.md",
     "docs/daily/2025-09-20.md",
     "docs/3rd Party/Python.md",
@@ -214,7 +219,6 @@
     "docs/bfm/INFO_aichatagent_JS.md",
     "docs/bfm/INFO__control2_JS.md",
     "docs/bfm/INFO_domelement_JS.md",
-    "docs/bfm/INFO_domdocument_JS.md",
-    "docs/bfm/INFO_dombody_JS.md"
+    "docs/bfm/INFO_domdocument_JS.md"
   ]
 }

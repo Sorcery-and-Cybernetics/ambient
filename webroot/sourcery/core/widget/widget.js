@@ -16,15 +16,12 @@ _.ambient.module("widget", function(_) {
         this.tagname = _.model.property("DIV")
         this.tagtype = _.model.property("")
 
-
         this._phase = 0
         this.phases = _.enum.widgetphase
 
         this.behavior = _.efb.none
         this.behaviors = _.efb
         
-        this.child = _.model.list()
-
         this.element = null
 
         this.parentuid = function() {
@@ -42,14 +39,6 @@ _.ambient.module("widget", function(_) {
                 return this
             }
 
-            this.assign = function(widget, orderindex, relative) {
-                this.child.add(widget, orderindex, relative)
-
-                this.setdirty()
-                this._phase = this.phases.assign
-                return this
-            }
-
         // this.assignto = function(parent, name, orderindex) {
         //     this._parent = parent
         //     this._name = name
@@ -63,9 +52,6 @@ _.ambient.module("widget", function(_) {
         //     return this
         // }            
 
-            this.delchild = function(widget) {
-                widget.destroy()
-            }
 
             this.onshow = undefined
             this.onhide = undefined
@@ -132,43 +118,19 @@ _.ambient.module("widget", function(_) {
                 return this;
             } 
 
-            this.render = function(force, resizing) {
-                var me = this
-
+            this.render = function() {
                 if (this.isdestroy()) { return this }
-
-                var dirty = this.dirty
-                force = force || !!(this.dirty & 2)
 
                 if (this.widgetstate < this.phases.show) {
                     this.show()
                 }  
-                
+
                 this._domcreate()
+
+                
                 this.phase = this.phases.render
 
                 this.dirty = 0
-
-                var maxwidth = 0
-                var maxheight = 0
-
-                if (this.onrender) {this.onrender() }
-                // if (this.onlayout) { this.onlayout() }
-                // if (this.onskin) { this.onskin() }
-
-                if (this._child) {
-                    this._child.foreach(function (child) {
-                        if (child.dirty || force) {
-                            child.render(force, resizing)
-                        } else if (resizing) {
-                            var childstyle = child.style()
-
-                            if ((childstyle.right() != null) || (childstyle.bottom() != null)) {
-                                child.render(undefined, resizing)
-                            }
-                        }
-                    })
-                }
 
                 this.phase = this.phases.show
 
@@ -181,36 +143,27 @@ _.ambient.module("widget", function(_) {
             this._domcreate = function() {
                 var me = this
 
+                if (this.element) { return this }
+
                 if (!this.tagname) { return this }
                 if (!this._parent) { return this }
 
-                if (!this.element) {
-                    this.element = _.model.uielement().assign(this)
-                    this.element.load().show()
-                    //todo: loop through all properties, and update the element
-                    _.foreach(me, function(trait, name) {
-                        if (trait && trait.definition) {
-                            switch (trait.definition.modelname()) {
-                                case "widgetstyle":
-                                    var value = me[name]()
-                                    if (value != trait.definition._initial) {
-                                        me.element.set(name, me[name]())
-                                    }
-                                    break
-                            }
+                this.element = _.model.uielement().assign(this)
+                this.element.load().show()
+
+                //loop through all properties, and update the element
+                _.foreach(me, function(trait, name) {
+                    if (trait && trait.definition) {
+                        switch (trait.definition.modelname()) {
+                            case "widgetstyle":
+                                var value = me[name]()
+                                if (value != trait.definition._initial) {
+                                    me.element.set(name, me[name]())
+                                }
+                                break
                         }
-                    })
-
-                }
-
-
-
-                // this.element = _.dom.createelement(this.tagname, this.tagtype)
-
-                // this.element.className = this.__kindname + " " + this.name //+ " " + this.name + this.activeclasses
-                // _.dom.appendelement(this.element, relative.element, appendmode)
-                
-                // _.dom.registercontrol(this)            
+                    }
+                })
 
                 return this
             }
