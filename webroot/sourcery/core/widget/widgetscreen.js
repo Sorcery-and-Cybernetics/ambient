@@ -1,4 +1,4 @@
 _.ambient.module("widgetscreen", function(_) {
-    _.define.widget("widgetscreen", function (supermodel) {
+    _.define.gadget("widgetscreen", function (supermodel) {
     })
 })
