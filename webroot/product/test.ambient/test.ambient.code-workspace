@@ -1,0 +1,53 @@
+{
+  "settings": {},
+  "launch": {
+    "version": "0.2.0",
+    "compounds": [
+      {
+        "name": "Full Launch",
+        "configurations": ["Launch Client", "Launch Server"]
+      }
+    ],
+    "configurations": [
+      {
+        "name": "Launch Client",
+        "type": "pwa-chrome",
+        "request": "launch",
+        "url": "http://localhost:80",
+        "webRoot": "${workspaceFolder:test.ambient}",
+        "pathMapping": {
+          "/": "${workspaceFolder:test.ambient}",
+          "/loader": "${workspaceFolder:loader}",
+          "/sourcery": "${workspaceFolder:sourcery}"
+        }
+      },
+      {
+        "name": "Launch Server",
+        "type": "node",
+        "request": "launch",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "${workspaceFolder:test.ambient}/server.js",
+        "cwd": "${workspaceFolder:test.ambient}",
+        "console": "integratedTerminal"
+      }
+    ]
+  },
+  "folders": [
+    {
+      "name": "test.ambient",
+      "path": "."
+    },
+    {
+      "name": "loader",
+      "path": "../../loader"
+    },
+    {
+      "name": "sourcery",
+      "path": "../../sourcery"
+    },
+    {
+      "name": "docs",
+      "path": "../../docs"
+    }
+  ]
+}
