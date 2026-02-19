@@ -134,16 +134,16 @@ _.ambient.module("htmldocument", function(_) {
             , { name: "border-style", method: domstylemethod.style }
 
             , { name: "border-left-color", method: domstylemethod.style }
-            , { name: "border-left-width", method: domstylemethod.style }
+            , { name: "border-left-width", method: domstylemethod.style, type: "metric" }
             , { name: "border-left-style", method: domstylemethod.style }
             , { name: "border-top-color", method: domstylemethod.style }
-            , { name: "border-top-width", method: domstylemethod.style }
+            , { name: "border-top-width", method: domstylemethod.style, type: "metric" }
             , { name: "border-top-style", method: domstylemethod.style }
             , { name: "border-right-color", method: domstylemethod.style }
-            , { name: "border-right-width", method: domstylemethod.style }
+            , { name: "border-right-width", method: domstylemethod.style, type: "metric" }
             , { name: "border-right-style", method: domstylemethod.style }
             , { name: "border-bottom-color", method: domstylemethod.style }
-            , { name: "border-bottom-width", method: domstylemethod.style }
+            , { name: "border-bottom-width", method: domstylemethod.style, type: "metric" }
             , { name: "border-bottom-style", method: domstylemethod.style }
 
             , { name: "border-radius", method: domstylemethod.style }

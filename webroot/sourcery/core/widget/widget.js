@@ -3,8 +3,6 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-//todo: Optimize: Looping through properties.
-//todo: Optimize: Triggering draw phases.
 
 _.ambient.module("widget", function(_) {
     _.define.property("widgetstyle")
@@ -267,21 +265,6 @@ _.ambient.module("widget", function(_) {
         //     this.zindex = _.model.widgetstyle("zIndex")
         // })
 
-        // this.flexbehavior = _.behavior(function() {
-        //     this.flex = _.model.widgetstyle("flex")
-        //     this.flexdirection = _.model.widgetstyle("flexDirection")
-        //     this.flexwrap = _.model.widgetstyle("flexWrap")
-        //     this.flexflow = _.model.widgetstyle("flexFlow")
-        //     this.justifycontent = _.model.widgetstyle("justifyContent")
-        //     this.alignitems = _.model.widgetstyle("alignItems")
-        //     this.aligncontent = _.model.widgetstyle("alignContent")
-        //     this.alignself = _.model.widgetstyle("alignSelf")
-        //     this.flexbasis = _.model.widgetstyle("flexBasis")
-        //     this.flexgrow = _.model.widgetstyle("flexGrow")
-        //     this.flexshrink = _.model.widgetstyle("flexShrink")
-        //     this.flex = _.model.widgetstyle("flex")
-        // })
-
         this.stylebehavior = _.behavior(function() {
             this.colorfore = _.model.widgetstyle()
             this.colorback = _.model.widgetstyle()
@@ -309,71 +292,67 @@ _.ambient.module("widget", function(_) {
         //     this.printcoloradjust = _.model.widgetstyle("printColorAdjust")
         // })
 
-        // this.borderbehavior = _.behavior(function() {
-        //     this.border = _.model.widgetstyle("border")
-        //     this.borderleftcolor = _.model.widgetstyle("borderLeftColor")
-        //     this.borderleftwidth = _.model.widgetstyle("borderLeftWidth")
-        //     this.borderleftstyle = _.model.widgetstyle("borderLeftStyle")
-        //     this.bordertopcolor = _.model.widgetstyle("borderTopColor")
-        //     this.bordertopwidth = _.model.widgetstyle("borderTopWidth")
-        //     this.bordertopstyle = _.model.widgetstyle("borderTopStyle")
-        //     this.borderrightcolor = _.model.widgetstyle("borderRightColor")
-        //     this.borderrightwidth = _.model.widgetstyle("borderRightWidth")
-        //     this.borderrightstyle = _.model.widgetstyle("borderRightStyle")
-        //     this.borderbottomcolor = _.model.widgetstyle("borderBottomColor")
-        //     this.borderbottomwidth = _.model.widgetstyle("borderBottomWidth")
-        //     this.borderbottomstyle = _.model.widgetstyle("borderBottomStyle")
+        this.borderbehavior = _.behavior(function() {
+            this.border = _.model.widgetstyle("border")
+            this.borderleftcolor = _.model.widgetstyle("borderLeftColor")
+            this.borderleftwidth = _.model.widgetstyle("borderLeftWidth")
+            this.borderleftstyle = _.model.widgetstyle("borderLeftStyle")
+            this.bordertopcolor = _.model.widgetstyle("borderTopColor")
+            this.bordertopwidth = _.model.widgetstyle("borderTopWidth")
+            this.bordertopstyle = _.model.widgetstyle("borderTopStyle")
+            this.borderrightcolor = _.model.widgetstyle("borderRightColor")
+            this.borderrightwidth = _.model.widgetstyle("borderRightWidth")
+            this.borderrightstyle = _.model.widgetstyle("borderRightStyle")
+            this.borderbottomcolor = _.model.widgetstyle("borderBottomColor")
+            this.borderbottomwidth = _.model.widgetstyle("borderBottomWidth")
+            this.borderbottomstyle = _.model.widgetstyle("borderBottomStyle")
             
-        //     this.setborder = function (borderarea, color, width, style) {
-        //         var css = this
+            this.setborder = function (borderarea, color, width, style) {
+                color = _.cstr(color)
+                style = style || "solid";
+                width = width || (color ? 1 : 0)
 
-        //         color = _.cstr(color)
-        //         style = style || "solid";
-        //         width = width || (color ? 1 : 0)
+                if (borderarea & _.area.left) {
+                    this.borderleftcolor(color)
+                    this.borderleftwidth(width)
+                    this.borderleftstyle(style)
+                }
 
-        //         if (borderarea & _.area.left) {
-        //             css.borderleftcolor(color)
-        //             css.borderleftwidth(width)
-        //             css.borderleftstyle(style)
-        //         }
+                if (borderarea & _.area.top) {
+                    this.bordertopcolor(color)
+                    this.bordertopwidth(width)
+                    this.bordertopstyle(style)
+                }
 
-        //         if (borderarea & _.area.top) {
-        //             css.bordertopcolor(color)
-        //             css.bordertopwidth(width)
-        //             css.bordertopstyle(style)
-        //         }
+                if (borderarea & _.area.right) {
+                    this.borderrightcolor(color)
+                    this.borderrightwidth(width)
+                    this.borderrightstyle(style)
+                }
 
-        //         if (borderarea & _.area.right) {
-        //             css.borderrightcolor(color)
-        //             css.borderrightwidth(width)
-        //             css.borderrightstyle(style)
-        //         }
-
-        //         if (borderarea & _.area.bottom) {
-        //             css.borderbottomcolor(color)
-        //             css.borderbottomwidth(width)
-        //             css.borderbottomstyle(style)
-        //         }
-        //         return this;
-        //     }
+                if (borderarea & _.area.bottom) {
+                    this.borderbottomcolor(color)
+                    this.borderbottomwidth(width)
+                    this.borderbottomstyle(style)
+                }
+                return this;
+            }
             
-        //     this.borderradius = _.model.widgetstyle("borderRadius")
-        //     this.bordertopleftradius = _.model.widgetstyle("borderTopLeftRadius")
-        //     this.bordertoprightradius = _.model.widgetstyle("borderTopRightRadius")
-        //     this.borderbottomrightradius = _.model.widgetstyle("borderBottomRightRadius")
-        //     this.borderbottomleftradius = _.model.widgetstyle("borderBottomLeftRadius")
+            this.borderradius = _.model.widgetstyle("borderRadius")
+            this.bordertopleftradius = _.model.widgetstyle("borderTopLeftRadius")
+            this.bordertoprightradius = _.model.widgetstyle("borderTopRightRadius")
+            this.borderbottomrightradius = _.model.widgetstyle("borderBottomRightRadius")
+            this.borderbottomleftradius = _.model.widgetstyle("borderBottomLeftRadius")
             
-        //     this.setborderradius = function (topleft, topright, bottomright, bottomleft) {
-        //         var css = this
+            this.setborderradius = function (topleft, topright, bottomright, bottomleft) {
+                if (topleft != null) { this.bordertopleftradius(topleft) }
+                if (topright != null) { this.bordertoprightradius(topright) }
+                if (bottomright != null) { this.borderbottomrightradius(bottomright) }
+                if (bottomleft != null) { this.borderbottomleftradius(bottomleft) }
 
-        //         if (topleft != null) { css.bordertopleftradius(topleft) }
-        //         if (topright != null) { css.bordertoprightradius(topright) }
-        //         if (bottomright != null) { css.borderbottomrightradius(bottomright) }
-        //         if (bottomleft != null) { css.borderbottomleftradius(bottomleft) }
-
-        //         return this
-        //     } 
-        // })
+                return this
+            } 
+        })
 
         // this.effectbehavior = _.behavior(function() {            
         //     this.boxshadow = function(value) {
