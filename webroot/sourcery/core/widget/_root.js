@@ -1,6 +1,7 @@
 _.ambient.rootmodule("widget/")
+    .require("sourcery/core/globals/ui/")
     .require("sourcery/core/system/client/")
-    .include("widgethelper")
+    
     .include("widget")
     .include("gadget")
     .include("widgetscreen")

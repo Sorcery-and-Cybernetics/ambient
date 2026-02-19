@@ -1,10 +1,7 @@
-//****************************************************************************************************************************
+//**************************************************************************************************
 // Ambient - Copyright (c) 1994-2025 Sorcery and Cybernetics (SAC). All rights reserved.
-// 
-// Style: Be Basic!
-// ES2017; No capitals; no lambdas; no semicolons. No underscores; No let and const; No 3rd party libraries; 1-based lists;
-// Single line if use brackets; Privates start with _; Library functions are preceded by _.;
-//****************************************************************************************************************************
+// See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
+//**************************************************************************************************
 
 //todo: seperate resize and dragevent 
 //todo: hang eventhandlers in dom object. Check on interval if mouse is hovering, or long press.

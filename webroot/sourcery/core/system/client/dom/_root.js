@@ -1,5 +1,7 @@
 _.ambient.rootmodule("dom/")
+    .require("sourcery/core/globals/ui/")
 //    .include("domevent")
     .include("uielement")
     .include("uibody")
     .include("uidocument")
+    .include("uievent")

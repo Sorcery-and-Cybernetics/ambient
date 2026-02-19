@@ -42,6 +42,14 @@
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}/webroot/ambientextension"
             ]         
-        }        
+        },
+        {
+            "name": "Gatonese",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/webroot/gatoneseextension"
+            ]         
+        }                
     ]
 }

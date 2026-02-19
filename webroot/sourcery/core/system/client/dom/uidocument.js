@@ -206,6 +206,9 @@ _.ambient.module("uidocument", function(_) {
 
         this._dirty = false
 
+        this.zoomfactor = 1
+        this.pixelratio = 1
+
         this.constructbehavior = _.behavior(function() {
             this.construct = function() {
                 var me = this
@@ -259,6 +262,9 @@ _.ambient.module("uidocument", function(_) {
             this.scrolheight = function () { return document.documentElement.scrollHeight }
 
             this.page = function () { return document.body }
+
+            this.bodyleft = function () {  return 0 } //todo: return this.page? this.page.currentstyle.left: 0 }
+            this.bodytop = function () {  return 0 }  //todo: this.page? this.page.currentstyle.top: 0 }
         })
 
         this.elementbehavior = _.behavior(function() {
@@ -398,7 +404,10 @@ _.ambient.module("uidocument", function(_) {
                 var me = this
 
                 
-                var bodyeventhandler = function(event) { me.onuievent(event) }                
+                var bodyeventhandler = function(event) { 
+                    var uievent = _.model.uievent(me, event)                    
+                    me.raiseuievent(uievent) 
+                }                
 
                 this.eventconfig = [
                     { name: "keydown", target:  "body",  execute: bodyeventhandler }
@@ -462,8 +471,8 @@ _.ambient.module("uidocument", function(_) {
                    
                     me.removeevent(target, item.name, item.execute)
                 })
-            }            
-
+            } 
+            
             this.onuievent = _.model.basicsignal()
             this.onresize = _.model.basicsignal()
             this.onunload = _.model.basicsignal()
