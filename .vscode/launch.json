@@ -12,16 +12,15 @@
             "request": "launch",
             "type": "pwa-chrome",
             "url": "http://localhost:80",
-            "webRoot": "${workspaceFolder}/webroot/product/test.ambient",
-//            "file": "${workspaceFolder}/webroot/product/test.ambient/index.html", 
+            "webRoot": "${workspaceFolder}/webroot",
+            "pathMapping": {
+                "/script": "${workspaceFolder}/webroot/product/test.ambient/script",
+                "/sourcery": "${workspaceFolder}/webroot/sourcery",
+                "/loader": "${workspaceFolder}/webroot/loader"
+            },
+            //"file": "${workspaceFolder}/webroot/product/test.ambient/index.html", 
 
-            "sourceMaps": true,
-
-            "sourceMapPathOverrides": {
-                "/loader/*": "${workspaceFolder}/webroot/loader/*",
-                "/sourcery/*": "${workspaceFolder}/webroot/sourcery/*",
-                "/*": "${workspaceFolder}/webroot/product/*"
-            }             
+            "sourceMaps": true
         },
 
         {
@@ -31,7 +30,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/webroot/product/test.ambient/server.js",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["server.js"],
             "cwd":     "${workspaceFolder}/webroot/product/test.ambient/",
             "console": "integratedTerminal"
         },

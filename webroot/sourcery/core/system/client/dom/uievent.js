@@ -81,6 +81,8 @@ _.ambient.module("uievent", function(_) {
 
         this.mouse = null
         this.history = null
+        this.target = null
+        this.targetuid = 0
             
         this.construct = function (uiroot, event) {
             this.uiroot = uiroot
@@ -148,6 +150,13 @@ _.ambient.module("uievent", function(_) {
             this.altkey = event.altKey
             this.shiftkey = event.shiftKey
             this.button = uihelper.lastmousebutton
+            this.target = event.target || event.srcElement || null
+
+            var target = this.target
+            while (target && (target._uid == null)) {
+                target = target.parentNode
+            }
+            this.targetuid = target ? target._uid : 0
 
             var history = {
                 button: this.button

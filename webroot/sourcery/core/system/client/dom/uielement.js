@@ -35,6 +35,7 @@ _.ambient.module("uielement", function(_) {
                 if (widget) { 
                     this.widget = widget         
                     this._uid = widget.uid()
+                    if (this.element) { this.element._uid = this._uid }
 
                     this.tagname(widget.tagname())
                     this.tagtype(widget.tagtype())
@@ -202,6 +203,7 @@ _.ambient.module("uielement", function(_) {
                     var relative = this.uidocument.finduielement(this.widget.parent())
 
                     this.element = this.uidocument.createelement(this.tagname(), this.tagtype())
+                    this.element._uid = this._uid
                     this.uidocument.appendlastchild(relative, this.element)
                 }
                 return this

@@ -442,8 +442,14 @@ _.ambient.module("widget", function(_) {
 
         //     this.enabled = function(value) {
         //     } 
-        // })       
-
-
+        // }) 
+        
+        this.onclick = _.model.signal()
+        this.onchange = _.model.signal()
+        this.onmouseenter = _.model.signal()
+        this.onmouseleave = _.model.signal()
+        this.onmousemove = _.model.signal()
+        this.onfocus = _.model.signal()
+        this.onunfocus = _.model.signal()
     })
 })

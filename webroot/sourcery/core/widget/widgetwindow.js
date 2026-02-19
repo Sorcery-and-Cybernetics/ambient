@@ -6,6 +6,7 @@
 _.ambient.module("widgetwindow", function(_) {
     _.define.model("widgetwindow", function (supermodel) {
         this.uidocument = null
+        this.uieventhandler = null
         this._dirty = true
 
         _.constructbehavior = _.behavior(function() {
@@ -29,10 +30,17 @@ _.ambient.module("widgetwindow", function(_) {
 
         this.connect = function(uidocument) {
             this.uidocument = uidocument
+            if (!this.uieventhandler) {
+                this.uieventhandler = _.model.uieventhandler()
+            }
+            this.uieventhandler.attach(this, uidocument)
             return this
         }
 
         this.disconnect = function() {
+            if (this.uieventhandler) {
+                this.uieventhandler.detach()
+            }
             this.uidocument = null
             return this
         }

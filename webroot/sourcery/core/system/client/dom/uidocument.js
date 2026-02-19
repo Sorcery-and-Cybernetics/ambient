@@ -406,7 +406,7 @@ _.ambient.module("uidocument", function(_) {
                 
                 var bodyeventhandler = function(event) { 
                     var uievent = _.model.uievent(me, event)                    
-                    me.raiseuievent(uievent) 
+                    me.onuievent(uievent) 
                 }                
 
                 this.eventconfig = [
