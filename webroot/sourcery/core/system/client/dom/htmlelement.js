@@ -5,7 +5,7 @@
 
 _.ambient.module("htmlelement", function(_) {
 
-    _.define.object("htmlelement", function(supermodel) {
+    _.define.uielement("htmlelement", function(supermodel) {
         this.element = null
         this.listeners = null
 

@@ -1,3 +1,6 @@
 _.ambient.rootmodule("ui/")
     .require("sourcery/core/oop/")
     .include("uihelper")
+    .include("uievent")
+    .include("uielement")
+    .include("uidocument")

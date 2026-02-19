@@ -5,7 +5,7 @@
 
 _.ambient.module("widgetwindow", function(_) {
     _.define.model("widgetwindow", function (supermodel) {
-        this.htmldocument = null
+        this.uidocument = null
         this.htmleventhandler = null
         this._dirty = true
 
@@ -28,21 +28,32 @@ _.ambient.module("widgetwindow", function(_) {
             this._dirty = true
         }
 
-        this.connect = function(htmldocument) {
-            this.htmldocument = htmldocument
+        this.connect = function(uidocument) {
+            var me = this
+
+            this.uidocument = uidocument
+            //todo: this shouldn't be here. No references to html objects, we want to be platform independent
             if (!this.htmleventhandler) {
                 this.htmleventhandler = _.model.htmleventhandler()
             }
-            this.htmleventhandler.attach(this, htmldocument)
+            this.htmleventhandler.attach(this, uidocument)
+            //todo: this should be how we connect uidocument events to our window
+//            this.htmleventhandler.onuievent(function(uievent) { me.handleevent(uievent) })
             return this
         }
 
         this.disconnect = function() {
+            //todo: this shouldn't be here. No references to html objects
+
             if (this.htmleventhandler) {
                 this.htmleventhandler.detach()
             }
-            this.htmldocument = null
+            this.uidocument = null
             return this
+        }
+
+        this.handleevent = function(uievent) {
+            //todo: Understand the uievent, and route to widget
         }
     })
 })

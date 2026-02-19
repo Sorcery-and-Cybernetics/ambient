@@ -68,7 +68,7 @@ _.ambient.module("htmlevent", function(_) {
     }) ()
 
 
-    _.define.event("htmlevent", function () {
+    _.define.uievent("htmlevent", function () {
         this.eventtype = ""
         this.behaviortype = _.efb.none
         this.cancelbubble = false

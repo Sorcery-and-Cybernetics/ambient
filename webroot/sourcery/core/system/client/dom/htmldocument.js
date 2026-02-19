@@ -192,7 +192,7 @@ _.ambient.module("htmldocument", function(_) {
 
 
 
-    _.define.globalobject("htmldocument", function (supermodel) {
+    _.define.uidocument("htmldocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
@@ -473,11 +473,13 @@ _.ambient.module("htmldocument", function(_) {
                 })
             } 
             
-            this.onuievent = _.model.basicsignal()
-            this.onresize = _.model.basicsignal()
-            this.onunload = _.model.basicsignal()
-            this.onbeforeunload = _.model.basicsignal()
-            this.onvisibilitychange = _.model.basicsignal()
+            // this.onuievent = _.model.basicsignal()
+            // this.onresize = _.model.basicsignal()
+            // this.onunload = _.model.basicsignal()
+            // this.onbeforeunload = _.model.basicsignal()
+            // this.onvisibilitychange = _.model.basicsignal()
         })
     })
+}).onload(function(_) {
+    _.htmldocument = _.model.htmldocument()
 })
