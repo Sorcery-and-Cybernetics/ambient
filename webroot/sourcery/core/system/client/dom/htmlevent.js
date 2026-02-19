@@ -69,25 +69,13 @@ _.ambient.module("htmlevent", function(_) {
 
 
     _.define.uievent("htmlevent", function () {
-        this.eventtype = ""
-        this.behaviortype = _.efb.none
-        this.cancelbubble = false
-        this.keycode = 0
-        this.key = 0
-        this.ctrlkey = false
-        this.altkey = false
-        this.shiftkey = false
-        this.button = 0
-
-        this.mouse = null
-        this.history = null
-        this.target = null
-        this.targetuid = 0
-            
         this.construct = function (uiroot, event) {
             this.uiroot = uiroot
+            this.raw = event
+            this.stamp = _.now()
 
             var touch = (event.originalEvent ? event.originalEvent.touches : event.touches) || []
+            this.istouch = !!touch[0]
 
             var eventdef = eventdefs[event.type] || { name: event.type, behaviortype: _.efb.none }
             var mouseinfo = touch[0] || event
@@ -164,8 +152,8 @@ _.ambient.module("htmlevent", function(_) {
                     x: this.mouse.x
                     , y: this.mouse.y
                 }
-                , istouch: !!touch[0]
-                , stamp: _.now()
+                , istouch: this.istouch
+                , stamp: this.stamp
                 , key: this.key
                 , keycode: this.keycode
             }

@@ -5,6 +5,9 @@
 
 _.ambient.module("uievent", function(_) {
     _.define.event("uievent", function() {
+        this.uiroot = null
+        this.raw = null
+
         this.eventtype = ""
         this.behaviortype = _.efb.none
         this.cancelbubble = false
@@ -15,10 +18,13 @@ _.ambient.module("uievent", function(_) {
         this.altkey = false
         this.shiftkey = false
         this.button = 0
+        this.currentbutton = 0
 
         this.mouse = null
         this.wheel = null
         this.history = null
+        this.stamp = 0
+        this.istouch = false
         this.target = null
         this.targetuid = 0
     })
