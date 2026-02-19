@@ -5,8 +5,8 @@
 
 _.ambient.module("widgetwindow", function(_) {
     _.define.model("widgetwindow", function (supermodel) {
-        this.uidocument = null
-        this.uieventhandler = null
+        this.htmldocument = null
+        this.htmleventhandler = null
         this._dirty = true
 
         _.constructbehavior = _.behavior(function() {
@@ -28,20 +28,20 @@ _.ambient.module("widgetwindow", function(_) {
             this._dirty = true
         }
 
-        this.connect = function(uidocument) {
-            this.uidocument = uidocument
-            if (!this.uieventhandler) {
-                this.uieventhandler = _.model.uieventhandler()
+        this.connect = function(htmldocument) {
+            this.htmldocument = htmldocument
+            if (!this.htmleventhandler) {
+                this.htmleventhandler = _.model.htmleventhandler()
             }
-            this.uieventhandler.attach(this, uidocument)
+            this.htmleventhandler.attach(this, htmldocument)
             return this
         }
 
         this.disconnect = function() {
-            if (this.uieventhandler) {
-                this.uieventhandler.detach()
+            if (this.htmleventhandler) {
+                this.htmleventhandler.detach()
             }
-            this.uidocument = null
+            this.htmldocument = null
             return this
         }
     })

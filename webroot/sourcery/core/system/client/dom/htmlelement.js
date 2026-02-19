@@ -3,13 +3,13 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("uielement", function(_) {
+_.ambient.module("htmlelement", function(_) {
 
-    _.define.object("uielement", function(supermodel) {
+    _.define.object("htmlelement", function(supermodel) {
         this.element = null
         this.listeners = null
 
-        this.uidocument = null
+        this.htmldocument = null
         this.widget = null
         this._uid = 0
 
@@ -26,11 +26,11 @@ _.ambient.module("uielement", function(_) {
             }
 
             this.parent = function() {
-                //return this.uidocument.finduielement(this.element.parentElement._uid)
+                //return this.htmldocument.findhtmlelement(this.element.parentElement._uid)
             }
 
             this.assign = function(widget) {
-                this.uidocument = _.uidocument
+                this.htmldocument = _.htmldocument
 
                 if (widget) { 
                     this.widget = widget         
@@ -41,7 +41,7 @@ _.ambient.module("uielement", function(_) {
                     this.tagtype(widget.tagtype())
                 }
 
-                this.uidocument.registeruielement(this)
+                this.htmldocument.registerhtmlelement(this)
 
                 return this
             }
@@ -96,7 +96,7 @@ _.ambient.module("uielement", function(_) {
             }
 
             this.set = function(name, value) {
-                var def = this.uidocument.stylenames[name]
+                var def = this.htmldocument.stylenames[name]
                 if (!def) { return this }
                 if (def.readonly) { return this }
 
@@ -131,7 +131,7 @@ _.ambient.module("uielement", function(_) {
             }
 
             this.get = function(name) {
-                var def = this.uidocument.stylenames[name]
+                var def = this.htmldocument.stylenames[name]
                 if (!def) { return null }
 
                 name = def.apiname || name
@@ -200,11 +200,11 @@ _.ambient.module("uielement", function(_) {
         this.statebehavior = _.behavior(function() {
             this.load = function() {
                 if (!this.element) {
-                    var relative = this.uidocument.finduielement(this.widget.parent())
+                    var relative = this.htmldocument.findhtmlelement(this.widget.parent())
 
-                    this.element = this.uidocument.createelement(this.tagname(), this.tagtype())
+                    this.element = this.htmldocument.createelement(this.tagname(), this.tagtype())
                     this.element._uid = this._uid
-                    this.uidocument.appendlastchild(relative, this.element)
+                    this.htmldocument.appendlastchild(relative, this.element)
                 }
                 return this
             }
@@ -213,7 +213,7 @@ _.ambient.module("uielement", function(_) {
                 this.clearevents()
 
                 if (this.element) {
-                    this.uidocument.removeelement(this.element)
+                    this.htmldocument.removeelement(this.element)
                 }
                 return this
             }

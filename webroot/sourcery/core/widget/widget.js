@@ -148,7 +148,7 @@ _.ambient.module("widget", function(_) {
                 if (!this.tagname) { return this }
                 if (!this._parent) { return this }
 
-                this.element = _.model.uielement().assign(this)
+                this.element = _.model.htmlelement().assign(this)
                 this.element.load().show()
 
                 //loop through all properties, and update the element

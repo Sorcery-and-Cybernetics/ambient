@@ -1,5 +1,3 @@
 # Node.js dependencies
 webroot/node_modules/
 
-# Custom excluded folder
-webroot/product/

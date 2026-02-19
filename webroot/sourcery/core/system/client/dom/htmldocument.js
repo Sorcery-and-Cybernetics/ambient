@@ -3,7 +3,7 @@
 // See codedesign.md - Be Basic! ES2017; no caps; privates _name; library/global funcs _.name; no arrows, semicolons, let/const, underscores (except privates), or 3rd-party libs; 1-based lists; {} for if; spaced blocks; modules via _.ambient.module; objects/behaviors via _.define.object & _.behavior; events via _.signal()
 //**************************************************************************************************
 
-_.ambient.module("uidocument", function(_) {
+_.ambient.module("htmldocument", function(_) {
     _.define.enum("dom", ["lastchild", "firstchild", "afterelement", "beforeelement", "body"], 0)
 
     _.cunit = function (coord, units) {
@@ -192,7 +192,7 @@ _.ambient.module("uidocument", function(_) {
 
 
 
-    _.define.globalobject("uidocument", function (supermodel) {
+    _.define.globalobject("htmldocument", function (supermodel) {
         this.istouch = ("createTouch" in document)
         this.lastmousebutton = 0
 
@@ -200,7 +200,7 @@ _.ambient.module("uidocument", function(_) {
         this.lastmousetime = 0
         this.eventhistory = null
 
-        this.uielements = null
+        this.htmlelements = null
         this.body = null
         this.stylenames = null
 
@@ -213,17 +213,17 @@ _.ambient.module("uidocument", function(_) {
             this.construct = function() {
                 var me = this
 
-                me.uielements = {}
+                me.htmlelements = {}
                 me.eventhistory = {}
                 me.stylenames = getstyledata()
 
                 if (document.body) {
-                    me.body = _.model.uibody(document.body)
+                    me.body = _.model.htmlbody(document.body)
 //                    this.observemutations()
                     this.observeevents()                    
                 } else {
                     document.addEventListener('DOMContentLoaded', function() {
-                        me.body = _.model.uibody(document.body)
+                        me.body = _.model.htmlbody(document.body)
 //                        this.observemutations()
                         this.observeevents()                        
                     })
@@ -272,26 +272,26 @@ _.ambient.module("uidocument", function(_) {
                 this._dirty = true
             }
 
-            this.finduielement = function(uielement) {
-                elementid = (_.isnumber(uielement)? uielement: uielement.uid())
+            this.findhtmlelement = function(htmlelement) {
+                elementid = (_.isnumber(htmlelement)? htmlelement: htmlelement.uid())
 
-                return this.uielements[elementid]
+                return this.htmlelements[elementid]
             }
 
-            this.registeruielement = function(uielement) {
-                if (!uielement) { throw "error" }
+            this.registerhtmlelement = function(htmlelement) {
+                if (!htmlelement) { throw "error" }
 
-                var uid = uielement.uid()
+                var uid = htmlelement.uid()
                 if (!uid) { throw "error" }
 
-                this.uielements[uid] = uielement
+                this.htmlelements[uid] = htmlelement
                 return this
             }
 
-            this.unregisteruielement = function (uielement) {
-                if (!uielement) { throw "error" }
+            this.unregisterhtmlelement = function (htmlelement) {
+                if (!htmlelement) { throw "error" }
 
-                delete this.uielements[uielement.uid()]
+                delete this.htmlelements[htmlelement.uid()]
                 return this
             }
 
@@ -313,7 +313,7 @@ _.ambient.module("uidocument", function(_) {
                 if (!relative) {
                     relative = this.body.element
 
-                } else if (relative instanceof _.model.uielement) {
+                } else if (relative instanceof _.model.htmlelement) {
                     relative = relative.element
                 }
 
@@ -405,8 +405,8 @@ _.ambient.module("uidocument", function(_) {
 
                 
                 var bodyeventhandler = function(event) { 
-                    var uievent = _.model.uievent(me, event)                    
-                    me.onuievent(uievent) 
+                    var htmlevent = _.model.htmlevent(me, event)                    
+                    me.onuievent(htmlevent) 
                 }                
 
                 this.eventconfig = [

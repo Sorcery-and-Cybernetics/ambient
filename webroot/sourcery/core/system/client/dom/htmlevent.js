@@ -5,7 +5,7 @@
 
 //todo: We need to track text selection better. This also means that controls should have a selectable state.
 
-_.ambient.module("uievent", function(_) {
+_.ambient.module("htmlevent", function(_) {
     //todo: Refactor private vars
     var uihelper = {}
     var eventhistory = {}
@@ -68,7 +68,7 @@ _.ambient.module("uievent", function(_) {
     }) ()
 
 
-    _.define.event("uievent", function () {
+    _.define.event("htmlevent", function () {
         this.eventtype = ""
         this.behaviortype = _.efb.none
         this.cancelbubble = false
